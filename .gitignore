@@ -1,0 +1,14 @@
+# Directories
+.idea/
+.intellij/
+**/gen
+vendor/
+data/
+logs/
+# .vscode/
+
+# Files
+*.log
+*.exe
+
+
