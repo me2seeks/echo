@@ -19,7 +19,7 @@ import (
 var (
 	userFieldNames          = builder.RawFieldNames(&User{})
 	userRows                = strings.Join(userFieldNames, ",")
-	userRowsExpectAutoSet   = strings.Join(stringx.Remove(userFieldNames, "`id`", "`[create_at`", "`update_at]`"), ",")
+	userRowsExpectAutoSet   = strings.Join(stringx.Remove(userFieldNames, "`[create_at`", "`update_at]`"), ",")
 	userRowsWithPlaceHolder = strings.Join(stringx.Remove(userFieldNames, "`id`", "`[create_at`", "`update_at]`"), "=?,") + "=?"
 
 	cacheUserIdPrefix    = "cache:user:id:"
@@ -45,7 +45,7 @@ type (
 		CreateAt time.Time    `db:"create_at"`
 		UpdateAt time.Time    `db:"update_at"`
 		DeleteAt sql.NullTime `db:"delete_at"`
-		Version  int64        `db:"version"` // 版本号
+		Version  uint64       `db:"version"` // 版本号
 		Email    string       `db:"email"`
 		Password string       `db:"password"`
 		Salt     string       `db:"salt"`
@@ -119,8 +119,8 @@ func (m *defaultUserModel) Insert(ctx context.Context, data *User) (sql.Result, 
 	userEmailKey := fmt.Sprintf("%s%v", cacheUserEmailPrefix, data.Email)
 	userIdKey := fmt.Sprintf("%s%v", cacheUserIdPrefix, data.Id)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, userRowsExpectAutoSet)
-		return conn.ExecCtx(ctx, query, data.CreateAt, data.UpdateAt, data.DeleteAt, data.Version, data.Email, data.Password, data.Salt, data.Nickname, data.Sex, data.Avatar, data.Bio)
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, userRowsExpectAutoSet)
+		return conn.ExecCtx(ctx, query, data.Id, data.CreateAt, data.UpdateAt, data.DeleteAt, data.Version, data.Email, data.Password, data.Salt, data.Nickname, data.Sex, data.Avatar, data.Bio)
 	}, userEmailKey, userIdKey)
 	return ret, err
 }
