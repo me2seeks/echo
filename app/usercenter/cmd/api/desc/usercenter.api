@@ -12,11 +12,11 @@ import (
 service usercenter {
 	@doc "register"
 	@handler register
-	post /user/register (RegisterReq) returns (RegisterResp)
+	post /register (RegisterReq) returns (RegisterResp)
 
 	@doc "login"
 	@handler login
-	post /user/login (LoginReq) returns (LoginResp)
+	post /login (LoginReq) returns (LoginResp)
 }
 
 //need login
@@ -28,6 +28,6 @@ service usercenter {
 service usercenter {
 	@doc "get user info"
 	@handler detail
-	post /user/detail (UserInfoReq) returns (UserInfoResp)
+	get / (UserInfoReq) returns (UserInfoResp)
 }
 
