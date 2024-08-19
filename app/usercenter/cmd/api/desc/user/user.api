@@ -1,0 +1,43 @@
+syntax = "v1"
+
+type User {
+	Id       uint64 `json:"id"`
+	Email    string `json:"email"`
+	Nickname string `json:"nickname"`
+	Handel   string `json:"handel"`
+	Sex      int    `json:"sex"`
+	Avatar   string `json:"avatar"`
+	Bio      string `json:"bio"`
+}
+
+type (
+	RegisterReq {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+	RegisterResp {
+		AccessToken  string `json:"accessToken"`
+		AccessExpire int64  `json:"accessExpire"`
+		RefreshAfter int64  `json:"refreshAfter"`
+	}
+)
+
+type (
+	LoginReq {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+	LoginResp {
+		AccessToken  string `json:"accessToken"`
+		AccessExpire int64  `json:"accessExpire"`
+		RefreshAfter int64  `json:"refreshAfter"`
+	}
+)
+
+type (
+	UserInfoReq {
+	}
+	UserInfoResp {
+		UserInfo User `json:"userInfo"`
+	}
+)

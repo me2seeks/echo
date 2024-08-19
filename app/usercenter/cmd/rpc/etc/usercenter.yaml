@@ -1,0 +1,33 @@
+Name: usercenter.rpc
+ListenOn: 0.0.0.0:2000
+# Etcd:
+#   Hosts:
+#   - 10.2.12.14:30000
+#   Key: usercenter.rpc
+
+# Prometheus:
+#   Host: 0.0.0.0
+#   Port: 4001
+#   Path: /metrics
+
+Telemetry:
+  Name: usercenter-rpc
+  Endpoint: http://jaeger:14268/api/traces
+  Sampler: 1.0
+  Batcher: jaeger
+
+Log:
+  ServiceName: usercenter-rpc
+  Level: error
+
+
+Redis:
+  Host: 10.2.12.14:31000
+  Type: node
+  Pass: 
+  Key: usercenter-rpc
+Mysql:
+  DataSource: root:bf17tk6d7t56@tcp(10.2.12.14:32000)/echo-hub?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+Cache:
+  - Host: 10.2.12.14:31000
+    Pass: 

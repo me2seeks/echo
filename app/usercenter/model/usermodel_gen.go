@@ -7,8 +7,12 @@ import (
 	"database/sql"
 	"fmt"
 	"strings"
+
 	"time"
 
+	"github.com/Masterminds/squirrel"
+	"github.com/me2seeks/echo-hub/common/globalkey"
+	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/stores/builder"
 	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/core/stores/sqlc"
@@ -19,8 +23,8 @@ import (
 var (
 	userFieldNames          = builder.RawFieldNames(&User{})
 	userRows                = strings.Join(userFieldNames, ",")
-	userRowsExpectAutoSet   = strings.Join(stringx.Remove(userFieldNames, "`[create_at`", "`update_at]`"), ",")
-	userRowsWithPlaceHolder = strings.Join(stringx.Remove(userFieldNames, "`id`", "`[create_at`", "`update_at]`"), "=?,") + "=?"
+	userRowsExpectAutoSet   = strings.Join(stringx.Remove(userFieldNames, "`create_time`", "`update_time`"), ",")
+	userRowsWithPlaceHolder = strings.Join(stringx.Remove(userFieldNames, "`id`", "`create_time`", "`update_time`"), "=?,") + "=?"
 
 	cacheUserIdPrefix    = "cache:user:id:"
 	cacheUserEmailPrefix = "cache:user:email:"
@@ -28,11 +32,22 @@ var (
 
 type (
 	userModel interface {
-		Insert(ctx context.Context, data *User) (sql.Result, error)
+		Insert(ctx context.Context, session sqlx.Session, data *User) (sql.Result, error)
 		FindOne(ctx context.Context, id uint64) (*User, error)
 		FindOneByEmail(ctx context.Context, email string) (*User, error)
-		Update(ctx context.Context, data *User) error
-		Delete(ctx context.Context, id uint64) error
+		Update(ctx context.Context, session sqlx.Session, data *User) (sql.Result, error)
+		UpdateWithVersion(ctx context.Context, session sqlx.Session, data *User) error
+		Trans(ctx context.Context, fn func(context context.Context, session sqlx.Session) error) error
+		SelectBuilder() squirrel.SelectBuilder
+		DeleteSoft(ctx context.Context, session sqlx.Session, data *User) error
+		FindSum(ctx context.Context, sumBuilder squirrel.SelectBuilder, field string) (float64, error)
+		FindCount(ctx context.Context, countBuilder squirrel.SelectBuilder, field string) (int64, error)
+		FindAll(ctx context.Context, rowBuilder squirrel.SelectBuilder, orderBy string) ([]*User, error)
+		FindPageListByPage(ctx context.Context, rowBuilder squirrel.SelectBuilder, page, pageSize int64, orderBy string) ([]*User, error)
+		FindPageListByPageWithTotal(ctx context.Context, rowBuilder squirrel.SelectBuilder, page, pageSize int64, orderBy string) ([]*User, int64, error)
+		FindPageListByIdDESC(ctx context.Context, rowBuilder squirrel.SelectBuilder, preMinId, pageSize int64) ([]*User, error)
+		FindPageListByIdASC(ctx context.Context, rowBuilder squirrel.SelectBuilder, preMaxId, pageSize int64) ([]*User, error)
+		Delete(ctx context.Context, session sqlx.Session, id uint64) error
 	}
 
 	defaultUserModel struct {
@@ -41,18 +56,20 @@ type (
 	}
 
 	User struct {
-		Id       uint64       `db:"id"`
-		CreateAt time.Time    `db:"create_at"`
-		UpdateAt time.Time    `db:"update_at"`
-		DeleteAt sql.NullTime `db:"delete_at"`
-		Version  uint64       `db:"version"` // 版本号
-		Email    string       `db:"email"`
-		Password string       `db:"password"`
-		Salt     string       `db:"salt"`
-		Nickname string       `db:"nickname"`
-		Sex      int64        `db:"sex"` // 性别 0:男 1:女
-		Avatar   string       `db:"avatar"`
-		Bio      string       `db:"bio"`
+		Id       uint64    `db:"id"`
+		CreateAt time.Time `db:"create_at"`
+		UpdateAt time.Time `db:"update_at"`
+		DeleteAt time.Time `db:"delete_at"`
+		DelState int64     `db:"del_state"`
+		Version  uint64    `db:"version"` // 版本号
+		Email    string    `db:"email"`
+		Password string    `db:"password"`
+		Salt     string    `db:"salt"`
+		Nickname string    `db:"nickname"`
+		Handle   string    `db:"handle"`
+		Sex      int64     `db:"sex"` // 性别 0: 未知, 1: 男, 2: 女
+		Avatar   string    `db:"avatar"`
+		Bio      string    `db:"bio"`
 	}
 )
 
@@ -63,7 +80,7 @@ func newUserModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.Option) *d
 	}
 }
 
-func (m *defaultUserModel) Delete(ctx context.Context, id uint64) error {
+func (m *defaultUserModel) Delete(ctx context.Context, session sqlx.Session, id uint64) error {
 	data, err := m.FindOne(ctx, id)
 	if err != nil {
 		return err
@@ -73,17 +90,19 @@ func (m *defaultUserModel) Delete(ctx context.Context, id uint64) error {
 	userIdKey := fmt.Sprintf("%s%v", cacheUserIdPrefix, id)
 	_, err = m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
+		if session != nil {
+			return session.ExecCtx(ctx, query, id)
+		}
 		return conn.ExecCtx(ctx, query, id)
 	}, userEmailKey, userIdKey)
 	return err
 }
-
 func (m *defaultUserModel) FindOne(ctx context.Context, id uint64) (*User, error) {
 	userIdKey := fmt.Sprintf("%s%v", cacheUserIdPrefix, id)
 	var resp User
-	err := m.QueryRowCtx(ctx, &resp, userIdKey, func(ctx context.Context, conn sqlx.SqlConn, v any) error {
-		query := fmt.Sprintf("select %s from %s where `id` = ? limit 1", userRows, m.table)
-		return conn.QueryRowCtx(ctx, v, query, id)
+	err := m.QueryRowCtx(ctx, &resp, userIdKey, func(ctx context.Context, conn sqlx.SqlConn, v interface{}) error {
+		query := fmt.Sprintf("select %s from %s where `id` = ? and del_state = ? limit 1", userRows, m.table)
+		return conn.QueryRowCtx(ctx, v, query, id, globalkey.DelStateNo)
 	})
 	switch err {
 	case nil:
@@ -98,9 +117,9 @@ func (m *defaultUserModel) FindOne(ctx context.Context, id uint64) (*User, error
 func (m *defaultUserModel) FindOneByEmail(ctx context.Context, email string) (*User, error) {
 	userEmailKey := fmt.Sprintf("%s%v", cacheUserEmailPrefix, email)
 	var resp User
-	err := m.QueryRowIndexCtx(ctx, &resp, userEmailKey, m.formatPrimary, func(ctx context.Context, conn sqlx.SqlConn, v any) (i any, e error) {
-		query := fmt.Sprintf("select %s from %s where `email` = ? limit 1", userRows, m.table)
-		if err := conn.QueryRowCtx(ctx, &resp, query, email); err != nil {
+	err := m.QueryRowIndexCtx(ctx, &resp, userEmailKey, m.formatPrimary, func(ctx context.Context, conn sqlx.SqlConn, v interface{}) (i interface{}, e error) {
+		query := fmt.Sprintf("select %s from %s where `email` = ? and del_state = ? limit 1", userRows, m.table)
+		if err := conn.QueryRowCtx(ctx, &resp, query, email, globalkey.DelStateNo); err != nil {
 			return nil, err
 		}
 		return resp.Id, nil
@@ -115,38 +134,279 @@ func (m *defaultUserModel) FindOneByEmail(ctx context.Context, email string) (*U
 	}
 }
 
-func (m *defaultUserModel) Insert(ctx context.Context, data *User) (sql.Result, error) {
+func (m *defaultUserModel) Insert(ctx context.Context, session sqlx.Session, data *User) (sql.Result, error) {
+	data.DeleteAt = time.Unix(0, 0)
+	data.DelState = globalkey.DelStateNo
 	userEmailKey := fmt.Sprintf("%s%v", cacheUserEmailPrefix, data.Email)
 	userIdKey := fmt.Sprintf("%s%v", cacheUserIdPrefix, data.Id)
-	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
+	return m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, userRowsExpectAutoSet)
-		return conn.ExecCtx(ctx, query, data.Id, data.CreateAt, data.UpdateAt, data.DeleteAt, data.Version, data.Email, data.Password, data.Salt, data.Nickname, data.Sex, data.Avatar, data.Bio)
+		if session != nil {
+			return session.ExecCtx(ctx, query, data.Id, data.DeleteAt, data.DelState, data.Version, data.Email, data.Password, data.Salt, data.Nickname, data.Handle, data.Sex, data.Avatar, data.Bio)
+		}
+		return conn.ExecCtx(ctx, query, data.Id, data.DeleteAt, data.DelState, data.Version, data.Email, data.Password, data.Salt, data.Nickname, data.Handle, data.Sex, data.Avatar, data.Bio)
 	}, userEmailKey, userIdKey)
-	return ret, err
 }
 
-func (m *defaultUserModel) Update(ctx context.Context, newData *User) error {
+func (m *defaultUserModel) Update(ctx context.Context, session sqlx.Session, newData *User) (sql.Result, error) {
+	data, err := m.FindOne(ctx, newData.Id)
+	if err != nil {
+		return nil, err
+	}
+	userEmailKey := fmt.Sprintf("%s%v", cacheUserEmailPrefix, data.Email)
+	userIdKey := fmt.Sprintf("%s%v", cacheUserIdPrefix, data.Id)
+	return m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
+		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, userRowsWithPlaceHolder)
+		if session != nil {
+			return session.ExecCtx(ctx, query, newData.DeleteAt, newData.DelState, newData.Version, newData.Email, newData.Password, newData.Salt, newData.Nickname, newData.Handle, newData.Sex, newData.Avatar, newData.Bio, newData.Id)
+		}
+		return conn.ExecCtx(ctx, query, newData.DeleteAt, newData.DelState, newData.Version, newData.Email, newData.Password, newData.Salt, newData.Nickname, newData.Handle, newData.Sex, newData.Avatar, newData.Bio, newData.Id)
+	}, userEmailKey, userIdKey)
+}
+
+func (m *defaultUserModel) UpdateWithVersion(ctx context.Context, session sqlx.Session, newData *User) error {
+
+	oldVersion := newData.Version
+	newData.Version += 1
+
+	var sqlResult sql.Result
+	var err error
+
 	data, err := m.FindOne(ctx, newData.Id)
 	if err != nil {
 		return err
 	}
-
 	userEmailKey := fmt.Sprintf("%s%v", cacheUserEmailPrefix, data.Email)
 	userIdKey := fmt.Sprintf("%s%v", cacheUserIdPrefix, data.Id)
-	_, err = m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, userRowsWithPlaceHolder)
-		return conn.ExecCtx(ctx, query, newData.CreateAt, newData.UpdateAt, newData.DeleteAt, newData.Version, newData.Email, newData.Password, newData.Salt, newData.Nickname, newData.Sex, newData.Avatar, newData.Bio, newData.Id)
+	sqlResult, err = m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
+		query := fmt.Sprintf("update %s set %s where `id` = ? and version = ? ", m.table, userRowsWithPlaceHolder)
+		if session != nil {
+			return session.ExecCtx(ctx, query, newData.DeleteAt, newData.DelState, newData.Version, newData.Email, newData.Password, newData.Salt, newData.Nickname, newData.Handle, newData.Sex, newData.Avatar, newData.Bio, newData.Id, oldVersion)
+		}
+		return conn.ExecCtx(ctx, query, newData.DeleteAt, newData.DelState, newData.Version, newData.Email, newData.Password, newData.Salt, newData.Nickname, newData.Handle, newData.Sex, newData.Avatar, newData.Bio, newData.Id, oldVersion)
 	}, userEmailKey, userIdKey)
-	return err
+	if err != nil {
+		return err
+	}
+	updateCount, err := sqlResult.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if updateCount == 0 {
+		return ErrNoRowsUpdate
+	}
+
+	return nil
 }
 
-func (m *defaultUserModel) formatPrimary(primary any) string {
+func (m *defaultUserModel) DeleteSoft(ctx context.Context, session sqlx.Session, data *User) error {
+	data.DelState = globalkey.DelStateYes
+	data.DeleteAt = time.Now()
+	if err := m.UpdateWithVersion(ctx, session, data); err != nil {
+		return errors.Wrapf(errors.New("delete soft failed "), "UserModel delete err : %+v", err)
+	}
+	return nil
+}
+
+func (m *defaultUserModel) FindSum(ctx context.Context, builder squirrel.SelectBuilder, field string) (float64, error) {
+
+	if len(field) == 0 {
+		return 0, errors.Wrapf(errors.New("FindSum Least One Field"), "FindSum Least One Field")
+	}
+
+	builder = builder.Columns("IFNULL(SUM(" + field + "),0)")
+
+	query, values, err := builder.Where("del_state = ?", globalkey.DelStateNo).ToSql()
+	if err != nil {
+		return 0, err
+	}
+
+	var resp float64
+	err = m.QueryRowNoCacheCtx(ctx, &resp, query, values...)
+	switch err {
+	case nil:
+		return resp, nil
+	default:
+		return 0, err
+	}
+}
+
+func (m *defaultUserModel) FindCount(ctx context.Context, builder squirrel.SelectBuilder, field string) (int64, error) {
+
+	if len(field) == 0 {
+		return 0, errors.Wrapf(errors.New("FindCount Least One Field"), "FindCount Least One Field")
+	}
+
+	builder = builder.Columns("COUNT(" + field + ")")
+
+	query, values, err := builder.Where("del_state = ?", globalkey.DelStateNo).ToSql()
+	if err != nil {
+		return 0, err
+	}
+
+	var resp int64
+	err = m.QueryRowNoCacheCtx(ctx, &resp, query, values...)
+	switch err {
+	case nil:
+		return resp, nil
+	default:
+		return 0, err
+	}
+}
+
+func (m *defaultUserModel) FindAll(ctx context.Context, builder squirrel.SelectBuilder, orderBy string) ([]*User, error) {
+
+	builder = builder.Columns(userRows)
+
+	if orderBy == "" {
+		builder = builder.OrderBy("id DESC")
+	} else {
+		builder = builder.OrderBy(orderBy)
+	}
+
+	query, values, err := builder.Where("del_state = ?", globalkey.DelStateNo).ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	var resp []*User
+	err = m.QueryRowsNoCacheCtx(ctx, &resp, query, values...)
+	switch err {
+	case nil:
+		return resp, nil
+	default:
+		return nil, err
+	}
+}
+
+func (m *defaultUserModel) FindPageListByPage(ctx context.Context, builder squirrel.SelectBuilder, page, pageSize int64, orderBy string) ([]*User, error) {
+
+	builder = builder.Columns(userRows)
+
+	if orderBy == "" {
+		builder = builder.OrderBy("id DESC")
+	} else {
+		builder = builder.OrderBy(orderBy)
+	}
+
+	if page < 1 {
+		page = 1
+	}
+	offset := (page - 1) * pageSize
+
+	query, values, err := builder.Where("del_state = ?", globalkey.DelStateNo).Offset(uint64(offset)).Limit(uint64(pageSize)).ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	var resp []*User
+	err = m.QueryRowsNoCacheCtx(ctx, &resp, query, values...)
+	switch err {
+	case nil:
+		return resp, nil
+	default:
+		return nil, err
+	}
+}
+
+func (m *defaultUserModel) FindPageListByPageWithTotal(ctx context.Context, builder squirrel.SelectBuilder, page, pageSize int64, orderBy string) ([]*User, int64, error) {
+
+	total, err := m.FindCount(ctx, builder, "id")
+	if err != nil {
+		return nil, 0, err
+	}
+
+	builder = builder.Columns(userRows)
+
+	if orderBy == "" {
+		builder = builder.OrderBy("id DESC")
+	} else {
+		builder = builder.OrderBy(orderBy)
+	}
+
+	if page < 1 {
+		page = 1
+	}
+	offset := (page - 1) * pageSize
+
+	query, values, err := builder.Where("del_state = ?", globalkey.DelStateNo).Offset(uint64(offset)).Limit(uint64(pageSize)).ToSql()
+	if err != nil {
+		return nil, total, err
+	}
+
+	var resp []*User
+	err = m.QueryRowsNoCacheCtx(ctx, &resp, query, values...)
+	switch err {
+	case nil:
+		return resp, total, nil
+	default:
+		return nil, total, err
+	}
+}
+
+func (m *defaultUserModel) FindPageListByIdDESC(ctx context.Context, builder squirrel.SelectBuilder, preMinId, pageSize int64) ([]*User, error) {
+
+	builder = builder.Columns(userRows)
+
+	if preMinId > 0 {
+		builder = builder.Where(" id < ? ", preMinId)
+	}
+
+	query, values, err := builder.Where("del_state = ?", globalkey.DelStateNo).OrderBy("id DESC").Limit(uint64(pageSize)).ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	var resp []*User
+	err = m.QueryRowsNoCacheCtx(ctx, &resp, query, values...)
+	switch err {
+	case nil:
+		return resp, nil
+	default:
+		return nil, err
+	}
+}
+
+func (m *defaultUserModel) FindPageListByIdASC(ctx context.Context, builder squirrel.SelectBuilder, preMaxId, pageSize int64) ([]*User, error) {
+
+	builder = builder.Columns(userRows)
+
+	if preMaxId > 0 {
+		builder = builder.Where(" id > ? ", preMaxId)
+	}
+
+	query, values, err := builder.Where("del_state = ?", globalkey.DelStateNo).OrderBy("id ASC").Limit(uint64(pageSize)).ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	var resp []*User
+	err = m.QueryRowsNoCacheCtx(ctx, &resp, query, values...)
+	switch err {
+	case nil:
+		return resp, nil
+	default:
+		return nil, err
+	}
+}
+
+func (m *defaultUserModel) Trans(ctx context.Context, fn func(ctx context.Context, session sqlx.Session) error) error {
+
+	return m.TransactCtx(ctx, func(ctx context.Context, session sqlx.Session) error {
+		return fn(ctx, session)
+	})
+
+}
+
+func (m *defaultUserModel) SelectBuilder() squirrel.SelectBuilder {
+	return squirrel.Select().From(m.table)
+}
+func (m *defaultUserModel) formatPrimary(primary interface{}) string {
 	return fmt.Sprintf("%s%v", cacheUserIdPrefix, primary)
 }
-
-func (m *defaultUserModel) queryPrimary(ctx context.Context, conn sqlx.SqlConn, v, primary any) error {
-	query := fmt.Sprintf("select %s from %s where `id` = ? limit 1", userRows, m.table)
-	return conn.QueryRowCtx(ctx, v, query, primary)
+func (m *defaultUserModel) queryPrimary(ctx context.Context, conn sqlx.SqlConn, v, primary interface{}) error {
+	query := fmt.Sprintf("select %s from %s where `id` = ? and del_state = ? limit 1", userRows, m.table)
+	return conn.QueryRowCtx(ctx, v, query, primary, globalkey.DelStateNo)
 }
 
 func (m *defaultUserModel) tableName() string {

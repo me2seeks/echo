@@ -1,0 +1,33 @@
+syntax = "v1"
+
+import (
+	"user/user.api"
+)
+
+//no need login
+@server (
+	prefix: user
+	group:  user
+)
+service usercenter {
+	@doc "register"
+	@handler register
+	post /user/register (RegisterReq) returns (RegisterResp)
+
+	@doc "login"
+	@handler login
+	post /user/login (LoginReq) returns (LoginResp)
+}
+
+//need login
+@server (
+	prefix: user
+	group:  user
+	jwt:    Auth
+)
+service usercenter {
+	@doc "get user info"
+	@handler detail
+	post /user/detail (UserInfoReq) returns (UserInfoResp)
+}
+
