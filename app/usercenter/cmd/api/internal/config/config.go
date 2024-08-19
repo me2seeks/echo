@@ -7,7 +7,7 @@ import (
 
 type Config struct {
 	rest.RestConf
-	Auth struct {
+	JwtAuth struct {
 		AccessSecret string
 		AccessExpire int64
 	}

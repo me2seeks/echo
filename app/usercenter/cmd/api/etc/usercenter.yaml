@@ -4,8 +4,9 @@ Port: 1000
 Mode: dev
 
 
-Auth:
+JwtAuth:
   AccessSecret: ae0536f9-6450-4606-8e13-5a19ed505da0
+  AccessExpire: 31536000
 
 #监控
 # Prometheus:

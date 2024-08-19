@@ -1,5 +1,6 @@
 Name: usercenter.rpc
 ListenOn: 0.0.0.0:2000
+
 # Etcd:
 #   Hosts:
 #   - 10.2.12.14:30000
@@ -10,16 +11,19 @@ ListenOn: 0.0.0.0:2000
 #   Port: 4001
 #   Path: /metrics
 
-Telemetry:
-  Name: usercenter-rpc
-  Endpoint: http://jaeger:14268/api/traces
-  Sampler: 1.0
-  Batcher: jaeger
+# Telemetry:
+#   Name: usercenter-rpc
+#   Endpoint: http://jaeger:14268/api/traces
+#   Sampler: 1.0
+#   Batcher: jaeger
 
 Log:
   ServiceName: usercenter-rpc
   Level: error
 
+JwtAuth:
+  AccessSecret: ae0536f9-6450-4606-8e13-5a19ed505da0
+  AccessExpire: 31536000
 
 Redis:
   Host: 10.2.12.14:31000
