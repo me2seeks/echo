@@ -14,6 +14,8 @@ type LoginResp struct {
 
 type RegisterReq struct {
 	Email    string `json:"email"`
+	Handle   string `json:"handle"`
+	Nickname string `json:"nickname"`
 	Password string `json:"password"`
 }
 
@@ -24,10 +26,10 @@ type RegisterResp struct {
 }
 
 type User struct {
-	Id       uint64 `json:"id"`
+	Id       int64  `json:"id"`
 	Email    string `json:"email"`
 	Nickname string `json:"nickname"`
-	Handel   string `json:"handel"`
+	Handle   string `json:"Handle"`
 	Sex      int    `json:"sex"`
 	Avatar   string `json:"avatar"`
 	Bio      string `json:"bio"`
@@ -38,10 +40,10 @@ type UserInfoReq struct {
 
 type UserInfoResp struct {
 	UserInfo struct {
-		Id       uint64 `json:"id"`
+		Id       int64  `json:"id"`
 		Email    string `json:"email"`
 		Nickname string `json:"nickname"`
-		Handel   string `json:"handel"`
+		Handle   string `json:"Handle"`
 		Sex      int    `json:"sex"`
 		Avatar   string `json:"avatar"`
 		Bio      string `json:"bio"`

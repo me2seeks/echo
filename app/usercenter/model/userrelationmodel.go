@@ -20,8 +20,8 @@ type (
 )
 
 // NewUserRelationModel returns a model for the database table.
-func NewUserRelationModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.Option) UserRelationModel {
+func NewUserRelationModel(conn sqlx.SqlConn, c cache.CacheConf) UserRelationModel {
 	return &customUserRelationModel{
-		defaultUserRelationModel: newUserRelationModel(conn, c, opts...),
+		defaultUserRelationModel: newUserRelationModel(conn, c),
 	}
 }

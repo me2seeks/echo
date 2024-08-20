@@ -23,8 +23,8 @@ import (
 var (
 	userRelationFieldNames          = builder.RawFieldNames(&UserRelation{})
 	userRelationRows                = strings.Join(userRelationFieldNames, ",")
-	userRelationRowsExpectAutoSet   = strings.Join(stringx.Remove(userRelationFieldNames, "`create_time`", "`update_time`"), ",")
-	userRelationRowsWithPlaceHolder = strings.Join(stringx.Remove(userRelationFieldNames, "`id`", "`create_time`", "`update_time`"), "=?,") + "=?"
+	userRelationRowsExpectAutoSet   = strings.Join(stringx.Remove(userRelationFieldNames, "`create_at`", "`update_at`"), ",")
+	userRelationRowsWithPlaceHolder = strings.Join(stringx.Remove(userRelationFieldNames, "`id`", "`create_at`", "`update_at`"), "=?,") + "=?"
 
 	cacheUserRelationIdPrefix                   = "cache:userRelation:id:"
 	cacheUserRelationFollowerIdFolloweeIdPrefix = "cache:userRelation:followerId:followeeId:"
@@ -33,8 +33,8 @@ var (
 type (
 	userRelationModel interface {
 		Insert(ctx context.Context, session sqlx.Session, data *UserRelation) (sql.Result, error)
-		FindOne(ctx context.Context, id uint64) (*UserRelation, error)
-		FindOneByFollowerIdFolloweeId(ctx context.Context, followerId uint64, followeeId uint64) (*UserRelation, error)
+		FindOne(ctx context.Context, id int64) (*UserRelation, error)
+		FindOneByFollowerIdFolloweeId(ctx context.Context, followerId int64, followeeId int64) (*UserRelation, error)
 		Update(ctx context.Context, session sqlx.Session, data *UserRelation) (sql.Result, error)
 		UpdateWithVersion(ctx context.Context, session sqlx.Session, data *UserRelation) error
 		Trans(ctx context.Context, fn func(context context.Context, session sqlx.Session) error) error
@@ -47,7 +47,7 @@ type (
 		FindPageListByPageWithTotal(ctx context.Context, rowBuilder squirrel.SelectBuilder, page, pageSize int64, orderBy string) ([]*UserRelation, int64, error)
 		FindPageListByIdDESC(ctx context.Context, rowBuilder squirrel.SelectBuilder, preMinId, pageSize int64) ([]*UserRelation, error)
 		FindPageListByIdASC(ctx context.Context, rowBuilder squirrel.SelectBuilder, preMaxId, pageSize int64) ([]*UserRelation, error)
-		Delete(ctx context.Context, session sqlx.Session, id uint64) error
+		Delete(ctx context.Context, session sqlx.Session, id int64) error
 	}
 
 	defaultUserRelationModel struct {
@@ -56,9 +56,9 @@ type (
 	}
 
 	UserRelation struct {
-		Id         uint64    `db:"id"`
-		FollowerId uint64    `db:"follower_id"` // 关注者的用户ID
-		FolloweeId uint64    `db:"followee_id"` // 被关注者的用户ID
+		Id         int64     `db:"id"`
+		FollowerId int64     `db:"follower_id"` // 关注者的用户ID
+		FolloweeId int64     `db:"followee_id"` // 被关注者的用户ID
 		CreateAt   time.Time `db:"create_at"`
 		DeleteAt   time.Time `db:"delete_at"`
 		DelState   int64     `db:"del_state"`
@@ -73,7 +73,7 @@ func newUserRelationModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.Op
 	}
 }
 
-func (m *defaultUserRelationModel) Delete(ctx context.Context, session sqlx.Session, id uint64) error {
+func (m *defaultUserRelationModel) Delete(ctx context.Context, session sqlx.Session, id int64) error {
 	data, err := m.FindOne(ctx, id)
 	if err != nil {
 		return err
@@ -90,7 +90,7 @@ func (m *defaultUserRelationModel) Delete(ctx context.Context, session sqlx.Sess
 	}, userRelationFollowerIdFolloweeIdKey, userRelationIdKey)
 	return err
 }
-func (m *defaultUserRelationModel) FindOne(ctx context.Context, id uint64) (*UserRelation, error) {
+func (m *defaultUserRelationModel) FindOne(ctx context.Context, id int64) (*UserRelation, error) {
 	userRelationIdKey := fmt.Sprintf("%s%v", cacheUserRelationIdPrefix, id)
 	var resp UserRelation
 	err := m.QueryRowCtx(ctx, &resp, userRelationIdKey, func(ctx context.Context, conn sqlx.SqlConn, v interface{}) error {
@@ -107,7 +107,7 @@ func (m *defaultUserRelationModel) FindOne(ctx context.Context, id uint64) (*Use
 	}
 }
 
-func (m *defaultUserRelationModel) FindOneByFollowerIdFolloweeId(ctx context.Context, followerId uint64, followeeId uint64) (*UserRelation, error) {
+func (m *defaultUserRelationModel) FindOneByFollowerIdFolloweeId(ctx context.Context, followerId int64, followeeId int64) (*UserRelation, error) {
 	userRelationFollowerIdFolloweeIdKey := fmt.Sprintf("%s%v:%v", cacheUserRelationFollowerIdFolloweeIdPrefix, followerId, followeeId)
 	var resp UserRelation
 	err := m.QueryRowIndexCtx(ctx, &resp, userRelationFollowerIdFolloweeIdKey, m.formatPrimary, func(ctx context.Context, conn sqlx.SqlConn, v interface{}) (i interface{}, e error) {

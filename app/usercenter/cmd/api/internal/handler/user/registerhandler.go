@@ -7,6 +7,7 @@ import (
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/api/internal/svc"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/api/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
+	"github.com/me2seeks/echo-hub/common/result"
 )
 
 // register
@@ -20,10 +21,6 @@ func RegisterHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 
 		l := user.NewRegisterLogic(r.Context(), svcCtx)
 		resp, err := l.Register(&req)
-		if err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
-		} else {
-			httpx.OkJsonCtx(r.Context(), w, resp)
-		}
+		result.HTTPResult(r, w, resp, err)
 	}
 }

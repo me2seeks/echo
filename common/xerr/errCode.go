@@ -13,6 +13,7 @@ const (
 	TokenGenerateError
 	DbError
 	DbUpdateAffectedZeroError
+	EncryptError
 )
 
 // 用户模块

@@ -7,6 +7,7 @@ import (
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/api/internal/svc"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/api/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
+	"github.com/me2seeks/echo-hub/common/result"
 )
 
 // login
@@ -20,10 +21,6 @@ func LoginHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 
 		l := user.NewLoginLogic(r.Context(), svcCtx)
 		resp, err := l.Login(&req)
-		if err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
-		} else {
-			httpx.OkJsonCtx(r.Context(), w, resp)
-		}
+		result.HTTPResult(r, w, resp, err)
 	}
 }

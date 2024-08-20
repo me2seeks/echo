@@ -7,7 +7,7 @@ package pb;
 
 //model
 message User {
-    uint64 id = 1;
+    int64 id = 1;
     string email = 2;
     string nickname =3;
     string handel = 4;
@@ -16,12 +16,19 @@ message User {
     string bio = 7;
 }
 
+message UserAuth {
+    int64  id = 1;
+    int64  userId = 2;
+    string authType = 3;
+    string authKey = 4;
+}
+
 
 //req 、resp
 message RegisterReq {
     string email = 1;
-    string nickname = 2;
-    string handel = 3;
+    string handle = 2;
+    string nickname = 3;
     string password = 4;
     string authKey = 5;
     string authType = 6;
@@ -50,12 +57,24 @@ message GetUserInfoResp {
     User user = 1;
 }
 
+message GetUserAuthByAuthKeyReq {
+    string  authKey = 1;
+    string  authType = 2;
+}
+message GetUserAuthByAuthKeyResp {
+    UserAuth userAuth = 1;
+}
 
-
-
+message GetUserAuthByUserIdReq {
+    int64  userId = 1;
+    string  authType = 2;
+}
+message GetUserAuthyUserIdResp {
+    UserAuth userAuth = 1;
+}
 
 message GenerateTokenReq {
-    uint64 userId = 1;
+    int64 userId = 1;
 }
 message GenerateTokenResp {
     string accessToken = 1;
@@ -63,10 +82,13 @@ message GenerateTokenResp {
     int64  refreshAfter = 3;
 }
 
+
 //service
 service usercenter {
     rpc login(LoginReq) returns(LoginResp);
     rpc register(RegisterReq) returns(RegisterResp);
     rpc getUserInfo(GetUserInfoReq) returns(GetUserInfoResp);
+    rpc getUserAuthByAuthKey(GetUserAuthByAuthKeyReq) returns(GetUserAuthByAuthKeyResp);
+    rpc getUserAuthByUserId(GetUserAuthByUserIdReq) returns(GetUserAuthyUserIdResp);
     rpc generateToken(GenerateTokenReq) returns(GenerateTokenResp);
 }

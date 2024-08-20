@@ -42,7 +42,7 @@ func (l *GenerateTokenLogic) GenerateToken(in *pb.GenerateTokenReq) (*pb.Generat
 	}, nil
 }
 
-func (l *GenerateTokenLogic) getJwtToken(secretKey string, iat, seconds int64, userID uint64) (string, error) {
+func (l *GenerateTokenLogic) getJwtToken(secretKey string, iat, seconds int64, userID int64) (string, error) {
 	claims := make(jwt.MapClaims)
 	claims["exp"] = iat + seconds
 	claims["iat"] = iat

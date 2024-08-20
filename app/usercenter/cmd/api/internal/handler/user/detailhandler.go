@@ -6,6 +6,7 @@ import (
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/api/internal/logic/user"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/api/internal/svc"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/api/internal/types"
+	"github.com/me2seeks/echo-hub/common/result"
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
@@ -20,10 +21,6 @@ func DetailHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 
 		l := user.NewDetailLogic(r.Context(), svcCtx)
 		resp, err := l.Detail(&req)
-		if err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
-		} else {
-			httpx.OkJsonCtx(r.Context(), w, resp)
-		}
+		result.HTTPResult(r, w, resp, err)
 	}
 }

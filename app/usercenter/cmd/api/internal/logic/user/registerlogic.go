@@ -31,6 +31,8 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 func (l *RegisterLogic) Register(req *types.RegisterReq) (*types.RegisterResp, error) {
 	registerResp, err := l.svcCtx.UsercenterRPC.Register(l.ctx, &usercenter.RegisterReq{
 		Email:    req.Email,
+		Handle:   req.Handle,
+		Nickname: req.Nickname,
 		Password: req.Password,
 		AuthKey:  req.Email,
 		AuthType: model.UserAuthTypeSystem,
