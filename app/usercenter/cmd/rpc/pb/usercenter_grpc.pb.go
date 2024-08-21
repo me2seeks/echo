@@ -25,6 +25,11 @@ const (
 	Usercenter_GetUserAuthByAuthKey_FullMethodName = "/pb.usercenter/getUserAuthByAuthKey"
 	Usercenter_GetUserAuthByUserId_FullMethodName  = "/pb.usercenter/getUserAuthByUserId"
 	Usercenter_GenerateToken_FullMethodName        = "/pb.usercenter/generateToken"
+	Usercenter_UpdateUserInfo_FullMethodName       = "/pb.usercenter/updateUserInfo"
+	Usercenter_Follow_FullMethodName               = "/pb.usercenter/follow"
+	Usercenter_Unfollow_FullMethodName             = "/pb.usercenter/unfollow"
+	Usercenter_Followers_FullMethodName            = "/pb.usercenter/followers"
+	Usercenter_Followings_FullMethodName           = "/pb.usercenter/followings"
 )
 
 // UsercenterClient is the client API for Usercenter service.
@@ -33,12 +38,19 @@ const (
 //
 // service
 type UsercenterClient interface {
+	// user
 	Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginResp, error)
 	Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*RegisterResp, error)
 	GetUserInfo(ctx context.Context, in *GetUserInfoReq, opts ...grpc.CallOption) (*GetUserInfoResp, error)
 	GetUserAuthByAuthKey(ctx context.Context, in *GetUserAuthByAuthKeyReq, opts ...grpc.CallOption) (*GetUserAuthByAuthKeyResp, error)
 	GetUserAuthByUserId(ctx context.Context, in *GetUserAuthByUserIdReq, opts ...grpc.CallOption) (*GetUserAuthyUserIdResp, error)
 	GenerateToken(ctx context.Context, in *GenerateTokenReq, opts ...grpc.CallOption) (*GenerateTokenResp, error)
+	UpdateUserInfo(ctx context.Context, in *UpdateUserInfoReq, opts ...grpc.CallOption) (*UpdateUserInfoResp, error)
+	// relation
+	Follow(ctx context.Context, in *FollowReq, opts ...grpc.CallOption) (*FollowResp, error)
+	Unfollow(ctx context.Context, in *UnfollowReq, opts ...grpc.CallOption) (*UnfollowResp, error)
+	Followers(ctx context.Context, in *FollowersReq, opts ...grpc.CallOption) (*FollowersResp, error)
+	Followings(ctx context.Context, in *FollowingsReq, opts ...grpc.CallOption) (*FollowingsResp, error)
 }
 
 type usercenterClient struct {
@@ -109,18 +121,75 @@ func (c *usercenterClient) GenerateToken(ctx context.Context, in *GenerateTokenR
 	return out, nil
 }
 
+func (c *usercenterClient) UpdateUserInfo(ctx context.Context, in *UpdateUserInfoReq, opts ...grpc.CallOption) (*UpdateUserInfoResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateUserInfoResp)
+	err := c.cc.Invoke(ctx, Usercenter_UpdateUserInfo_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *usercenterClient) Follow(ctx context.Context, in *FollowReq, opts ...grpc.CallOption) (*FollowResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(FollowResp)
+	err := c.cc.Invoke(ctx, Usercenter_Follow_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *usercenterClient) Unfollow(ctx context.Context, in *UnfollowReq, opts ...grpc.CallOption) (*UnfollowResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UnfollowResp)
+	err := c.cc.Invoke(ctx, Usercenter_Unfollow_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *usercenterClient) Followers(ctx context.Context, in *FollowersReq, opts ...grpc.CallOption) (*FollowersResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(FollowersResp)
+	err := c.cc.Invoke(ctx, Usercenter_Followers_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *usercenterClient) Followings(ctx context.Context, in *FollowingsReq, opts ...grpc.CallOption) (*FollowingsResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(FollowingsResp)
+	err := c.cc.Invoke(ctx, Usercenter_Followings_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UsercenterServer is the server API for Usercenter service.
 // All implementations must embed UnimplementedUsercenterServer
 // for forward compatibility.
 //
 // service
 type UsercenterServer interface {
+	// user
 	Login(context.Context, *LoginReq) (*LoginResp, error)
 	Register(context.Context, *RegisterReq) (*RegisterResp, error)
 	GetUserInfo(context.Context, *GetUserInfoReq) (*GetUserInfoResp, error)
 	GetUserAuthByAuthKey(context.Context, *GetUserAuthByAuthKeyReq) (*GetUserAuthByAuthKeyResp, error)
 	GetUserAuthByUserId(context.Context, *GetUserAuthByUserIdReq) (*GetUserAuthyUserIdResp, error)
 	GenerateToken(context.Context, *GenerateTokenReq) (*GenerateTokenResp, error)
+	UpdateUserInfo(context.Context, *UpdateUserInfoReq) (*UpdateUserInfoResp, error)
+	// relation
+	Follow(context.Context, *FollowReq) (*FollowResp, error)
+	Unfollow(context.Context, *UnfollowReq) (*UnfollowResp, error)
+	Followers(context.Context, *FollowersReq) (*FollowersResp, error)
+	Followings(context.Context, *FollowingsReq) (*FollowingsResp, error)
 	mustEmbedUnimplementedUsercenterServer()
 }
 
@@ -148,6 +217,21 @@ func (UnimplementedUsercenterServer) GetUserAuthByUserId(context.Context, *GetUs
 }
 func (UnimplementedUsercenterServer) GenerateToken(context.Context, *GenerateTokenReq) (*GenerateTokenResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GenerateToken not implemented")
+}
+func (UnimplementedUsercenterServer) UpdateUserInfo(context.Context, *UpdateUserInfoReq) (*UpdateUserInfoResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserInfo not implemented")
+}
+func (UnimplementedUsercenterServer) Follow(context.Context, *FollowReq) (*FollowResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Follow not implemented")
+}
+func (UnimplementedUsercenterServer) Unfollow(context.Context, *UnfollowReq) (*UnfollowResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Unfollow not implemented")
+}
+func (UnimplementedUsercenterServer) Followers(context.Context, *FollowersReq) (*FollowersResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Followers not implemented")
+}
+func (UnimplementedUsercenterServer) Followings(context.Context, *FollowingsReq) (*FollowingsResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Followings not implemented")
 }
 func (UnimplementedUsercenterServer) mustEmbedUnimplementedUsercenterServer() {}
 func (UnimplementedUsercenterServer) testEmbeddedByValue()                    {}
@@ -278,6 +362,96 @@ func _Usercenter_GenerateToken_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Usercenter_UpdateUserInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateUserInfoReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsercenterServer).UpdateUserInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Usercenter_UpdateUserInfo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsercenterServer).UpdateUserInfo(ctx, req.(*UpdateUserInfoReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Usercenter_Follow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FollowReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsercenterServer).Follow(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Usercenter_Follow_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsercenterServer).Follow(ctx, req.(*FollowReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Usercenter_Unfollow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UnfollowReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsercenterServer).Unfollow(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Usercenter_Unfollow_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsercenterServer).Unfollow(ctx, req.(*UnfollowReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Usercenter_Followers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FollowersReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsercenterServer).Followers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Usercenter_Followers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsercenterServer).Followers(ctx, req.(*FollowersReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Usercenter_Followings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FollowingsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsercenterServer).Followings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Usercenter_Followings_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsercenterServer).Followings(ctx, req.(*FollowingsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Usercenter_ServiceDesc is the grpc.ServiceDesc for Usercenter service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -308,6 +482,26 @@ var Usercenter_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "generateToken",
 			Handler:    _Usercenter_GenerateToken_Handler,
+		},
+		{
+			MethodName: "updateUserInfo",
+			Handler:    _Usercenter_UpdateUserInfo_Handler,
+		},
+		{
+			MethodName: "follow",
+			Handler:    _Usercenter_Follow_Handler,
+		},
+		{
+			MethodName: "unfollow",
+			Handler:    _Usercenter_Unfollow_Handler,
+		},
+		{
+			MethodName: "followers",
+			Handler:    _Usercenter_Followers_Handler,
+		},
+		{
+			MethodName: "followings",
+			Handler:    _Usercenter_Followings_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

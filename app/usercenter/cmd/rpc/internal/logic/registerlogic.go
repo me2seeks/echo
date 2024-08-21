@@ -2,7 +2,6 @@ package logic
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/rpc/internal/svc"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/rpc/pb"
@@ -39,7 +38,7 @@ func (l *RegisterLogic) Register(in *pb.RegisterReq) (*pb.RegisterResp, error) {
 	if err != nil && err != model.ErrNotFound {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "email:%s,err:%v", in.Email, err)
 	}
-	if user != nil {
+	if err != model.ErrNotFound {
 		return nil, errors.Wrapf(ErrUserAlreadyRegisterError, "Register user exists email:%s,err:%v", in.Email, err)
 	}
 
@@ -56,9 +55,7 @@ func (l *RegisterLogic) Register(in *pb.RegisterReq) (*pb.RegisterResp, error) {
 	if err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.EncryptError), "Register EncryptWithBcrypt err:%v,user:%+v", err, user)
 	}
-	user.Id = uniqueid.GenID()
-
-	fmt.Println("user:", user)
+	user.Id = uniqueid.GenUserID()
 
 	if err := l.svcCtx.UserModel.Trans(l.ctx, func(ctx context.Context, session sqlx.Session) error {
 		_, err := l.svcCtx.UserModel.Insert(ctx, session, user)

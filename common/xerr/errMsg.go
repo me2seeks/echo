@@ -12,6 +12,8 @@ func init() {
 	message[DbError] = "数据库繁忙,请稍后再试"
 	message[DbUpdateAffectedZeroError] = "更新数据影响行数为0"
 	message[EncryptError] = "加密失败"
+	message[FollowError] = "关注失败"
+	message[UnFollowError] = "取消关注失败"
 }
 
 func MapErrMsg(errcode uint32) string {

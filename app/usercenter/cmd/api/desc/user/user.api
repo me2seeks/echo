@@ -43,3 +43,14 @@ type (
 		UserInfo User `json:"userInfo"`
 	}
 )
+
+type (
+	UpdateUserInfoReq {
+		Nickname string `json:"nickname"`
+		Sex      int    `json:"sex"`
+		Avatar   string `json:"avatar"`
+		Bio      string `json:"bio"`
+	}
+	UpdateUserInfoResp {
+	}
+)

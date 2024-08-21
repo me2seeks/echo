@@ -1,47 +1,47 @@
-package user
+package relation
 
 import (
 	"context"
 
-	"github.com/jinzhu/copier"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/api/internal/svc"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/api/internal/types"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/rpc/usercenter"
-
 	"github.com/me2seeks/echo-hub/common/ctxdata"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type DetailLogic struct {
+type FollowLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-// get user info
-func NewDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DetailLogic {
-	return &DetailLogic{
+// follow
+func NewFollowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FollowLogic {
+	return &FollowLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *DetailLogic) Detail(req *types.UserInfoReq) (*types.UserInfoResp, error) {
+func (l *FollowLogic) Follow(req *types.FollowReq) (*types.FollowResp, error) {
 	userID := ctxdata.GetUIDFromCtx(l.ctx)
-
 	resp, err := l.svcCtx.UsercenterRPC.GetUserInfo(l.ctx, &usercenter.GetUserInfoReq{
-		UserId: userID,
+		UserId: req.UserId,
+	})
+	if err != nil || resp.User == nil {
+		return nil, err
+	}
+
+	_, err = l.svcCtx.UsercenterRPC.Follow(l.ctx, &usercenter.FollowReq{
+		UserId:     userID,
+		FolloweeId: req.UserId,
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	var userInfo types.User
-	_ = copier.Copy(&userInfo, resp.User)
-
-	return &types.UserInfoResp{
-		UserInfo: userInfo,
-	}, nil
+	return &types.FollowResp{}, nil
 }

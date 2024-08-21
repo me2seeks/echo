@@ -13,6 +13,12 @@ import (
 )
 
 type (
+	FollowReq                = pb.FollowReq
+	FollowResp               = pb.FollowResp
+	FollowersReq             = pb.FollowersReq
+	FollowersResp            = pb.FollowersResp
+	FollowingsReq            = pb.FollowingsReq
+	FollowingsResp           = pb.FollowingsResp
 	GenerateTokenReq         = pb.GenerateTokenReq
 	GenerateTokenResp        = pb.GenerateTokenResp
 	GetUserAuthByAuthKeyReq  = pb.GetUserAuthByAuthKeyReq
@@ -25,16 +31,27 @@ type (
 	LoginResp                = pb.LoginResp
 	RegisterReq              = pb.RegisterReq
 	RegisterResp             = pb.RegisterResp
+	UnfollowReq              = pb.UnfollowReq
+	UnfollowResp             = pb.UnfollowResp
+	UpdateUserInfoReq        = pb.UpdateUserInfoReq
+	UpdateUserInfoResp       = pb.UpdateUserInfoResp
 	User                     = pb.User
 	UserAuth                 = pb.UserAuth
 
 	Usercenter interface {
+		// user
 		Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginResp, error)
 		Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*RegisterResp, error)
 		GetUserInfo(ctx context.Context, in *GetUserInfoReq, opts ...grpc.CallOption) (*GetUserInfoResp, error)
 		GetUserAuthByAuthKey(ctx context.Context, in *GetUserAuthByAuthKeyReq, opts ...grpc.CallOption) (*GetUserAuthByAuthKeyResp, error)
 		GetUserAuthByUserId(ctx context.Context, in *GetUserAuthByUserIdReq, opts ...grpc.CallOption) (*GetUserAuthyUserIdResp, error)
 		GenerateToken(ctx context.Context, in *GenerateTokenReq, opts ...grpc.CallOption) (*GenerateTokenResp, error)
+		UpdateUserInfo(ctx context.Context, in *UpdateUserInfoReq, opts ...grpc.CallOption) (*UpdateUserInfoResp, error)
+		// relation
+		Follow(ctx context.Context, in *FollowReq, opts ...grpc.CallOption) (*FollowResp, error)
+		Unfollow(ctx context.Context, in *UnfollowReq, opts ...grpc.CallOption) (*UnfollowResp, error)
+		Followers(ctx context.Context, in *FollowersReq, opts ...grpc.CallOption) (*FollowersResp, error)
+		Followings(ctx context.Context, in *FollowingsReq, opts ...grpc.CallOption) (*FollowingsResp, error)
 	}
 
 	defaultUsercenter struct {
@@ -48,6 +65,7 @@ func NewUsercenter(cli zrpc.Client) Usercenter {
 	}
 }
 
+// user
 func (m *defaultUsercenter) Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginResp, error) {
 	client := pb.NewUsercenterClient(m.cli.Conn())
 	return client.Login(ctx, in, opts...)
@@ -76,4 +94,30 @@ func (m *defaultUsercenter) GetUserAuthByUserId(ctx context.Context, in *GetUser
 func (m *defaultUsercenter) GenerateToken(ctx context.Context, in *GenerateTokenReq, opts ...grpc.CallOption) (*GenerateTokenResp, error) {
 	client := pb.NewUsercenterClient(m.cli.Conn())
 	return client.GenerateToken(ctx, in, opts...)
+}
+
+func (m *defaultUsercenter) UpdateUserInfo(ctx context.Context, in *UpdateUserInfoReq, opts ...grpc.CallOption) (*UpdateUserInfoResp, error) {
+	client := pb.NewUsercenterClient(m.cli.Conn())
+	return client.UpdateUserInfo(ctx, in, opts...)
+}
+
+// relation
+func (m *defaultUsercenter) Follow(ctx context.Context, in *FollowReq, opts ...grpc.CallOption) (*FollowResp, error) {
+	client := pb.NewUsercenterClient(m.cli.Conn())
+	return client.Follow(ctx, in, opts...)
+}
+
+func (m *defaultUsercenter) Unfollow(ctx context.Context, in *UnfollowReq, opts ...grpc.CallOption) (*UnfollowResp, error) {
+	client := pb.NewUsercenterClient(m.cli.Conn())
+	return client.Unfollow(ctx, in, opts...)
+}
+
+func (m *defaultUsercenter) Followers(ctx context.Context, in *FollowersReq, opts ...grpc.CallOption) (*FollowersResp, error) {
+	client := pb.NewUsercenterClient(m.cli.Conn())
+	return client.Followers(ctx, in, opts...)
+}
+
+func (m *defaultUsercenter) Followings(ctx context.Context, in *FollowingsReq, opts ...grpc.CallOption) (*FollowingsResp, error) {
+	client := pb.NewUsercenterClient(m.cli.Conn())
+	return client.Followings(ctx, in, opts...)
 }

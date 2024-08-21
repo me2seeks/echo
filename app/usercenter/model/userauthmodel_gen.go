@@ -23,8 +23,8 @@ import (
 var (
 	userAuthFieldNames          = builder.RawFieldNames(&UserAuth{})
 	userAuthRows                = strings.Join(userAuthFieldNames, ",")
-	userAuthRowsExpectAutoSet   = strings.Join(stringx.Remove(userAuthFieldNames, "`create_at`", "`update_at`"), ",")
-	userAuthRowsWithPlaceHolder = strings.Join(stringx.Remove(userAuthFieldNames, "`id`", "`create_at`", "`update_at`"), "=?,") + "=?"
+	userAuthRowsExpectAutoSet   = strings.Join(stringx.Remove(userAuthFieldNames, "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
+	userAuthRowsWithPlaceHolder = strings.Join(stringx.Remove(userAuthFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
 
 	cacheUserAuthIdPrefix              = "cache:userAuth:id:"
 	cacheUserAuthAuthTypeAuthKeyPrefix = "cache:userAuth:authType:authKey:"

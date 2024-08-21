@@ -23,8 +23,8 @@ import (
 var (
 	userRelationFieldNames          = builder.RawFieldNames(&UserRelation{})
 	userRelationRows                = strings.Join(userRelationFieldNames, ",")
-	userRelationRowsExpectAutoSet   = strings.Join(stringx.Remove(userRelationFieldNames, "`create_at`", "`update_at`"), ",")
-	userRelationRowsWithPlaceHolder = strings.Join(stringx.Remove(userRelationFieldNames, "`id`", "`create_at`", "`update_at`"), "=?,") + "=?"
+	userRelationRowsExpectAutoSet   = strings.Join(stringx.Remove(userRelationFieldNames, "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
+	userRelationRowsWithPlaceHolder = strings.Join(stringx.Remove(userRelationFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
 
 	cacheUserRelationIdPrefix                   = "cache:userRelation:id:"
 	cacheUserRelationFollowerIdFolloweeIdPrefix = "cache:userRelation:followerId:followeeId:"
@@ -48,6 +48,10 @@ type (
 		FindPageListByIdDESC(ctx context.Context, rowBuilder squirrel.SelectBuilder, preMinId, pageSize int64) ([]*UserRelation, error)
 		FindPageListByIdASC(ctx context.Context, rowBuilder squirrel.SelectBuilder, preMaxId, pageSize int64) ([]*UserRelation, error)
 		Delete(ctx context.Context, session sqlx.Session, id int64) error
+		FindFollowers(ctx context.Context, followerId int64) ([]int64, error)
+		FindFollowees(ctx context.Context, followeeId int64) ([]int64, error)
+
+		RestoreSoft(ctx context.Context, session sqlx.Session, followerId , followeeId int64) error
 	}
 
 	defaultUserRelationModel struct {
@@ -272,6 +276,51 @@ func (m *defaultUserRelationModel) FindAll(ctx context.Context, builder squirrel
 	}
 }
 
+func (m *defaultUserRelationModel) FindFollowers(ctx context.Context, followeeId int64) ([]int64, error) {
+	query, values, err:= squirrel.Select("follower_id").From(m.table).Where("followee_id = ?", followeeId).Where("del_state = ?", globalkey.DelStateNo).ToSql()
+	if err != nil {
+		return nil, err
+	}
+	var resp []int64
+	err = m.QueryRowsNoCacheCtx(ctx, &resp, query, values...)
+	switch err {
+	case nil:
+		return resp, nil
+	default:
+		return nil, err
+	}
+}
+
+func  (m *defaultUserRelationModel)FindFollowees(ctx context.Context, followerId int64) ([]int64, error){
+	query, values, err:= squirrel.Select("followee_id").From(m.table).Where("follower_id = ?", followerId).Where("del_state = ?", globalkey.DelStateNo).ToSql()
+	if err != nil {
+		return nil, err
+	}
+	var resp []int64
+	err = m.QueryRowsNoCacheCtx(ctx, &resp, query, values...)
+	switch err {
+	case nil:
+		return resp, nil
+	default:
+		return nil, err
+	}
+}
+
+func  (m *defaultUserRelationModel)RestoreSoft(ctx context.Context, session sqlx.Session, followerId , followeeId int64) error{
+	builder := squirrel.Update(m.table).Set("del_state", globalkey.DelStateNo).Set("delete_at", time.Unix(0, 0)).Where("follower_id = ?", followerId).Where("followee_id = ?", followeeId)
+	query, values, err := builder.ToSql()
+	if err != nil {
+		return err
+	}
+	_, err = m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
+		if session != nil {
+			return session.ExecCtx(ctx, query, values...)
+		}
+		return conn.ExecCtx(ctx, query, values...)
+	})
+	return err
+}
+	
 func (m *defaultUserRelationModel) FindPageListByPage(ctx context.Context, builder squirrel.SelectBuilder, page, pageSize int64, orderBy string) ([]*UserRelation, error) {
 
 	builder = builder.Columns(userRelationRows)

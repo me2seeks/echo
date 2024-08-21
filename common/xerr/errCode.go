@@ -17,3 +17,9 @@ const (
 )
 
 // 用户模块
+
+// relation
+const (
+	FollowError uint32 = 200001 + iota
+	UnFollowError
+)

@@ -3,45 +3,38 @@ package user
 import (
 	"context"
 
-	"github.com/jinzhu/copier"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/api/internal/svc"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/api/internal/types"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/rpc/usercenter"
-
 	"github.com/me2seeks/echo-hub/common/ctxdata"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type DetailLogic struct {
+type UpdateLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-// get user info
-func NewDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DetailLogic {
-	return &DetailLogic{
+// update user info
+func NewUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UpdateLogic {
+	return &UpdateLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *DetailLogic) Detail(req *types.UserInfoReq) (*types.UserInfoResp, error) {
+func (l *UpdateLogic) Update(req *types.UpdateUserInfoReq) (*types.UpdateUserInfoResp, error) {
 	userID := ctxdata.GetUIDFromCtx(l.ctx)
 
-	resp, err := l.svcCtx.UsercenterRPC.GetUserInfo(l.ctx, &usercenter.GetUserInfoReq{
+	_, err := l.svcCtx.UsercenterRPC.UpdateUserInfo(l.ctx, &usercenter.UpdateUserInfoReq{
 		UserId: userID,
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	var userInfo types.User
-	_ = copier.Copy(&userInfo, resp.User)
-
-	return &types.UserInfoResp{
-		UserInfo: userInfo,
-	}, nil
+	return &types.UpdateUserInfoResp{}, nil
 }
