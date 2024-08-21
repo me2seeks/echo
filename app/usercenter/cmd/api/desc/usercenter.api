@@ -2,7 +2,6 @@ syntax = "v1"
 
 import (
 	"user/user.api"
-	"relation/relation.api"
 )
 
 //no need login
@@ -24,7 +23,7 @@ service usercenter {
 @server (
 	prefix: user
 	group:  user
-	jwt:    Auth
+	jwt:    JwtAuth
 )
 service usercenter {
 	@doc "get user info"
@@ -36,25 +35,3 @@ service usercenter {
 	post / (UpdateUserInfoReq) returns (UpdateUserInfoResp)
 }
 
-@server (
-	prefix: relation
-	group:  relation
-	jwt:    Auth
-)
-service usercenter {
-	@doc "follow"
-	@handler follow
-	post /follow (FollowReq) returns (FollowResp)
-
-	@doc "unfollow"
-	@handler unfollow
-	post /unfollow (UnfollowReq) returns (UnfollowResp)
-
-	@doc "get followers"
-	@handler followers
-	post /followers (FollowersReq) returns (FollowersResp)
-
-	@doc "get followings"
-	@handler followings
-	post /followings (FollowingsReq) returns (FollowingsResp)
-}

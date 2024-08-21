@@ -1,0 +1,35 @@
+syntax = "v1"
+
+type (
+	FollowReq {
+		UserId int64 `json:"userId"`
+	}
+	FollowResp {
+	}
+)
+
+type (
+	UnfollowReq {
+		UserId int64 `json:"userId"`
+	}
+	UnfollowResp {
+	}
+)
+
+type (
+	FollowersReq {
+		UserId int64 `json:"userId"`
+	}
+	FollowersResp {
+		Followers []int64 `json:"followers"`
+	}
+)
+
+type (
+	FollowingReq {
+		UserId int64 `json:"userId"`
+	}
+	FollowingResp {
+		Followings []int64 `json:"following"`
+	}
+)

@@ -1,0 +1,24 @@
+Name: interaction
+Host: 0.0.0.0
+Port: 1001
+
+
+JwtAuth:
+  AccessSecret: ae0536f9-6450-4606-8e13-5a19ed505da0
+  AccessExpire: 31536000
+
+Log:
+  ServiceName: interaction-api
+  Level: error
+
+
+#rpc service
+InteractionRpcConf:
+  Endpoints:
+    - 127.0.0.1:2001
+  NonBlock: true
+
+UsercenterRpcConf:
+  Endpoints:
+    - 127.0.0.1:2000
+  NonBlock: true

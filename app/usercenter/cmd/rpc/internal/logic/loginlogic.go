@@ -34,11 +34,11 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 }
 
 func (l *LoginLogic) Login(in *pb.LoginReq) (*pb.LoginResp, error) {
-	var userId int64
+	var userID int64
 	var err error
 	switch in.AuthType {
 	case model.UserAuthTypeSystem:
-		userId, err = l.loginByEmail(in.AuthKey, in.Password)
+		userID, err = l.loginByEmail(in.AuthKey, in.Password)
 	default:
 		return nil, xerr.NewErrCode(xerr.ServerCommonError)
 	}
@@ -49,10 +49,10 @@ func (l *LoginLogic) Login(in *pb.LoginReq) (*pb.LoginResp, error) {
 	// 2、Generate the token, so that the service doesn't call rpc internally
 	generateTokenLogic := NewGenerateTokenLogic(l.ctx, l.svcCtx)
 	tokenResp, err := generateTokenLogic.GenerateToken(&usercenter.GenerateTokenReq{
-		UserId: userId,
+		UserId: userID,
 	})
 	if err != nil {
-		return nil, errors.Wrapf(ErrGenerateTokenError, "GenerateToken userId : %d", userId)
+		return nil, errors.Wrapf(ErrGenerateTokenError, "GenerateToken userId : %d", userID)
 	}
 
 	return &usercenter.LoginResp{

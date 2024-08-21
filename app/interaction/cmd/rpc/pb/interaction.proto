@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+option go_package = "./pb";
+
+package pb;
+
+
+
+message FollowReq {
+    int64 userId = 1;
+    int64 FolloweeId = 2;
+}
+message FollowResp {
+}
+
+message UnfollowReq {
+    int64 userId = 1;
+    int64 FolloweeId = 2;
+}
+message UnfollowResp {
+}
+
+message FollowersReq {
+    int64 userId = 1;
+}
+message FollowersResp {
+    repeated int64 followers = 1;
+}
+
+message FollowingReq {
+    int64 userId = 1;
+}
+message FollowingResp {
+    repeated int64 following = 1;
+}
+
+
+
+service interaction {
+    //relation
+
+    rpc follow(FollowReq) returns(FollowResp);
+    rpc unfollow(UnfollowReq) returns(UnfollowResp);
+    rpc followers(FollowersReq) returns(FollowersResp);
+    rpc following(FollowingReq) returns(FollowingResp);
+}

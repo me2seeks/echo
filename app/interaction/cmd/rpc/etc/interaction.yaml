@@ -1,0 +1,22 @@
+Name: interaction.rpc
+ListenOn: 0.0.0.0:2001
+# Etcd:
+#   Hosts:
+#   - 127.0.0.1:2379
+#   Key: interaction.rpc
+
+Log:
+  ServiceName: interaction-rpc
+  Level: error
+
+
+Redis:
+  Host: 10.2.12.14:31000
+  Type: node
+  Pass: 
+  Key: interaction-rpc
+Mysql:
+  DataSource: root:bf17tk6d7t56@tcp(10.2.12.14:32000)/echo-hub?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+Cache:
+  - Host: 10.2.12.14:31000
+    Pass: 

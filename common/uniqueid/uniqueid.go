@@ -1,8 +1,6 @@
 package uniqueid
 
 import (
-	"sync"
-
 	"github.com/sony/sonyflake"
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -10,7 +8,6 @@ import (
 var (
 	userFlake         *sonyflake.Sonyflake
 	userRelationFlake *sonyflake.Sonyflake
-	once              sync.Once
 )
 
 func init() {

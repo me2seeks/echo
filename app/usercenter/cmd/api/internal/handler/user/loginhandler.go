@@ -6,8 +6,8 @@ import (
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/api/internal/logic/user"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/api/internal/svc"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/api/internal/types"
-	"github.com/zeromicro/go-zero/rest/httpx"
 	"github.com/me2seeks/echo-hub/common/result"
+	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 // login

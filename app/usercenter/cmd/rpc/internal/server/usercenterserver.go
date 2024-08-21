@@ -22,7 +22,6 @@ func NewUsercenterServer(svcCtx *svc.ServiceContext) *UsercenterServer {
 	}
 }
 
-// user
 func (s *UsercenterServer) Login(ctx context.Context, in *pb.LoginReq) (*pb.LoginResp, error) {
 	l := logic.NewLoginLogic(ctx, s.svcCtx)
 	return l.Login(in)
@@ -43,9 +42,9 @@ func (s *UsercenterServer) GetUserAuthByAuthKey(ctx context.Context, in *pb.GetU
 	return l.GetUserAuthByAuthKey(in)
 }
 
-func (s *UsercenterServer) GetUserAuthByUserId(ctx context.Context, in *pb.GetUserAuthByUserIdReq) (*pb.GetUserAuthyUserIdResp, error) {
-	l := logic.NewGetUserAuthByUserIdLogic(ctx, s.svcCtx)
-	return l.GetUserAuthByUserId(in)
+func (s *UsercenterServer) GetUserAuthByUserId(ctx context.Context, in *pb.GetUserAuthByUserIDReq) (*pb.GetUserAuthyUserIDResp, error) {
+	l := logic.NewGetUserAuthByUserIDLogic(ctx, s.svcCtx)
+	return l.GetUserAuthByUserID(in)
 }
 
 func (s *UsercenterServer) GenerateToken(ctx context.Context, in *pb.GenerateTokenReq) (*pb.GenerateTokenResp, error) {
@@ -56,25 +55,4 @@ func (s *UsercenterServer) GenerateToken(ctx context.Context, in *pb.GenerateTok
 func (s *UsercenterServer) UpdateUserInfo(ctx context.Context, in *pb.UpdateUserInfoReq) (*pb.UpdateUserInfoResp, error) {
 	l := logic.NewUpdateUserInfoLogic(ctx, s.svcCtx)
 	return l.UpdateUserInfo(in)
-}
-
-// relation
-func (s *UsercenterServer) Follow(ctx context.Context, in *pb.FollowReq) (*pb.FollowResp, error) {
-	l := logic.NewFollowLogic(ctx, s.svcCtx)
-	return l.Follow(in)
-}
-
-func (s *UsercenterServer) Unfollow(ctx context.Context, in *pb.UnfollowReq) (*pb.UnfollowResp, error) {
-	l := logic.NewUnfollowLogic(ctx, s.svcCtx)
-	return l.Unfollow(in)
-}
-
-func (s *UsercenterServer) Followers(ctx context.Context, in *pb.FollowersReq) (*pb.FollowersResp, error) {
-	l := logic.NewFollowersLogic(ctx, s.svcCtx)
-	return l.Followers(in)
-}
-
-func (s *UsercenterServer) Followings(ctx context.Context, in *pb.FollowingsReq) (*pb.FollowingsResp, error) {
-	l := logic.NewFollowingsLogic(ctx, s.svcCtx)
-	return l.Followings(in)
 }

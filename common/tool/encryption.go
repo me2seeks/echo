@@ -34,6 +34,8 @@ func EncryptWithBcrypt(str string) (string, error) {
 }
 
 // 提取盐的函数
+//
+//nolint:unused
 func extractSalt(hashed []byte) string {
 	// bcrypt 哈希值的前 29 个字符包含了盐的信息
 	return string(hashed[:29])
