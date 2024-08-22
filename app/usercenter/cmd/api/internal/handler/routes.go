@@ -4,6 +4,7 @@ package handler
 import (
 	"net/http"
 
+	relation "github.com/me2seeks/echo-hub/app/usercenter/cmd/api/internal/handler/relation"
 	user "github.com/me2seeks/echo-hub/app/usercenter/cmd/api/internal/handler/user"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/api/internal/svc"
 
@@ -11,6 +12,37 @@ import (
 )
 
 func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// follow
+				Method:  http.MethodPost,
+				Path:    "/follow",
+				Handler: relation.FollowHandler(serverCtx),
+			},
+			{
+				// get followers
+				Method:  http.MethodPost,
+				Path:    "/followers",
+				Handler: relation.FollowersHandler(serverCtx),
+			},
+			{
+				// get following
+				Method:  http.MethodPost,
+				Path:    "/following",
+				Handler: relation.FollowingHandler(serverCtx),
+			},
+			{
+				// unfollow
+				Method:  http.MethodPost,
+				Path:    "/unfollow",
+				Handler: relation.UnfollowHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
+		rest.WithPrefix("/user"),
+	)
+
 	server.AddRoutes(
 		[]rest.Route{
 			{

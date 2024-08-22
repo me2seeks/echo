@@ -13,6 +13,12 @@ import (
 )
 
 type (
+	FollowReq                = pb.FollowReq
+	FollowResp               = pb.FollowResp
+	FollowersReq             = pb.FollowersReq
+	FollowersResp            = pb.FollowersResp
+	FollowingReq             = pb.FollowingReq
+	FollowingResp            = pb.FollowingResp
 	GenerateTokenReq         = pb.GenerateTokenReq
 	GenerateTokenResp        = pb.GenerateTokenResp
 	GetUserAuthByAuthKeyReq  = pb.GetUserAuthByAuthKeyReq
@@ -25,6 +31,8 @@ type (
 	LoginResp                = pb.LoginResp
 	RegisterReq              = pb.RegisterReq
 	RegisterResp             = pb.RegisterResp
+	UnfollowReq              = pb.UnfollowReq
+	UnfollowResp             = pb.UnfollowResp
 	UpdateUserInfoReq        = pb.UpdateUserInfoReq
 	UpdateUserInfoResp       = pb.UpdateUserInfoResp
 	User                     = pb.User
@@ -35,9 +43,13 @@ type (
 		Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*RegisterResp, error)
 		GetUserInfo(ctx context.Context, in *GetUserInfoReq, opts ...grpc.CallOption) (*GetUserInfoResp, error)
 		GetUserAuthByAuthKey(ctx context.Context, in *GetUserAuthByAuthKeyReq, opts ...grpc.CallOption) (*GetUserAuthByAuthKeyResp, error)
-		GetUserAuthByUserId(ctx context.Context, in *GetUserAuthByUserIDReq, opts ...grpc.CallOption) (*GetUserAuthyUserIDResp, error)
+		GetUserAuthByUserID(ctx context.Context, in *GetUserAuthByUserIDReq, opts ...grpc.CallOption) (*GetUserAuthyUserIDResp, error)
 		GenerateToken(ctx context.Context, in *GenerateTokenReq, opts ...grpc.CallOption) (*GenerateTokenResp, error)
 		UpdateUserInfo(ctx context.Context, in *UpdateUserInfoReq, opts ...grpc.CallOption) (*UpdateUserInfoResp, error)
+		Follow(ctx context.Context, in *FollowReq, opts ...grpc.CallOption) (*FollowResp, error)
+		Unfollow(ctx context.Context, in *UnfollowReq, opts ...grpc.CallOption) (*UnfollowResp, error)
+		Followers(ctx context.Context, in *FollowersReq, opts ...grpc.CallOption) (*FollowersResp, error)
+		Following(ctx context.Context, in *FollowingReq, opts ...grpc.CallOption) (*FollowingResp, error)
 	}
 
 	defaultUsercenter struct {
@@ -71,9 +83,9 @@ func (m *defaultUsercenter) GetUserAuthByAuthKey(ctx context.Context, in *GetUse
 	return client.GetUserAuthByAuthKey(ctx, in, opts...)
 }
 
-func (m *defaultUsercenter) GetUserAuthByUserId(ctx context.Context, in *GetUserAuthByUserIDReq, opts ...grpc.CallOption) (*GetUserAuthyUserIDResp, error) {
+func (m *defaultUsercenter) GetUserAuthByUserID(ctx context.Context, in *GetUserAuthByUserIDReq, opts ...grpc.CallOption) (*GetUserAuthyUserIDResp, error) {
 	client := pb.NewUsercenterClient(m.cli.Conn())
-	return client.GetUserAuthByUserId(ctx, in, opts...)
+	return client.GetUserAuthByUserID(ctx, in, opts...)
 }
 
 func (m *defaultUsercenter) GenerateToken(ctx context.Context, in *GenerateTokenReq, opts ...grpc.CallOption) (*GenerateTokenResp, error) {
@@ -84,4 +96,24 @@ func (m *defaultUsercenter) GenerateToken(ctx context.Context, in *GenerateToken
 func (m *defaultUsercenter) UpdateUserInfo(ctx context.Context, in *UpdateUserInfoReq, opts ...grpc.CallOption) (*UpdateUserInfoResp, error) {
 	client := pb.NewUsercenterClient(m.cli.Conn())
 	return client.UpdateUserInfo(ctx, in, opts...)
+}
+
+func (m *defaultUsercenter) Follow(ctx context.Context, in *FollowReq, opts ...grpc.CallOption) (*FollowResp, error) {
+	client := pb.NewUsercenterClient(m.cli.Conn())
+	return client.Follow(ctx, in, opts...)
+}
+
+func (m *defaultUsercenter) Unfollow(ctx context.Context, in *UnfollowReq, opts ...grpc.CallOption) (*UnfollowResp, error) {
+	client := pb.NewUsercenterClient(m.cli.Conn())
+	return client.Unfollow(ctx, in, opts...)
+}
+
+func (m *defaultUsercenter) Followers(ctx context.Context, in *FollowersReq, opts ...grpc.CallOption) (*FollowersResp, error) {
+	client := pb.NewUsercenterClient(m.cli.Conn())
+	return client.Followers(ctx, in, opts...)
+}
+
+func (m *defaultUsercenter) Following(ctx context.Context, in *FollowingReq, opts ...grpc.CallOption) (*FollowingResp, error) {
+	client := pb.NewUsercenterClient(m.cli.Conn())
+	return client.Following(ctx, in, opts...)
 }

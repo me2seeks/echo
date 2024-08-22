@@ -42,7 +42,7 @@ func (s *UsercenterServer) GetUserAuthByAuthKey(ctx context.Context, in *pb.GetU
 	return l.GetUserAuthByAuthKey(in)
 }
 
-func (s *UsercenterServer) GetUserAuthByUserId(ctx context.Context, in *pb.GetUserAuthByUserIDReq) (*pb.GetUserAuthyUserIDResp, error) {
+func (s *UsercenterServer) GetUserAuthByUserID(ctx context.Context, in *pb.GetUserAuthByUserIDReq) (*pb.GetUserAuthyUserIDResp, error) {
 	l := logic.NewGetUserAuthByUserIDLogic(ctx, s.svcCtx)
 	return l.GetUserAuthByUserID(in)
 }
@@ -55,4 +55,24 @@ func (s *UsercenterServer) GenerateToken(ctx context.Context, in *pb.GenerateTok
 func (s *UsercenterServer) UpdateUserInfo(ctx context.Context, in *pb.UpdateUserInfoReq) (*pb.UpdateUserInfoResp, error) {
 	l := logic.NewUpdateUserInfoLogic(ctx, s.svcCtx)
 	return l.UpdateUserInfo(in)
+}
+
+func (s *UsercenterServer) Follow(ctx context.Context, in *pb.FollowReq) (*pb.FollowResp, error) {
+	l := logic.NewFollowLogic(ctx, s.svcCtx)
+	return l.Follow(in)
+}
+
+func (s *UsercenterServer) Unfollow(ctx context.Context, in *pb.UnfollowReq) (*pb.UnfollowResp, error) {
+	l := logic.NewUnfollowLogic(ctx, s.svcCtx)
+	return l.Unfollow(in)
+}
+
+func (s *UsercenterServer) Followers(ctx context.Context, in *pb.FollowersReq) (*pb.FollowersResp, error) {
+	l := logic.NewFollowersLogic(ctx, s.svcCtx)
+	return l.Followers(in)
+}
+
+func (s *UsercenterServer) Following(ctx context.Context, in *pb.FollowingReq) (*pb.FollowingResp, error) {
+	l := logic.NewFollowingLogic(ctx, s.svcCtx)
+	return l.Following(in)
 }

@@ -1,28 +1,14 @@
 syntax = "v1"
 
 import (
-	"relation/relation.api"
+	
 )
 
 @server (
-	prefix: relation
-	group:  relation
+	prefix:
+	group:  
 	jwt:    JwtAuth
 )
 service interaction {
-	@doc "follow"
-	@handler follow
-	post /follow (FollowReq) returns (FollowResp)
-
-	@doc "unfollow"
-	@handler unfollow
-	post /unfollow (UnfollowReq) returns (UnfollowResp)
-
-	@doc "get followers"
-	@handler followers
-	post /followers (FollowersReq) returns (FollowersResp)
-
-	@doc "get following"
-	@handler following
-	post /following (FollowingReq) returns (FollowingResp)
+	
 }

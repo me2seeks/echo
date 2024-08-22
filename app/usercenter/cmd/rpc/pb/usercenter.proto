@@ -92,7 +92,33 @@ message UpdateUserInfoReq {
 message UpdateUserInfoResp {
 }
 
+message FollowReq {
+    int64 userId = 1;
+    int64 FolloweeId = 2;
+}
+message FollowResp {
+}
 
+message UnfollowReq {
+    int64 userId = 1;
+    int64 FolloweeId = 2;
+}
+message UnfollowResp {
+}
+
+message FollowersReq {
+    int64 userId = 1;
+}
+message FollowersResp {
+    repeated int64 followers = 1;
+}
+
+message FollowingReq {
+    int64 userId = 1;
+}
+message FollowingResp {
+    repeated int64 following = 1;
+}
 
 //service
 service usercenter {
@@ -102,8 +128,15 @@ service usercenter {
     rpc register(RegisterReq) returns(RegisterResp);
     rpc getUserInfo(GetUserInfoReq) returns(GetUserInfoResp);
     rpc getUserAuthByAuthKey(GetUserAuthByAuthKeyReq) returns(GetUserAuthByAuthKeyResp);
-    rpc getUserAuthByUserId(GetUserAuthByUserIDReq) returns(GetUserAuthyUserIDResp);
+    rpc getUserAuthByUserID(GetUserAuthByUserIDReq) returns(GetUserAuthyUserIDResp);
     rpc generateToken(GenerateTokenReq) returns(GenerateTokenResp);
     rpc updateUserInfo(UpdateUserInfoReq) returns(UpdateUserInfoResp);
+
+    //relation
+
+    rpc follow(FollowReq) returns(FollowResp);
+    rpc unfollow(UnfollowReq) returns(UnfollowResp);
+    rpc followers(FollowersReq) returns(FollowersResp);
+    rpc following(FollowingReq) returns(FollowingResp);
 
 }

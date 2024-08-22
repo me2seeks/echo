@@ -12,7 +12,7 @@ and := if os_family() == "windows" {";"} else {"&&"}
 #===================================== targets start ===========================================#
 
 # default target - `just` 默认目标
-default: lint fmt test
+default: fmt lint  test
 
 # go build
 [unix]

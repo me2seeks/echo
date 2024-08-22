@@ -1,20 +1,65 @@
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
-DROP TABLE IF EXISTS `user_relation`;
 -- ----------------------------
--- user_relation
+-- Table structure for likes
 -- ----------------------------
-CREATE TABLE `user_relation` (
-    `id` bigint NOT NULL,
-    `follower_id` bigint NOT NULL COMMENT '关注者的用户ID',
-    `followee_id` bigint NOT NULL COMMENT '被关注者的用户ID',
+DROP TABLE IF EXISTS `likes`;
+CREATE TABLE `likes` (
+    `id` bigint NOT NULL AUTO_INCREMENT,
+    `user_id` bigint NOT NULL,
+    `content_id` bigint NOT NULL,
     `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `update_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `delete_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `del_state` tinyint NOT NULL DEFAULT '0',
-    `version` bigint UNSIGNED NOT NULL DEFAULT '0' COMMENT '版本号',
+    `del_state` tinyint NOT NULL DEFAULT 0,
+    `version` bigint UNSIGNED NOT NULL DEFAULT 0 COMMENT '版本号',
+    PRIMARY KEY (`id`) USING BTREE,
+    UNIQUE KEY `idx_user_content` (`user_id`, `content_id`)
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+-- ----------------------------
+-- Table structure for content_count
+-- ----------------------------
+DROP TABLE IF EXISTS `content_count`;
+CREATE TABLE `content_count` (
+    `id` bigint NOT NULL AUTO_INCREMENT,
+    `content_id` bigint NULL DEFAULT NULL,
+    `comment_count` int NULL DEFAULT NULL,
+    `view_count` int NULL DEFAULT NULL,
+    `like_count` int NULL DEFAULT NULL,
+    `repost_count` int NULL DEFAULT NULL,
+    `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `update_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `delete_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `del_state` tinyint NOT NULL DEFAULT 0,
+    `version` bigint UNSIGNED NOT NULL DEFAULT 0 COMMENT '版本号',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+-- ----------------------------
+-- Table structure for sys_notifications
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_notifications`;
+CREATE TABLE `sys_notifications` (
+    `id` bigint NOT NULL AUTO_INCREMENT,
+    `message` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+    `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `update_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `delete_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `del_state` tinyint NOT NULL DEFAULT 0,
+    `version` bigint UNSIGNED NOT NULL DEFAULT 0 COMMENT '版本号',
+    PRIMARY KEY (`id`) USING BTREE,
+    INDEX `create_at`(`create_at` DESC) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+DROP TABLE IF EXISTS `sys_notification_offset`;
+CREATE TABLE `sys_notification_offset` (
+    `id` bigint NOT NULL AUTO_INCREMENT,
+    `user_id` BIGINT NOT NULL,
+    `offset` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '偏移量',
+    `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `update_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `delete_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `del_state` tinyint NOT NULL DEFAULT 0,
+    `version` bigint UNSIGNED NOT NULL DEFAULT 0 COMMENT '版本号',
     PRIMARY KEY (`id`),
-    UNIQUE KEY `idx_follower_followee` (`follower_id`, `followee_id`),
-    KEY `idx_follower_id` (`follower_id`),
-    KEY `idx_followee_id` (`followee_id`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户关注关系表';
+    INDEX `idx_user_id` (`user_id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT = '用户的系统通知偏移量';
 SET FOREIGN_KEY_CHECKS = 1;
