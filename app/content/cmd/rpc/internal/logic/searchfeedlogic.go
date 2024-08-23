@@ -24,7 +24,7 @@ func NewSearchFeedLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Search
 }
 
 func (l *SearchFeedLogic) SearchFeed(in *pb.SearchFeedReq) (*pb.SearchFeedResp, error) {
-	// todo: add your logic here and delete this line
+	// TODO es
 
 	return &pb.SearchFeedResp{}, nil
 }

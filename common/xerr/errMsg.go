@@ -14,6 +14,7 @@ func init() {
 	message[EncryptError] = "加密失败"
 	message[FollowError] = "关注失败"
 	message[UnFollowError] = "取消关注失败"
+	message[CopyError] = "拷贝失败"
 }
 
 func MapErrMsg(errcode uint32) string {

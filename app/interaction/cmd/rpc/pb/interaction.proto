@@ -11,5 +11,28 @@ package pb;
 
 
 service interaction {
+    // TODO 使用消息队列来削峰 多条合并
+    rpc IncreaseLikeCount(IncreaseLikeCountRequest) returns (IncreaseLikeCountResponse) {}
+    rpc IncreaseCommentCount(IncreaseCommentCountRequest) returns (IncreaseCommentCountResponse) {}
+    rpc IncreaseRepostCount(IncreaseRepostCountRequest) returns (IncreaseRepostCountResponse) {}
+    rpc IncreaseViewCount(IncreaseViewCountRequest) returns (IncreaseViewCountResponse) {}
+
+
+    rpc IncreaseFollowCount(IncreaseFollowCountRequest) returns (IncreaseFollowCountResponse) {}
+    rpc IncreaseFollowingCount(IncreaseFollowingCountRequest) returns (IncreaseFollowingCountResponse) {}
+
+    rpc DecreaseLikeCount(DecreaseLikeCountRequest) returns (DecreaseLikeCountResponse) {}
+    rpc DecreaseCommentCount(DecreaseCommentCountRequest) returns (DecreaseCommentCountResponse) {}
+    rpc DecreaseRepostCount(DecreaseRepostCountRequest) returns (DecreaseRepostCountResponse) {}
+    rpc DecreaseViewCount(DecreaseViewCountRequest) returns (DecreaseViewCountResponse) {}
+    rpc DecreaseFollowCount(DecreaseFollowCountRequest) returns (DecreaseFollowCountResponse) {}
+    rpc DecreaseFollowingCount(DecreaseFollowingCountRequest) returns (DecreaseFollowingCountResponse) {}
+
+    // 获取点赞数 评论数 转发数 浏览数
+    rpc GetCount(GetCountRequest) returns (GetCountResponse) {}
+    // 获取关注数 粉丝数
+    rpc GetRelationCount(GetRelationCountRequest) returns (GetRelationCountResponse) {}
+
+
 
 }

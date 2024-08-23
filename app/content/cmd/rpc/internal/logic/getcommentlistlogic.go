@@ -1,10 +1,14 @@
+//nolint:dupl
 package logic
 
 import (
 	"context"
 
+	"github.com/jinzhu/copier"
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/internal/svc"
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/pb"
+	"github.com/me2seeks/echo-hub/common/xerr"
+	"github.com/pkg/errors"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,7 +29,16 @@ func NewGetCommentListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 
 // comment
 func (l *GetCommentListLogic) GetCommentList(in *pb.GetCommentListReq) (*pb.GetCommentListResp, error) {
-	// todo: add your logic here and delete this line
+	comments, err := l.svcCtx.CommentsModel.FindAll(l.ctx, l.svcCtx.CommentsModel.SelectBuilder().Columns("*").Where("feed_id=?", in.FeedID), "")
+	if err != nil {
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetCommentList FindAll feedID%d err:%v", in.FeedID, err)
+	}
+
+	var commentList []*pb.Comment
+	err = copier.Copy(&commentList, &comments)
+	if err != nil {
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.CopyError), "GetCommentList copier.Copy err:%v", err)
+	}
 
 	return &pb.GetCommentListResp{}, nil
 }

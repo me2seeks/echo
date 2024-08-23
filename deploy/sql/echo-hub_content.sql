@@ -34,7 +34,7 @@ CREATE TABLE `comments` (
     `del_state` tinyint NOT NULL DEFAULT 0,
     `version` bigint UNSIGNED NOT NULL DEFAULT 0 COMMENT '版本号',
     PRIMARY KEY (`id`),
-    INDEX `idx_post_id` (`feed_id`),
+    INDEX `idx_feed_id` (`feed_id`),
     INDEX `idx_user_id` (`user_id`),
     INDEX `idx_parent_id` (`parent_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT = '用户的评论和回复';

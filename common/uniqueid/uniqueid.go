@@ -8,6 +8,8 @@ import (
 var (
 	userFlake         *sonyflake.Sonyflake
 	userRelationFlake *sonyflake.Sonyflake
+	feedsFlake        *sonyflake.Sonyflake
+	commentsFlake     *sonyflake.Sonyflake
 )
 
 func init() {
@@ -20,6 +22,14 @@ func init() {
 	userRelationFlake = sonyflake.NewSonyflake(settings)
 	if userRelationFlake == nil {
 		logx.Error("Sonyflake for user_relation not created")
+	}
+	feedsFlake = sonyflake.NewSonyflake(settings)
+	if feedsFlake == nil {
+		logx.Error("Sonyflake for feeds not created")
+	}
+	commentsFlake = sonyflake.NewSonyflake(settings)
+	if commentsFlake == nil {
+		logx.Error("Sonyflake for comments not created")
 	}
 }
 
@@ -35,6 +45,26 @@ func GenUserID() int64 {
 
 func GenUserRelationID() int64 {
 	id, err := userRelationFlake.NextID()
+	if err != nil {
+		logx.Severef("flake NextID failed with %s \n", err)
+		panic(err)
+	}
+
+	return int64(id)
+}
+
+func GenFeedID() int64 {
+	id, err := feedsFlake.NextID()
+	if err != nil {
+		logx.Severef("flake NextID failed with %s \n", err)
+		panic(err)
+	}
+
+	return int64(id)
+}
+
+func GenCommentID() int64 {
+	id, err := commentsFlake.NextID()
 	if err != nil {
 		logx.Severef("flake NextID failed with %s \n", err)
 		panic(err)

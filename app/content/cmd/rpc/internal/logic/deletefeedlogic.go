@@ -5,6 +5,7 @@ import (
 
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/internal/svc"
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/pb"
+	"github.com/me2seeks/echo-hub/app/content/model"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -24,7 +25,12 @@ func NewDeleteFeedLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Delete
 }
 
 func (l *DeleteFeedLogic) DeleteFeed(in *pb.DeleteFeedReq) (*pb.DeleteFeedResp, error) {
-	// todo: add your logic here and delete this line
+	err := l.svcCtx.FeedsModel.DeleteSoft(l.ctx, nil, &model.Feeds{
+		Id: in.Id,
+	})
+	if err != nil {
+		return nil, err
+	}
 
 	return &pb.DeleteFeedResp{}, nil
 }

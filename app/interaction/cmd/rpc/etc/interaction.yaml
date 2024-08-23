@@ -5,6 +5,16 @@ ListenOn: 0.0.0.0:2001
 #   - 127.0.0.1:2379
 #   Key: interaction.rpc
 
+KqConsumerConf:
+  Name: count
+  Brokers:
+    - 10.2.12.14:30092
+  Group: count
+  Topic: reletion-event
+  Offset: first
+  Consumers: 8
+  Processors: 8
+
 Log:
   ServiceName: interaction-rpc
   Level: error

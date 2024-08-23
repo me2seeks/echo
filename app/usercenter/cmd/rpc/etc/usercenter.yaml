@@ -17,6 +17,12 @@ ListenOn: 0.0.0.0:2000
 #   Sampler: 1.0
 #   Batcher: jaeger
 
+
+KqPusherConf:
+  Brokers:
+    - 10.2.12.14:30092
+  Topic: reletion-event
+
 Log:
   ServiceName: usercenter-rpc
   Level: error

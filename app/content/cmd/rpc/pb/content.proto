@@ -23,17 +23,18 @@ message GetFeedListReq{
     google.protobuf.Timestamp  start_time = 2;
 }
 message GetFeedListResp{
-    repeated Feed Feed = 1;
+    repeated Feed feed = 1;
 }
 
 message GetFeedListByPageReq{
     int64 userID = 1;
     google.protobuf.Timestamp  start_time = 2;
-    int32 page = 3;
-    int32 page_size = 4;
+    int64 page = 3;
+    int64 page_size = 4;
 }
 message GetFeedListByPageResp{
     repeated Feed Feed = 1;
+    int64 total = 2;
 }
 
 
@@ -51,7 +52,6 @@ message CreateFeedResp{
 
 message UpdateFeedReq{
     int64 id = 1;
-    int64 userID = 2;
     string content = 3;
     string media0 = 4;
     string media1 = 5;
@@ -62,7 +62,6 @@ message UpdateFeedResp{}
 
 message DeleteFeedReq{
     int64 id = 1;
-    int64 userID = 2;
 }
 message DeleteFeedResp{}
 
@@ -84,16 +83,17 @@ message GetCommentListReq{
     int64 feedID = 1;
 }
 message GetCommentListResp{
-    repeated Comment Comment = 1;
+    repeated Comment comment = 1;
 }
 
 message GetCommentListByPageReq{
     int64 feedID = 1;
-    int32 page = 2;
-    int32 page_size = 3;
+    int64 page = 2;
+    int64 page_size = 3;
 }
 message GetCommentListByPageResp{
-    repeated Comment Comment = 1;
+    repeated Comment comment = 1;
+    int64 total = 2;
 }
 
 message CreateCommentReq{
@@ -111,8 +111,6 @@ message CreateCommentResp{
 
 message UpdateCommentReq{
     int64 id = 1;
-    int64 feedID = 2;
-    int64 userID = 3;
     string content = 4;
     string media0 = 5;
     string media1 = 6;
@@ -123,8 +121,6 @@ message UpdateCommentResp{}
 
 message DeleteCommentReq{
     int64 id = 1;
-    int64 feedID = 2;
-    int64 userID = 3;
 }
 message DeleteCommentResp{}
 

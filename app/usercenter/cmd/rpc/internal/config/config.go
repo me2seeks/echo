@@ -14,5 +14,9 @@ type Config struct {
 	Mysql struct {
 		DataSource string
 	}
-	Cache cache.CacheConf
+	Cache        cache.CacheConf
+	KqPusherConf struct {
+		Brokers []string
+		Topic   string
+	}
 }

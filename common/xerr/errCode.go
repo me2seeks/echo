@@ -14,6 +14,7 @@ const (
 	DbError
 	DbUpdateAffectedZeroError
 	EncryptError
+	CopyError
 )
 
 // 用户模块

@@ -1,6 +1,37 @@
 Name: content.rpc
 ListenOn: 0.0.0.0:8080
-Etcd:
-  Hosts:
-  - 127.0.0.1:2379
-  Key: content.rpc
+# Etcd:
+#   Hosts:
+#   - 127.0.0.1:2379
+#   Key: content.rpc
+
+
+# Prometheus:
+#   Host: 0.0.0.0
+#   Port: 4002
+#   Path: /metrics
+
+# Telemetry:
+#   Name: content-rpc
+#   Endpoint: http://jaeger:14268/api/traces
+#   Sampler: 1.0
+#   Batcher: jaeger
+
+Log:
+  ServiceName: content-rpc
+  Level: error
+
+JwtAuth:
+  AccessSecret: ae0536f9-6450-4606-8e13-5a19ed505da0
+  AccessExpire: 31536000
+
+Redis:
+  Host: 10.2.12.14:31000
+  Type: node
+  Pass: 
+  Key: content-rpc
+Mysql:
+  DataSource: root:bf17tk6d7t56@tcp(10.2.12.14:32000)/echo-hub?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+Cache:
+  - Host: 10.2.12.14:31000
+    Pass: 
