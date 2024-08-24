@@ -16,6 +16,7 @@ func init() {
 	message[UnFollowError] = "取消关注失败"
 	message[CopyError] = "拷贝失败"
 	message[KqPusherError] = "推送失败"
+	message[MarshalError] = "序列化失败"
 }
 
 func MapErrMsg(errcode uint32) string {

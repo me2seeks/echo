@@ -32,7 +32,7 @@ func NewGetUserAuthByUserIDLogic(ctx context.Context, svcCtx *svc.ServiceContext
 func (l *GetUserAuthByUserIDLogic) GetUserAuthByUserID(in *pb.GetUserAuthByUserIDReq) (*pb.GetUserAuthyUserIDResp, error) {
 	userAuth, err := l.svcCtx.UserAuthModel.FindOneByUserIdAuthType(l.ctx, in.UserID, in.AuthType)
 	if err != nil && err != model.ErrNotFound {
-		return nil, errors.Wrapf(xerr.NewErrMsg("get user auth  fail"), "err : %v , in : %+v", err, in)
+		return nil, errors.Wrapf(xerr.NewErrMsg("get user auth failed"), "err : %v , in : %+v", err, in)
 	}
 
 	var respUserAuth usercenter.UserAuth

@@ -55,13 +55,13 @@ func (l *FollowLogic) Follow(in *pb.FollowReq) (*pb.FollowResp, error) {
 	}
 	msgBytes, err := json.Marshal(msg)
 	if err != nil {
-		return nil, errors.Wrap(err, "marshal event error")
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.MarshalError), "failed to marshal follow event ,err:%v", err)
 	}
-	FolloweeIDStr := strconv.FormatInt(in.FolloweeId, 10)
+	followeeIDStr := strconv.FormatInt(in.FolloweeId, 10)
 
-	err = l.svcCtx.KqPusherClient.PushWithKey(l.ctx, FolloweeIDStr, tool.BytesToString(msgBytes))
+	err = l.svcCtx.KqPusherClient.PushWithKey(l.ctx, followeeIDStr, tool.BytesToString(msgBytes))
 	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.KqPusherError), "failed push follow event followeeID:%d,err:%v", in.FolloweeId, err)
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.KqPusherError), "failed to push follow event followeeID:%d,err:%v", in.FolloweeId, err)
 	}
 
 	return &pb.FollowResp{}, err

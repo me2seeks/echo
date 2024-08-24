@@ -16,6 +16,7 @@ const (
 	EncryptError
 	CopyError
 	KqPusherError
+	MarshalError
 )
 
 // 用户模块

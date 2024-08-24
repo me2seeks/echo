@@ -1,9 +1,14 @@
 Name: interaction.rpc
-ListenOn: 0.0.0.0:2001
+ListenOn: 0.0.0.0:1005
 # Etcd:
 #   Hosts:
 #   - 127.0.0.1:2379
 #   Key: interaction.rpc
+
+# Prometheus:
+#   Host: 0.0.0.0
+#   Port: 4005
+#   Path: /metrics
 
 KqConsumerConf:
   Name: count

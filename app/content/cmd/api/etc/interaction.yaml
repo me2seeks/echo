@@ -1,11 +1,11 @@
-Name: interaction-api
+Name: content-api
 Host: 0.0.0.0
-Port: 1004
+Port: 1002
 
 
 # Prometheus:
 #   Host: 0.0.0.0
-#   Port: 4004
+#   Port: 4002
 #   Path: /metrics
 
 JwtAuth:
@@ -20,10 +20,10 @@ Log:
 #rpc service
 InteractionRpcConf:
   Endpoints:
-    - 127.0.0.1:2005
+    - 127.0.0.1:1005
   NonBlock: true
 
 UsercenterRpcConf:
   Endpoints:
-    - 127.0.0.1:2001
+    - 127.0.0.1:1001
   NonBlock: true

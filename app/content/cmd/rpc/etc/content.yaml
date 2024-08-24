@@ -1,5 +1,5 @@
 Name: content.rpc
-ListenOn: 0.0.0.0:8080
+ListenOn: 0.0.0.0:1003
 # Etcd:
 #   Hosts:
 #   - 127.0.0.1:2379
@@ -8,7 +8,7 @@ ListenOn: 0.0.0.0:8080
 
 # Prometheus:
 #   Host: 0.0.0.0
-#   Port: 4002
+#   Port: 4003
 #   Path: /metrics
 
 # Telemetry:
@@ -16,6 +16,11 @@ ListenOn: 0.0.0.0:8080
 #   Endpoint: http://jaeger:14268/api/traces
 #   Sampler: 1.0
 #   Batcher: jaeger
+
+KqPusherConf:
+  Brokers:
+    - 10.2.12.14:30092
+  Topic: reletion-event
 
 Log:
   ServiceName: content-rpc

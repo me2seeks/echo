@@ -2,10 +2,16 @@ package logic
 
 import (
 	"context"
+	"encoding/json"
+	"strconv"
 
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/internal/svc"
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/pb"
 	"github.com/me2seeks/echo-hub/app/content/model"
+	"github.com/me2seeks/echo-hub/common/kqueue"
+	"github.com/me2seeks/echo-hub/common/tool"
+	"github.com/me2seeks/echo-hub/common/xerr"
+	"github.com/pkg/errors"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -29,7 +35,28 @@ func (l *DeleteCommentLogic) DeleteComment(in *pb.DeleteCommentReq) (*pb.DeleteC
 		Id: in.Id,
 	})
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "delete comment failed: %v", err)
+	}
+
+	msg := kqueue.Event{
+		Type:      kqueue.Comment,
+		ID:        in.ParentID,
+		IsComment: false,
+	}
+
+	if in.IsComment {
+		msg.IsComment = true
+	}
+
+	msgBytes, err := json.Marshal(msg)
+	if err != nil {
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.MarshalError), "failed to marshal delete comment event err:%v", err)
+	}
+	IDStr := strconv.FormatInt(in.Id, 10)
+
+	err = l.svcCtx.KqPusherClient.PushWithKey(l.ctx, IDStr, tool.BytesToString(msgBytes))
+	if err != nil {
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.KqPusherError), "failed push delete comment event ParentID:%d,IsComment:%t,err:%v", in.ParentID, in.IsComment, err)
 	}
 
 	return &pb.DeleteCommentResp{}, nil
