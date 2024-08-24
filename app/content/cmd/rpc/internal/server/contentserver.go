@@ -72,8 +72,3 @@ func (s *ContentServer) DeleteComment(ctx context.Context, in *pb.DeleteCommentR
 	l := logic.NewDeleteCommentLogic(ctx, s.svcCtx)
 	return l.DeleteComment(in)
 }
-
-func (s *ContentServer) SearchFeed(ctx context.Context, in *pb.SearchFeedReq) (*pb.SearchFeedResp, error) {
-	l := logic.NewSearchFeedLogic(ctx, s.svcCtx)
-	return l.SearchFeed(in)
-}

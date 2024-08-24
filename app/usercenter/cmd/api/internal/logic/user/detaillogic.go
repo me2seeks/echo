@@ -32,7 +32,7 @@ func (l *DetailLogic) Detail(req *types.UserInfoReq) (*types.UserInfoResp, error
 	userID := ctxdata.GetUIDFromCtx(l.ctx)
 
 	resp, err := l.svcCtx.UsercenterRPC.GetUserInfo(l.ctx, &usercenter.GetUserInfoReq{
-		UserId: userID,
+		UserID: userID,
 	})
 	if err != nil {
 		return nil, err

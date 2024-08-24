@@ -29,7 +29,7 @@ func NewFollowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FollowLogi
 func (l *FollowLogic) Follow(req *types.FollowReq) (*types.FollowResp, error) {
 	userID := ctxdata.GetUIDFromCtx(l.ctx)
 	resp, err := l.svcCtx.UsercenterRPC.GetUserInfo(l.ctx, &usercenter.GetUserInfoReq{
-		UserId: req.UserId,
+		UserID: req.UserId,
 	})
 	if err != nil || resp.User == nil {
 		return nil, err

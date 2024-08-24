@@ -1,19 +1,25 @@
-Name: interaction.rpc
-ListenOn: 0.0.0.0:1005
+Name: counter.rpc
+ListenOn: 0.0.0.0:1007
 # Etcd:
 #   Hosts:
 #   - 127.0.0.1:2379
-#   Key: interaction.rpc
+#   Key: counter.rpc
+
 
 # Prometheus:
 #   Host: 0.0.0.0
-#   Port: 4005
+#   Port: 4007
 #   Path: /metrics
 
-KqPusherConf:
+KqConsumerConf:
+  Name: counter
   Brokers:
     - 10.2.12.14:30092
+  Group: counter
   Topic: counter-event
+  Offset: first
+  Consumers: 8
+  Processors: 8
 
 Log:
   ServiceName: interaction-rpc

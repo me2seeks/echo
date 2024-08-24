@@ -19,17 +19,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Content_GetFeedList_FullMethodName          = "/pb.Content/GetFeedList"
-	Content_GetFeedListByPage_FullMethodName    = "/pb.Content/GetFeedListByPage"
-	Content_CreateFeed_FullMethodName           = "/pb.Content/CreateFeed"
-	Content_UpdateFeed_FullMethodName           = "/pb.Content/UpdateFeed"
-	Content_DeleteFeed_FullMethodName           = "/pb.Content/DeleteFeed"
-	Content_GetCommentList_FullMethodName       = "/pb.Content/GetCommentList"
-	Content_GetCommentListByPage_FullMethodName = "/pb.Content/GetCommentListByPage"
-	Content_CreateComment_FullMethodName        = "/pb.Content/CreateComment"
-	Content_UpdateComment_FullMethodName        = "/pb.Content/UpdateComment"
-	Content_DeleteComment_FullMethodName        = "/pb.Content/DeleteComment"
-	Content_SearchFeed_FullMethodName           = "/pb.Content/SearchFeed"
+	Content_GetFeedList_FullMethodName          = "/pb.Content/getFeedList"
+	Content_GetFeedListByPage_FullMethodName    = "/pb.Content/getFeedListByPage"
+	Content_CreateFeed_FullMethodName           = "/pb.Content/createFeed"
+	Content_UpdateFeed_FullMethodName           = "/pb.Content/updateFeed"
+	Content_DeleteFeed_FullMethodName           = "/pb.Content/deleteFeed"
+	Content_GetCommentList_FullMethodName       = "/pb.Content/getCommentList"
+	Content_GetCommentListByPage_FullMethodName = "/pb.Content/getCommentListByPage"
+	Content_CreateComment_FullMethodName        = "/pb.Content/createComment"
+	Content_UpdateComment_FullMethodName        = "/pb.Content/updateComment"
+	Content_DeleteComment_FullMethodName        = "/pb.Content/deleteComment"
 )
 
 // ContentClient is the client API for Content service.
@@ -47,7 +46,6 @@ type ContentClient interface {
 	CreateComment(ctx context.Context, in *CreateCommentReq, opts ...grpc.CallOption) (*CreateCommentResp, error)
 	UpdateComment(ctx context.Context, in *UpdateCommentReq, opts ...grpc.CallOption) (*UpdateCommentResp, error)
 	DeleteComment(ctx context.Context, in *DeleteCommentReq, opts ...grpc.CallOption) (*DeleteCommentResp, error)
-	SearchFeed(ctx context.Context, in *SearchFeedReq, opts ...grpc.CallOption) (*SearchFeedResp, error)
 }
 
 type contentClient struct {
@@ -158,16 +156,6 @@ func (c *contentClient) DeleteComment(ctx context.Context, in *DeleteCommentReq,
 	return out, nil
 }
 
-func (c *contentClient) SearchFeed(ctx context.Context, in *SearchFeedReq, opts ...grpc.CallOption) (*SearchFeedResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SearchFeedResp)
-	err := c.cc.Invoke(ctx, Content_SearchFeed_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // ContentServer is the server API for Content service.
 // All implementations must embed UnimplementedContentServer
 // for forward compatibility.
@@ -183,7 +171,6 @@ type ContentServer interface {
 	CreateComment(context.Context, *CreateCommentReq) (*CreateCommentResp, error)
 	UpdateComment(context.Context, *UpdateCommentReq) (*UpdateCommentResp, error)
 	DeleteComment(context.Context, *DeleteCommentReq) (*DeleteCommentResp, error)
-	SearchFeed(context.Context, *SearchFeedReq) (*SearchFeedResp, error)
 	mustEmbedUnimplementedContentServer()
 }
 
@@ -223,9 +210,6 @@ func (UnimplementedContentServer) UpdateComment(context.Context, *UpdateCommentR
 }
 func (UnimplementedContentServer) DeleteComment(context.Context, *DeleteCommentReq) (*DeleteCommentResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteComment not implemented")
-}
-func (UnimplementedContentServer) SearchFeed(context.Context, *SearchFeedReq) (*SearchFeedResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SearchFeed not implemented")
 }
 func (UnimplementedContentServer) mustEmbedUnimplementedContentServer() {}
 func (UnimplementedContentServer) testEmbeddedByValue()                 {}
@@ -428,24 +412,6 @@ func _Content_DeleteComment_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Content_SearchFeed_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SearchFeedReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ContentServer).SearchFeed(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Content_SearchFeed_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ContentServer).SearchFeed(ctx, req.(*SearchFeedReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // Content_ServiceDesc is the grpc.ServiceDesc for Content service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -454,48 +420,44 @@ var Content_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ContentServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetFeedList",
+			MethodName: "getFeedList",
 			Handler:    _Content_GetFeedList_Handler,
 		},
 		{
-			MethodName: "GetFeedListByPage",
+			MethodName: "getFeedListByPage",
 			Handler:    _Content_GetFeedListByPage_Handler,
 		},
 		{
-			MethodName: "CreateFeed",
+			MethodName: "createFeed",
 			Handler:    _Content_CreateFeed_Handler,
 		},
 		{
-			MethodName: "UpdateFeed",
+			MethodName: "updateFeed",
 			Handler:    _Content_UpdateFeed_Handler,
 		},
 		{
-			MethodName: "DeleteFeed",
+			MethodName: "deleteFeed",
 			Handler:    _Content_DeleteFeed_Handler,
 		},
 		{
-			MethodName: "GetCommentList",
+			MethodName: "getCommentList",
 			Handler:    _Content_GetCommentList_Handler,
 		},
 		{
-			MethodName: "GetCommentListByPage",
+			MethodName: "getCommentListByPage",
 			Handler:    _Content_GetCommentListByPage_Handler,
 		},
 		{
-			MethodName: "CreateComment",
+			MethodName: "createComment",
 			Handler:    _Content_CreateComment_Handler,
 		},
 		{
-			MethodName: "UpdateComment",
+			MethodName: "updateComment",
 			Handler:    _Content_UpdateComment_Handler,
 		},
 		{
-			MethodName: "DeleteComment",
+			MethodName: "deleteComment",
 			Handler:    _Content_DeleteComment_Handler,
-		},
-		{
-			MethodName: "SearchFeed",
-			Handler:    _Content_SearchFeed_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

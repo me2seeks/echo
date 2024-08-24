@@ -120,6 +120,20 @@ message FollowingResp {
     repeated int64 following = 1;
 }
 
+message GetFollowingeCountReq {
+    int64 userId = 1;
+}
+message GetFollowingeCountResp {
+    int64 count = 1;
+}
+
+message GetFollowerCountReq {
+    int64 userId = 1;
+}
+message GetFollowerCountResp {
+    int64 count = 1;
+}
+
 //service
 service usercenter {
     //user
@@ -138,5 +152,8 @@ service usercenter {
     rpc unfollow(UnfollowReq) returns(UnfollowResp);
     rpc followers(FollowersReq) returns(FollowersResp);
     rpc following(FollowingReq) returns(FollowingResp);
+
+    rpc getFollowingeCount(GetFollowingeCountReq) returns(GetFollowingeCountResp);
+    rpc getFollowerCount(GetFollowerCountReq) returns(GetFollowerCountResp);
 
 }

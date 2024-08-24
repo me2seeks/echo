@@ -5,34 +5,39 @@ option go_package = "./pb";
 package pb;
 
 
+message CreateLikeReq {
+    int64 userID = 1;
+    int64 id = 2;
+    bool isComment = 3;
+}
+message CreateLikeResp {
+}
+
+message DeleteLikeReq {
+    int64 userID = 1;
+    int64 id = 2;
+    bool isComment = 3;
+}
+message DeleteLikeResp {
+}
+
+message GetLikeCountReq {
+    int64 id = 1;
+    bool isComment = 2;
+}
+message GetLikeCountResp {
+    int64 count = 1;
+}
+
+
+
 
 
 
 
 
 service interaction {
-    // TODO 使用消息队列来削峰 多条合并
-    rpc IncreaseLikeCount(IncreaseLikeCountRequest) returns (IncreaseLikeCountResponse) {}
-    rpc IncreaseCommentCount(IncreaseCommentCountRequest) returns (IncreaseCommentCountResponse) {}
-    rpc IncreaseRepostCount(IncreaseRepostCountRequest) returns (IncreaseRepostCountResponse) {}
-    rpc IncreaseViewCount(IncreaseViewCountRequest) returns (IncreaseViewCountResponse) {}
-
-
-    rpc IncreaseFollowCount(IncreaseFollowCountRequest) returns (IncreaseFollowCountResponse) {}
-    rpc IncreaseFollowingCount(IncreaseFollowingCountRequest) returns (IncreaseFollowingCountResponse) {}
-
-    rpc DecreaseLikeCount(DecreaseLikeCountRequest) returns (DecreaseLikeCountResponse) {}
-    rpc DecreaseCommentCount(DecreaseCommentCountRequest) returns (DecreaseCommentCountResponse) {}
-    rpc DecreaseRepostCount(DecreaseRepostCountRequest) returns (DecreaseRepostCountResponse) {}
-    rpc DecreaseViewCount(DecreaseViewCountRequest) returns (DecreaseViewCountResponse) {}
-    rpc DecreaseFollowCount(DecreaseFollowCountRequest) returns (DecreaseFollowCountResponse) {}
-    rpc DecreaseFollowingCount(DecreaseFollowingCountRequest) returns (DecreaseFollowingCountResponse) {}
-
-    // 获取点赞数 评论数 转发数 浏览数
-    rpc GetCount(GetCountRequest) returns (GetCountResponse) {}
-    // 获取关注数 粉丝数
-    rpc GetRelationCount(GetRelationCountRequest) returns (GetRelationCountResponse) {}
-
-
-
+    rpc createLike(CreateLikeReq) returns (CreateLikeResp) {}
+    rpc deleteLike(DeleteLikeReq) returns (DeleteLikeResp) {}   
+    rpc getLikeCount(GetLikeCountReq) returns (GetLikeCountResp) {}
 }

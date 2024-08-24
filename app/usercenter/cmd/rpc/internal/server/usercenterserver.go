@@ -76,3 +76,13 @@ func (s *UsercenterServer) Following(ctx context.Context, in *pb.FollowingReq) (
 	l := logic.NewFollowingLogic(ctx, s.svcCtx)
 	return l.Following(in)
 }
+
+func (s *UsercenterServer) GetFollowingeCount(ctx context.Context, in *pb.GetFollowingeCountReq) (*pb.GetFollowingeCountResp, error) {
+	l := logic.NewGetFollowingeCountLogic(ctx, s.svcCtx)
+	return l.GetFollowingeCount(in)
+}
+
+func (s *UsercenterServer) GetFollowerCount(ctx context.Context, in *pb.GetFollowerCountReq) (*pb.GetFollowerCountResp, error) {
+	l := logic.NewGetFollowerCountLogic(ctx, s.svcCtx)
+	return l.GetFollowerCount(in)
+}

@@ -50,7 +50,6 @@ type (
 		CreateComment(ctx context.Context, in *CreateCommentReq, opts ...grpc.CallOption) (*CreateCommentResp, error)
 		UpdateComment(ctx context.Context, in *UpdateCommentReq, opts ...grpc.CallOption) (*UpdateCommentResp, error)
 		DeleteComment(ctx context.Context, in *DeleteCommentReq, opts ...grpc.CallOption) (*DeleteCommentResp, error)
-		SearchFeed(ctx context.Context, in *SearchFeedReq, opts ...grpc.CallOption) (*SearchFeedResp, error)
 	}
 
 	defaultContent struct {
@@ -113,9 +112,4 @@ func (m *defaultContent) UpdateComment(ctx context.Context, in *UpdateCommentReq
 func (m *defaultContent) DeleteComment(ctx context.Context, in *DeleteCommentReq, opts ...grpc.CallOption) (*DeleteCommentResp, error) {
 	client := pb.NewContentClient(m.cli.Conn())
 	return client.DeleteComment(ctx, in, opts...)
-}
-
-func (m *defaultContent) SearchFeed(ctx context.Context, in *SearchFeedReq, opts ...grpc.CallOption) (*SearchFeedResp, error) {
-	client := pb.NewContentClient(m.cli.Conn())
-	return client.SearchFeed(ctx, in, opts...)
 }

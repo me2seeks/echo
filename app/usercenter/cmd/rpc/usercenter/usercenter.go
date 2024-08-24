@@ -21,6 +21,10 @@ type (
 	FollowingResp            = pb.FollowingResp
 	GenerateTokenReq         = pb.GenerateTokenReq
 	GenerateTokenResp        = pb.GenerateTokenResp
+	GetFollowerCountReq      = pb.GetFollowerCountReq
+	GetFollowerCountResp     = pb.GetFollowerCountResp
+	GetFollowingeCountReq    = pb.GetFollowingeCountReq
+	GetFollowingeCountResp   = pb.GetFollowingeCountResp
 	GetUserAuthByAuthKeyReq  = pb.GetUserAuthByAuthKeyReq
 	GetUserAuthByAuthKeyResp = pb.GetUserAuthByAuthKeyResp
 	GetUserAuthByUserIDReq   = pb.GetUserAuthByUserIDReq
@@ -50,6 +54,8 @@ type (
 		Unfollow(ctx context.Context, in *UnfollowReq, opts ...grpc.CallOption) (*UnfollowResp, error)
 		Followers(ctx context.Context, in *FollowersReq, opts ...grpc.CallOption) (*FollowersResp, error)
 		Following(ctx context.Context, in *FollowingReq, opts ...grpc.CallOption) (*FollowingResp, error)
+		GetFollowingeCount(ctx context.Context, in *GetFollowingeCountReq, opts ...grpc.CallOption) (*GetFollowingeCountResp, error)
+		GetFollowerCount(ctx context.Context, in *GetFollowerCountReq, opts ...grpc.CallOption) (*GetFollowerCountResp, error)
 	}
 
 	defaultUsercenter struct {
@@ -116,4 +122,14 @@ func (m *defaultUsercenter) Followers(ctx context.Context, in *FollowersReq, opt
 func (m *defaultUsercenter) Following(ctx context.Context, in *FollowingReq, opts ...grpc.CallOption) (*FollowingResp, error) {
 	client := pb.NewUsercenterClient(m.cli.Conn())
 	return client.Following(ctx, in, opts...)
+}
+
+func (m *defaultUsercenter) GetFollowingeCount(ctx context.Context, in *GetFollowingeCountReq, opts ...grpc.CallOption) (*GetFollowingeCountResp, error) {
+	client := pb.NewUsercenterClient(m.cli.Conn())
+	return client.GetFollowingeCount(ctx, in, opts...)
+}
+
+func (m *defaultUsercenter) GetFollowerCount(ctx context.Context, in *GetFollowerCountReq, opts ...grpc.CallOption) (*GetFollowerCountResp, error) {
+	client := pb.NewUsercenterClient(m.cli.Conn())
+	return client.GetFollowerCount(ctx, in, opts...)
 }

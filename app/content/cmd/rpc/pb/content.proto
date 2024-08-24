@@ -140,20 +140,16 @@ message SearchFeedResp{
 
 service Content {
 
-    rpc GetFeedList (GetFeedListReq) returns (GetFeedListResp) {}
-    rpc GetFeedListByPage (GetFeedListByPageReq) returns (GetFeedListByPageResp) {}
-    rpc CreateFeed (CreateFeedReq) returns (CreateFeedResp) {}
-    rpc UpdateFeed (UpdateFeedReq) returns (UpdateFeedResp) {}
-    rpc DeleteFeed (DeleteFeedReq) returns (DeleteFeedResp) {}
+    rpc getFeedList (GetFeedListReq) returns (GetFeedListResp) {}
+    rpc getFeedListByPage (GetFeedListByPageReq) returns (GetFeedListByPageResp) {}
+    rpc createFeed (CreateFeedReq) returns (CreateFeedResp) {}
+    rpc updateFeed (UpdateFeedReq) returns (UpdateFeedResp) {}
+    rpc deleteFeed (DeleteFeedReq) returns (DeleteFeedResp) {}
 
     //comment
-    rpc GetCommentList (GetCommentListReq) returns (GetCommentListResp) {}
-    rpc GetCommentListByPage (GetCommentListByPageReq) returns (GetCommentListByPageResp) {}
-    rpc CreateComment (CreateCommentReq) returns (CreateCommentResp) {}
-    rpc UpdateComment (UpdateCommentReq) returns (UpdateCommentResp) {}
-    rpc DeleteComment (DeleteCommentReq) returns (DeleteCommentResp) {}
-
-
-    rpc SearchFeed (SearchFeedReq) returns (SearchFeedResp) {}
-
+    rpc getCommentList (GetCommentListReq) returns (GetCommentListResp) {}
+    rpc getCommentListByPage (GetCommentListByPageReq) returns (GetCommentListByPageResp) {}
+    rpc createComment (CreateCommentReq) returns (CreateCommentResp) {}
+    rpc updateComment (UpdateCommentReq) returns (UpdateCommentResp) {}
+    rpc deleteComment (DeleteCommentReq) returns (DeleteCommentResp) {}
 }
