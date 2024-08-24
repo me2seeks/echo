@@ -2,9 +2,13 @@ package logic
 
 import (
 	"context"
+	"encoding/json"
+	"strconv"
 
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/rpc/internal/svc"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/rpc/pb"
+	"github.com/me2seeks/echo-hub/common/kqueue"
+	"github.com/me2seeks/echo-hub/common/tool"
 	"github.com/me2seeks/echo-hub/common/xerr"
 	"github.com/pkg/errors"
 
@@ -28,10 +32,28 @@ func NewUnfollowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Unfollow
 func (l *UnfollowLogic) Unfollow(in *pb.UnfollowReq) (*pb.UnfollowResp, error) {
 	userRelation, err := l.svcCtx.UserRelationModel.FindOneByFollowerIdFolloweeId(l.ctx, in.UserId, in.FolloweeId)
 	if err != nil {
-		return &pb.UnfollowResp{}, errors.Wrapf(xerr.NewErrCode(xerr.UnFollowError), "Unfollow err:%v", err)
+		return &pb.UnfollowResp{}, errors.Wrapf(xerr.NewErrCode(xerr.UnFollowError), "not followed err:%v", err)
 	}
 
 	err = l.svcCtx.UserRelationModel.DeleteSoft(l.ctx, nil, userRelation)
+	if err != nil {
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.UnFollowError), "unfollow err:%v", err)
+	}
 
+	msg := kqueue.Event{
+		Type:      kqueue.UnFollow,
+		ID:        in.FolloweeId,
+		IsComment: false,
+	}
+	msgBytes, err := json.Marshal(msg)
+	if err != nil {
+		return nil, errors.Wrap(err, "marshal event error")
+	}
+	FolloweeIDStr := strconv.FormatInt(in.FolloweeId, 10)
+
+	err = l.svcCtx.KqPusherClient.PushWithKey(l.ctx, FolloweeIDStr, tool.BytesToString(msgBytes))
+	if err != nil {
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.KqPusherError), "failed push unfollow event followeeID:%d,err:%v", in.FolloweeId, err)
+	}
 	return &pb.UnfollowResp{}, err
 }

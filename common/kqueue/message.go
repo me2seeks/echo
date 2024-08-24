@@ -1,5 +1,22 @@
 // KqMessage
 package kqueue
 
-// KqMessage 消息体
-type KqMessage struct{}
+type EventType int
+
+const (
+	Follow EventType = iota
+	UnFollow
+	Like
+	UnLike
+	Comment
+	UnComment
+	Repost
+	UnRepost
+	View
+)
+
+type Event struct {
+	Type      EventType
+	ID        int64
+	IsComment bool
+}

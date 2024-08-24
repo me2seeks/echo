@@ -9,5 +9,7 @@
     ],
     "go.buildFlags": [
         // "-tags=swagger"
-    ]
+    ],
+    "go.formatTool": "gofmt",
+    "go.formatFlags": ["-s"]
 }

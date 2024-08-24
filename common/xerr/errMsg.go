@@ -15,6 +15,7 @@ func init() {
 	message[FollowError] = "关注失败"
 	message[UnFollowError] = "取消关注失败"
 	message[CopyError] = "拷贝失败"
+	message[KqPusherError] = "推送失败"
 }
 
 func MapErrMsg(errcode uint32) string {

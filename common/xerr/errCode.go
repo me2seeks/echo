@@ -15,6 +15,7 @@ const (
 	DbUpdateAffectedZeroError
 	EncryptError
 	CopyError
+	KqPusherError
 )
 
 // 用户模块
