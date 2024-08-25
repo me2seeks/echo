@@ -17,6 +17,7 @@ ListenOn: 0.0.0.0:1001
 #   Sampler: 1.0
 #   Batcher: jaeger
 
+# TODO 使用es 来搜索handle
 
 KqPusherConf:
   Brokers:

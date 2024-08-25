@@ -31,7 +31,7 @@ func (l *GetFollowingFeedListByPageLogic) GetFollowingFeedListByPage(in *pb.GetF
 	if err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetfeedListByPage FindOne UserID%d err:%v", in.UserID, err)
 	}
-	feeds, total, err := l.svcCtx.FeedsModel.FindPageListByPageWithTotal(l.ctx, l.svcCtx.FeedsModel.SelectBuilder().Columns("*").Where("user_id IN (?,?,...)", in.UserID).Where("create_at > ?", userLastRequest.LastRequestTime), in.Page, in.PageSize, "")
+	feeds, total, err := l.svcCtx.FeedsModel.FindPageListByPageWithTotal(l.ctx, l.svcCtx.FeedsModel.SelectBuilder().Columns("id, user_id, content, media0, media1, media2, media3, create_at").Where("user_id IN (?,?,...)", in.UserID).Where("create_at > ?", userLastRequest.LastRequestTime), in.Page, in.PageSize, "")
 	if err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetfeedListByPage FindPageListByPageWithTotal UserID%d err:%v", in.UserID, err)
 	}

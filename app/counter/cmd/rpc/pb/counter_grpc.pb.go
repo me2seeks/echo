@@ -7,7 +7,10 @@
 package pb
 
 import (
+	context "context"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -15,10 +18,17 @@ import (
 // Requires gRPC-Go v1.64.0 or later.
 const _ = grpc.SupportPackageIsVersion9
 
+const (
+	Counter_GetContentCounter_FullMethodName = "/pb.counter/getContentCounter"
+	Counter_GetUserCounter_FullMethodName    = "/pb.counter/getUserCounter"
+)
+
 // CounterClient is the client API for Counter service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CounterClient interface {
+	GetContentCounter(ctx context.Context, in *GetContentCounterRequest, opts ...grpc.CallOption) (*GetContentCounterResponse, error)
+	GetUserCounter(ctx context.Context, in *GetUserCounterRequest, opts ...grpc.CallOption) (*GetUserCounterResponse, error)
 }
 
 type counterClient struct {
@@ -29,10 +39,32 @@ func NewCounterClient(cc grpc.ClientConnInterface) CounterClient {
 	return &counterClient{cc}
 }
 
+func (c *counterClient) GetContentCounter(ctx context.Context, in *GetContentCounterRequest, opts ...grpc.CallOption) (*GetContentCounterResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetContentCounterResponse)
+	err := c.cc.Invoke(ctx, Counter_GetContentCounter_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *counterClient) GetUserCounter(ctx context.Context, in *GetUserCounterRequest, opts ...grpc.CallOption) (*GetUserCounterResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetUserCounterResponse)
+	err := c.cc.Invoke(ctx, Counter_GetUserCounter_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CounterServer is the server API for Counter service.
 // All implementations must embed UnimplementedCounterServer
 // for forward compatibility.
 type CounterServer interface {
+	GetContentCounter(context.Context, *GetContentCounterRequest) (*GetContentCounterResponse, error)
+	GetUserCounter(context.Context, *GetUserCounterRequest) (*GetUserCounterResponse, error)
 	mustEmbedUnimplementedCounterServer()
 }
 
@@ -43,6 +75,12 @@ type CounterServer interface {
 // pointer dereference when methods are called.
 type UnimplementedCounterServer struct{}
 
+func (UnimplementedCounterServer) GetContentCounter(context.Context, *GetContentCounterRequest) (*GetContentCounterResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetContentCounter not implemented")
+}
+func (UnimplementedCounterServer) GetUserCounter(context.Context, *GetUserCounterRequest) (*GetUserCounterResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserCounter not implemented")
+}
 func (UnimplementedCounterServer) mustEmbedUnimplementedCounterServer() {}
 func (UnimplementedCounterServer) testEmbeddedByValue()                 {}
 
@@ -64,13 +102,58 @@ func RegisterCounterServer(s grpc.ServiceRegistrar, srv CounterServer) {
 	s.RegisterService(&Counter_ServiceDesc, srv)
 }
 
+func _Counter_GetContentCounter_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetContentCounterRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CounterServer).GetContentCounter(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Counter_GetContentCounter_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CounterServer).GetContentCounter(ctx, req.(*GetContentCounterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Counter_GetUserCounter_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserCounterRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CounterServer).GetUserCounter(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Counter_GetUserCounter_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CounterServer).GetUserCounter(ctx, req.(*GetUserCounterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Counter_ServiceDesc is the grpc.ServiceDesc for Counter service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Counter_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "pb.counter",
 	HandlerType: (*CounterServer)(nil),
-	Methods:     []grpc.MethodDesc{},
-	Streams:     []grpc.StreamDesc{},
-	Metadata:    "counter.proto",
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "getContentCounter",
+			Handler:    _Counter_GetContentCounter_Handler,
+		},
+		{
+			MethodName: "getUserCounter",
+			Handler:    _Counter_GetUserCounter_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "counter.proto",
 }

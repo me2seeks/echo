@@ -32,12 +32,12 @@ func (l *GetCommentListLogic) GetCommentList(in *pb.GetCommentListReq) (*pb.GetC
 	var commentList []*model.Comments
 	var err error
 	if !in.IsComment {
-		commentList, err = l.svcCtx.CommentsModel.FindAll(l.ctx, l.svcCtx.CommentsModel.SelectBuilder().Columns("*").Where("feed_id = ?", in.Id), "")
+		commentList, err = l.svcCtx.CommentsModel.FindAll(l.ctx, l.svcCtx.CommentsModel.SelectBuilder().Columns("id, user_id, content, media0, media1, media2, media3, create_at").Where("feed_id = ?", in.Id), "")
 		if err != nil {
 			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetCommentListByPage FindAll feedID%d err:%v", in.Id, err)
 		}
 	} else {
-		commentList, err = l.svcCtx.CommentsModel.FindAll(l.ctx, l.svcCtx.CommentsModel.SelectBuilder().Columns("*").Where("parent_id = ?", in.Id), "")
+		commentList, err = l.svcCtx.CommentsModel.FindAll(l.ctx, l.svcCtx.CommentsModel.SelectBuilder().Columns("id, user_id, content, media0, media1, media2, media3, create_at").Where("parent_id = ?", in.Id), "")
 		if err != nil {
 			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetCommentListByPage FindAll commentID%d err:%v", in.Id, err)
 		}
