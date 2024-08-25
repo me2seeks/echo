@@ -31,6 +31,8 @@ func (l *CounterEvent) Consume(ctx context.Context, key, val string) error {
 	if err != nil {
 		return errors.Wrapf(xerr.NewErrCode(xerr.UnmarshalError), "unmarshal event err:%v", err)
 	}
+
+	// TODO 多条消息一起消费
 	if event.IsComment {
 		switch event.Type {
 		case kqueue.Follow:

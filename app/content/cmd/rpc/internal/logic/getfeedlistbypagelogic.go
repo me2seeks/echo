@@ -27,7 +27,7 @@ func NewGetFeedListByPageLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 }
 
 func (l *GetFeedListByPageLogic) GetFeedListByPage(in *pb.GetFeedListByPageReq) (*pb.GetFeedListByPageResp, error) {
-	feeds, total, err := l.svcCtx.FeedsModel.FindPageListByPageWithTotal(l.ctx, l.svcCtx.FeedsModel.SelectBuilder().Columns("*").Where("user_id = ?", in.UserID), in.Page, in.PageSize, "")
+	feeds, total, err := l.svcCtx.FeedsModel.FindPageListByPageWithTotal(l.ctx, l.svcCtx.FeedsModel.SelectBuilder().Columns("id, user_id, content, media0, media1, media2, media3, create_at").Where("user_id = ?", in.UserID), in.Page, in.PageSize, "")
 	if err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetfeedListByPage FindPageListByPageWithTotal UserID%d err:%v", in.UserID, err)
 	}

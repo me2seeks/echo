@@ -4,14 +4,23 @@
 package counter
 
 import (
+	"context"
 
-	// "github.com/me2seeks/echo-hub/app/counter/cmd/rpc/pb"
+	"github.com/me2seeks/echo-hub/app/counter/cmd/rpc/pb"
 
 	"github.com/zeromicro/go-zero/zrpc"
+	"google.golang.org/grpc"
 )
 
 type (
+	GetContentCounterRequest  = pb.GetContentCounterRequest
+	GetContentCounterResponse = pb.GetContentCounterResponse
+	GetUserCounterRequest     = pb.GetUserCounterRequest
+	GetUserCounterResponse    = pb.GetUserCounterResponse
+
 	Counter interface {
+		GetContentCounter(ctx context.Context, in *GetContentCounterRequest, opts ...grpc.CallOption) (*GetContentCounterResponse, error)
+		GetUserCounter(ctx context.Context, in *GetUserCounterRequest, opts ...grpc.CallOption) (*GetUserCounterResponse, error)
 	}
 
 	defaultCounter struct {
@@ -23,4 +32,14 @@ func NewCounter(cli zrpc.Client) Counter {
 	return &defaultCounter{
 		cli: cli,
 	}
+}
+
+func (m *defaultCounter) GetContentCounter(ctx context.Context, in *GetContentCounterRequest, opts ...grpc.CallOption) (*GetContentCounterResponse, error) {
+	client := pb.NewCounterClient(m.cli.Conn())
+	return client.GetContentCounter(ctx, in, opts...)
+}
+
+func (m *defaultCounter) GetUserCounter(ctx context.Context, in *GetUserCounterRequest, opts ...grpc.CallOption) (*GetUserCounterResponse, error) {
+	client := pb.NewCounterClient(m.cli.Conn())
+	return client.GetUserCounter(ctx, in, opts...)
 }
