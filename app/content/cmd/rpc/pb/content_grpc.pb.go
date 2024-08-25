@@ -19,23 +19,23 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Content_GetFeedList_FullMethodName          = "/pb.Content/getFeedList"
-	Content_GetFeedListByPage_FullMethodName    = "/pb.Content/getFeedListByPage"
-	Content_CreateFeed_FullMethodName           = "/pb.Content/createFeed"
-	Content_UpdateFeed_FullMethodName           = "/pb.Content/updateFeed"
-	Content_DeleteFeed_FullMethodName           = "/pb.Content/deleteFeed"
-	Content_GetCommentList_FullMethodName       = "/pb.Content/getCommentList"
-	Content_GetCommentListByPage_FullMethodName = "/pb.Content/getCommentListByPage"
-	Content_CreateComment_FullMethodName        = "/pb.Content/createComment"
-	Content_UpdateComment_FullMethodName        = "/pb.Content/updateComment"
-	Content_DeleteComment_FullMethodName        = "/pb.Content/deleteComment"
+	Content_GetFollowingFeedListByPage_FullMethodName = "/pb.Content/getFollowingFeedListByPage"
+	Content_GetFeedListByPage_FullMethodName          = "/pb.Content/getFeedListByPage"
+	Content_CreateFeed_FullMethodName                 = "/pb.Content/createFeed"
+	Content_UpdateFeed_FullMethodName                 = "/pb.Content/updateFeed"
+	Content_DeleteFeed_FullMethodName                 = "/pb.Content/deleteFeed"
+	Content_GetCommentList_FullMethodName             = "/pb.Content/getCommentList"
+	Content_GetCommentListByPage_FullMethodName       = "/pb.Content/getCommentListByPage"
+	Content_CreateComment_FullMethodName              = "/pb.Content/createComment"
+	Content_UpdateComment_FullMethodName              = "/pb.Content/updateComment"
+	Content_DeleteComment_FullMethodName              = "/pb.Content/deleteComment"
 )
 
 // ContentClient is the client API for Content service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ContentClient interface {
-	GetFeedList(ctx context.Context, in *GetFeedListReq, opts ...grpc.CallOption) (*GetFeedListResp, error)
+	GetFollowingFeedListByPage(ctx context.Context, in *GetFollowingFeedListByPageReq, opts ...grpc.CallOption) (*GetFollowingFeedListByPageResp, error)
 	GetFeedListByPage(ctx context.Context, in *GetFeedListByPageReq, opts ...grpc.CallOption) (*GetFeedListByPageResp, error)
 	CreateFeed(ctx context.Context, in *CreateFeedReq, opts ...grpc.CallOption) (*CreateFeedResp, error)
 	UpdateFeed(ctx context.Context, in *UpdateFeedReq, opts ...grpc.CallOption) (*UpdateFeedResp, error)
@@ -56,10 +56,10 @@ func NewContentClient(cc grpc.ClientConnInterface) ContentClient {
 	return &contentClient{cc}
 }
 
-func (c *contentClient) GetFeedList(ctx context.Context, in *GetFeedListReq, opts ...grpc.CallOption) (*GetFeedListResp, error) {
+func (c *contentClient) GetFollowingFeedListByPage(ctx context.Context, in *GetFollowingFeedListByPageReq, opts ...grpc.CallOption) (*GetFollowingFeedListByPageResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetFeedListResp)
-	err := c.cc.Invoke(ctx, Content_GetFeedList_FullMethodName, in, out, cOpts...)
+	out := new(GetFollowingFeedListByPageResp)
+	err := c.cc.Invoke(ctx, Content_GetFollowingFeedListByPage_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -160,7 +160,7 @@ func (c *contentClient) DeleteComment(ctx context.Context, in *DeleteCommentReq,
 // All implementations must embed UnimplementedContentServer
 // for forward compatibility.
 type ContentServer interface {
-	GetFeedList(context.Context, *GetFeedListReq) (*GetFeedListResp, error)
+	GetFollowingFeedListByPage(context.Context, *GetFollowingFeedListByPageReq) (*GetFollowingFeedListByPageResp, error)
 	GetFeedListByPage(context.Context, *GetFeedListByPageReq) (*GetFeedListByPageResp, error)
 	CreateFeed(context.Context, *CreateFeedReq) (*CreateFeedResp, error)
 	UpdateFeed(context.Context, *UpdateFeedReq) (*UpdateFeedResp, error)
@@ -181,8 +181,8 @@ type ContentServer interface {
 // pointer dereference when methods are called.
 type UnimplementedContentServer struct{}
 
-func (UnimplementedContentServer) GetFeedList(context.Context, *GetFeedListReq) (*GetFeedListResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetFeedList not implemented")
+func (UnimplementedContentServer) GetFollowingFeedListByPage(context.Context, *GetFollowingFeedListByPageReq) (*GetFollowingFeedListByPageResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFollowingFeedListByPage not implemented")
 }
 func (UnimplementedContentServer) GetFeedListByPage(context.Context, *GetFeedListByPageReq) (*GetFeedListByPageResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFeedListByPage not implemented")
@@ -232,20 +232,20 @@ func RegisterContentServer(s grpc.ServiceRegistrar, srv ContentServer) {
 	s.RegisterService(&Content_ServiceDesc, srv)
 }
 
-func _Content_GetFeedList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetFeedListReq)
+func _Content_GetFollowingFeedListByPage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFollowingFeedListByPageReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ContentServer).GetFeedList(ctx, in)
+		return srv.(ContentServer).GetFollowingFeedListByPage(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Content_GetFeedList_FullMethodName,
+		FullMethod: Content_GetFollowingFeedListByPage_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ContentServer).GetFeedList(ctx, req.(*GetFeedListReq))
+		return srv.(ContentServer).GetFollowingFeedListByPage(ctx, req.(*GetFollowingFeedListByPageReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -420,8 +420,8 @@ var Content_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ContentServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "getFeedList",
-			Handler:    _Content_GetFeedList_Handler,
+			MethodName: "getFollowingFeedListByPage",
+			Handler:    _Content_GetFollowingFeedListByPage_Handler,
 		},
 		{
 			MethodName: "getFeedListByPage",

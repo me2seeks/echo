@@ -1,0 +1,71 @@
+syntax = "v1"
+
+import (
+	"feed/feed.api"
+	"comment/comment.api"
+)
+
+@server (
+	prefix: feed
+	group:  feed
+)
+service content {
+	@doc "get feed list by page"
+	@handler listFeed
+	get /:userID (GetFeedsByPageReq) returns (GetFeedsByPageResp)
+
+	@doc "get comment list by page"
+	@handler listComment
+	get /:feedID/comment/ (GetFeedCommentsByPageReq) returns (GetFeedCommentsByPageResp)
+}
+
+@server (
+	prefix: comment
+	group:  comment
+)
+service content {
+	@doc "get comment comment list by page"
+	@handler list
+	get /:commentID (GetCommentsByPageReq) returns (GetCommentsByPageResp)
+}
+
+@server (
+	prefix: feed
+	group:  feed
+	jwt:    JwtAuth
+)
+service content {
+	@doc "create feed"
+	@handler create
+	post / (CreateFeedReq) returns (CreateFeedResp)
+
+	@doc "delete feed"
+	@handler delete
+	delete / (DeleteFeedReq) returns (DeleteFeedResp)
+
+	// @doc "update feed"
+	// @handler update
+	// put / (UpdateFeedReq) returns (UpdateFeedResp)
+	@doc "create feed comment"
+	@handler createComment
+	post /:feedID/comment/ (CreateFeedCommentReq) returns (CreateFeedCommentResp)
+}
+
+@server (
+	prefix: comment
+	group:  comment
+	jwt:    JwtAuth
+)
+service content {
+	@doc "create comment"
+	@handler create
+	post / (CreateCommentReq) returns (CreateCommentResp)
+
+	@doc "delete comment"
+	@handler delete
+	delete / (DeleteCommentReq) returns (DeleteCommentResp)
+// @doc "update comment"
+// @handler update
+// put / (UpdateCommentReq) returns (UpdateCommentResp)
+}
+

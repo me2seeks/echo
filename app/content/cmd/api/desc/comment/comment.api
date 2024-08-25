@@ -1,0 +1,60 @@
+syntax = "v1"
+type Comment {
+	ID          int64  `json:"id"`
+	FeedID      int64  `json:"feedID"`
+	UserID      int64  `json:"userID"`
+	Content     string `json:"content"`
+	Media0      string `json:"media0"`
+	Media1      string `json:"media1"`
+	Media2      string `json:"media2"`
+	Media3      string `json:"media3"`
+	Create_time int64  `json:"create_time"`
+}
+
+type (
+	GetCommentsByPageReq {
+		CommentID int64 `path:"commentID"`
+		Page      int64 `form:"page"`
+		PageSize  int64 `form:"page_size"`
+	}
+	GetCommentsByPageResp {
+		Comments []Comment `json:"comment"`
+		Total    int64     `json:"total"`
+	}
+)
+
+type (
+	CreateCommentReq {
+		CommentID int64  `json:"comment_id"`
+		Content   string `json:"content"`
+		Media0    string `json:"media0"`
+		Media1    string `json:"media1"`
+		Media2    string `json:"media2"`
+		Media3    string `json:"media3"`
+	}
+	CreateCommentResp {
+		ID int64 `json:"id"`
+	}
+)
+
+// type (
+// UpdateCommentReq {
+// 	ID      int64  `json:"id"`
+// 	Content string `json:"content"`
+// 	Media0  string `json:"media0"`
+// 	Media1  string `json:"media1"`
+// 	Media2  string `json:"media2"`
+// 	Media3  string `json:"media3"`
+// }
+// UpdateCommentResp struct{}
+// )
+
+type (
+	DeleteCommentReq {
+		ID int64 `json:"id"`
+		ParentID int64 `json:"parent_id"`
+		
+	}
+	DeleteCommentResp {
+	}
+)

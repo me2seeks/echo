@@ -52,6 +52,7 @@ type (
 		IncreaseFollowingCount(ctx context.Context, session sqlx.Session, userId int64) error
 		DecreaseFollowingCount(ctx context.Context, session sqlx.Session, userId int64) error
 		IncreaseFeedCount(ctx context.Context, session sqlx.Session, userId int64) error
+		DecreaseFeedCount(ctx context.Context, session sqlx.Session, userId int64) error
 	}
 
 	defaultUserStateModel struct {
@@ -458,8 +459,8 @@ func (m *defaultUserStateModel) IncreaseFeedCount(ctx context.Context, session s
 	if err != nil {
 		if err == ErrNotFound {
 			userState = &UserState{
-				UserId:         userId,
-				FeedCount:      1,
+				UserId:    userId,
+				FeedCount: 1,
 			}
 			_, err = m.Insert(ctx, session, userState)
 			if err != nil {
@@ -471,6 +472,19 @@ func (m *defaultUserStateModel) IncreaseFeedCount(ctx context.Context, session s
 	}
 
 	userState.FeedCount += 1
+	err = m.UpdateWithVersion(ctx, session, userState)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *defaultUserStateModel) DecreaseFeedCount(ctx context.Context, session sqlx.Session, userId int64) error {
+	userState, err := m.FindOne(ctx, userId)
+	if err != nil {
+		return err
+	}
+	userState.FeedCount -= 1
 	err = m.UpdateWithVersion(ctx, session, userState)
 	if err != nil {
 		return err

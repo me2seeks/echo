@@ -1,0 +1,17 @@
+syntax = "v1"
+
+type (
+	CreateFeedLikeReq {
+		ID int64 `json:"id"`
+	}
+	CreateFeedLikeResp {
+	}
+)
+
+type (
+	DeleteFeedLikeReq {
+		ID int64 `json:"id"`
+	}
+	DeleteFeedLikeResp {
+	}
+)

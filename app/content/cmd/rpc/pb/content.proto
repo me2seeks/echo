@@ -10,30 +10,33 @@ import "google/protobuf/timestamp.proto";
 message Feed {
     int64 id = 1;
     int64 userID = 2;
-    string Feed = 4;
-    string media0 = 5;
-    string media1 = 6;
-    string media2 = 7;
-    string media3 = 8;
-    google.protobuf.Timestamp  create_time = 9;
-}
-
-message GetFeedListReq{
-    int64 userID = 1;
-    google.protobuf.Timestamp  start_time = 2;
-}
-message GetFeedListResp{
-    repeated Feed feed = 1;
+    string content = 3;
+    string media0 = 4;
+    string media1 = 5;
+    string media2 = 6;
+    string media3 = 7;
+    google.protobuf.Timestamp  create_time = 8;
 }
 
 message GetFeedListByPageReq{
     int64 userID = 1;
-    google.protobuf.Timestamp  start_time = 2;
-    int64 page = 3;
-    int64 page_size = 4;
+    int64 page = 2;
+    int64 page_size = 3;
 }
 message GetFeedListByPageResp{
-    repeated Feed Feed = 1;
+    repeated Feed feeds = 1;
+    int64 total = 2;
+}
+
+message GetFollowingFeedListByPageReq{
+    int64 userID = 1;
+    repeated int64 targetID = 2;
+    int64 page = 3;
+    int64 page_size = 4;
+//   google.protobuf.Timestamp  start_time = 2;
+}
+message GetFollowingFeedListByPageResp{
+    repeated Feed Feeds = 1;
     int64 total = 2;
 }
 
@@ -62,6 +65,7 @@ message UpdateFeedResp{}
 
 message DeleteFeedReq{
     int64 id = 1;
+    int64 userID = 2;
 }
 message DeleteFeedResp{}
 
@@ -80,19 +84,21 @@ message Comment {
 }
 
 message GetCommentListReq{
-    int64 feedID = 1;
+    int64 id = 1;
+    bool isComment = 4;CreateCommentReq
 }
 message GetCommentListResp{
-    repeated Comment comment = 1;
+    repeated Comment comments = 1;
 }
 
 message GetCommentListByPageReq{
-    int64 feedID = 1;
+    int64 id = 1;
     int64 page = 2;
     int64 page_size = 3;
+    bool isComment = 4;
 }
 message GetCommentListByPageResp{
-    repeated Comment comment = 1;
+    repeated Comment comments = 1;
     int64 total = 2;
 }
 
@@ -128,19 +134,13 @@ message DeleteCommentReq{
 }
 message DeleteCommentResp{}
 
-message SearchFeedReq{
-    string keyword = 1;
-}
-message SearchFeedResp{
-    repeated Feed Feed = 1;
-}
 
 
 
 
 service Content {
 
-    rpc getFeedList (GetFeedListReq) returns (GetFeedListResp) {}
+    rpc getFollowingFeedListByPage (GetFollowingFeedListByPageReq) returns (GetFollowingFeedListByPageResp) {}
     rpc getFeedListByPage (GetFeedListByPageReq) returns (GetFeedListByPageResp) {}
     rpc createFeed (CreateFeedReq) returns (CreateFeedResp) {}
     rpc updateFeed (UpdateFeedReq) returns (UpdateFeedResp) {}

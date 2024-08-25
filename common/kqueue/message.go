@@ -14,6 +14,7 @@ const (
 	UnRepost
 	View
 	Feed
+	DeleteFeed
 )
 
 type Event struct {

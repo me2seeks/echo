@@ -1,0 +1,92 @@
+syntax = "v1"
+
+type Feed {
+	ID          int64  `json:"id"`
+	UserID      int64  `json:"userID"`
+	Content     string `json:"content"`
+	Media0      string `json:"media0"`
+	Media1      string `json:"media1"`
+	Media2      string `json:"media2"`
+	Media3      string `json:"media3"`
+	Create_time int64  `json:"create_time"`
+}
+
+type (
+	GetFeedsByPageReq {
+		UserID   int64 `path:"userID"`
+		Page     int64 `form:"page"`
+		PageSize int64 `form:"page_size"`
+	}
+	GetFeedsByPageResp {
+		Feeds []Feed `json:"feed"`
+		Total int64  `json:"total"`
+	}
+)
+
+type (
+	GetFeedCommentsByPageReq {
+		FeedID   int64  `path:"feedID"`
+		Page     int64  `form:"page"`
+		PageSize int64  `form:"page_size"`
+	}
+	GetFeedCommentsByPageResp {
+		Comments []Comment `json:"comment"`
+		Total    int64     `json:"total"`
+	}
+)
+
+type (
+	GetFollowingFeedListByPageReq {
+		Page     int64 `json:"page"`
+		PageSize int64 `json:"page_size"`
+	}
+	GetFollowingFeedListByPageResp {
+		Feeds []Feed `json:"feed"`
+		Total int64  `json:"total"`
+	}
+)
+
+type (
+	CreateFeedReq {
+		Content string `json:"content"`
+		Media0  string `json:"media0"`
+		Media1  string `json:"media1"`
+		Media2  string `json:"media2"`
+		Media3  string `json:"media3"`
+	}
+	CreateFeedResp {
+		ID int64 `json:"id"`
+	}
+)
+// type (
+// UpdateFeedReq {
+// 	ID      int64  `json:"id"`
+// 	Content string `json:"content"`
+// 	Media0  string `json:"media0"`
+// 	Media1  string `json:"media1"`
+// 	Media2  string `json:"media2"`
+// 	Media3  string `json:"media3"`
+// }
+// UpdateFeedResp struct{}
+// )
+type (
+	DeleteFeedReq {
+		ID int64 `json:"id"`
+	}
+	DeleteFeedResp {
+	}
+)
+
+type (
+	CreateFeedCommentReq {
+		FeedID  int64  `path:"feedID"`
+		Content string `json:"content"`
+		Media0  string `json:"media0"`
+		Media1  string `json:"media1"`
+		Media2  string `json:"media2"`
+		Media3  string `json:"media3"`
+	}
+	CreateFeedCommentResp {
+		ID int64 `json:"id"`
+	}
+)

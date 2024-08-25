@@ -13,33 +13,31 @@ import (
 )
 
 type (
-	Comment                  = pb.Comment
-	CreateCommentReq         = pb.CreateCommentReq
-	CreateCommentResp        = pb.CreateCommentResp
-	CreateFeedReq            = pb.CreateFeedReq
-	CreateFeedResp           = pb.CreateFeedResp
-	DeleteCommentReq         = pb.DeleteCommentReq
-	DeleteCommentResp        = pb.DeleteCommentResp
-	DeleteFeedReq            = pb.DeleteFeedReq
-	DeleteFeedResp           = pb.DeleteFeedResp
-	Feed                     = pb.Feed
-	GetCommentListByPageReq  = pb.GetCommentListByPageReq
-	GetCommentListByPageResp = pb.GetCommentListByPageResp
-	GetCommentListReq        = pb.GetCommentListReq
-	GetCommentListResp       = pb.GetCommentListResp
-	GetFeedListByPageReq     = pb.GetFeedListByPageReq
-	GetFeedListByPageResp    = pb.GetFeedListByPageResp
-	GetFeedListReq           = pb.GetFeedListReq
-	GetFeedListResp          = pb.GetFeedListResp
-	SearchFeedReq            = pb.SearchFeedReq
-	SearchFeedResp           = pb.SearchFeedResp
-	UpdateCommentReq         = pb.UpdateCommentReq
-	UpdateCommentResp        = pb.UpdateCommentResp
-	UpdateFeedReq            = pb.UpdateFeedReq
-	UpdateFeedResp           = pb.UpdateFeedResp
+	Comment                        = pb.Comment
+	CreateCommentReq               = pb.CreateCommentReq
+	CreateCommentResp              = pb.CreateCommentResp
+	CreateFeedReq                  = pb.CreateFeedReq
+	CreateFeedResp                 = pb.CreateFeedResp
+	DeleteCommentReq               = pb.DeleteCommentReq
+	DeleteCommentResp              = pb.DeleteCommentResp
+	DeleteFeedReq                  = pb.DeleteFeedReq
+	DeleteFeedResp                 = pb.DeleteFeedResp
+	Feed                           = pb.Feed
+	GetCommentListByPageReq        = pb.GetCommentListByPageReq
+	GetCommentListByPageResp       = pb.GetCommentListByPageResp
+	GetCommentListReq              = pb.GetCommentListReq
+	GetCommentListResp             = pb.GetCommentListResp
+	GetFeedListByPageReq           = pb.GetFeedListByPageReq
+	GetFeedListByPageResp          = pb.GetFeedListByPageResp
+	GetFollowingFeedListByPageReq  = pb.GetFollowingFeedListByPageReq
+	GetFollowingFeedListByPageResp = pb.GetFollowingFeedListByPageResp
+	UpdateCommentReq               = pb.UpdateCommentReq
+	UpdateCommentResp              = pb.UpdateCommentResp
+	UpdateFeedReq                  = pb.UpdateFeedReq
+	UpdateFeedResp                 = pb.UpdateFeedResp
 
 	Content interface {
-		GetFeedList(ctx context.Context, in *GetFeedListReq, opts ...grpc.CallOption) (*GetFeedListResp, error)
+		GetFollowingFeedListByPage(ctx context.Context, in *GetFollowingFeedListByPageReq, opts ...grpc.CallOption) (*GetFollowingFeedListByPageResp, error)
 		GetFeedListByPage(ctx context.Context, in *GetFeedListByPageReq, opts ...grpc.CallOption) (*GetFeedListByPageResp, error)
 		CreateFeed(ctx context.Context, in *CreateFeedReq, opts ...grpc.CallOption) (*CreateFeedResp, error)
 		UpdateFeed(ctx context.Context, in *UpdateFeedReq, opts ...grpc.CallOption) (*UpdateFeedResp, error)
@@ -63,9 +61,9 @@ func NewContent(cli zrpc.Client) Content {
 	}
 }
 
-func (m *defaultContent) GetFeedList(ctx context.Context, in *GetFeedListReq, opts ...grpc.CallOption) (*GetFeedListResp, error) {
+func (m *defaultContent) GetFollowingFeedListByPage(ctx context.Context, in *GetFollowingFeedListByPageReq, opts ...grpc.CallOption) (*GetFollowingFeedListByPageResp, error) {
 	client := pb.NewContentClient(m.cli.Conn())
-	return client.GetFeedList(ctx, in, opts...)
+	return client.GetFollowingFeedListByPage(ctx, in, opts...)
 }
 
 func (m *defaultContent) GetFeedListByPage(ctx context.Context, in *GetFeedListByPageReq, opts ...grpc.CallOption) (*GetFeedListByPageResp, error) {

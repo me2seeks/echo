@@ -1,0 +1,17 @@
+syntax = "v1"
+
+type (
+	CreateCommentLikeReq {
+		ID int64 `json:"id"`
+	}
+	CreateCommentLikeResp {
+	}
+)
+
+type (
+	DeleteCommentLikeReq {
+		ID int64 `json:"id"`
+	}
+	DeleteCommentLikeResp {
+	}
+)

@@ -38,4 +38,15 @@ CREATE TABLE `comments` (
     INDEX `idx_user_id` (`user_id`),
     INDEX `idx_parent_id` (`parent_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT = '用户的评论和回复';
+DROP TABLE IF EXISTS `user_last_request`;
+CREATE TABLE `user_last_request` (
+    `user_id` BIGINT NOT NULL COMMENT '用户ID',
+    `last_request_time` DATETIME NOT NULL COMMENT '用户最后一次请求时间',
+    `create_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `delete_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '删除时间',
+    `del_state` TINYINT NOT NULL DEFAULT 0 COMMENT '删除状态',
+    `version` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '版本号',
+    PRIMARY KEY (`user_id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT = '用户最后一次请求时间';
 SET FOREIGN_KEY_CHECKS = 1;

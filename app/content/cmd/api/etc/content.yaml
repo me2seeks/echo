@@ -8,6 +8,13 @@ Port: 1002
 #   Port: 4002
 #   Path: /metrics
 
+
+# Telemetry:
+#   Name: content-api
+#   Endpoint: http://jaeger:14268/api/traces
+#   Sampler: 1.0
+#   Batcher: jaeger
+
 JwtAuth:
   AccessSecret: ae0536f9-6450-4606-8e13-5a19ed505da0
   AccessExpire: 31536000
@@ -18,12 +25,8 @@ Log:
 
 
 #rpc service
-InteractionRpcConf:
+ContentRPCConf:
   Endpoints:
-    - 127.0.0.1:1005
+    - 127.0.0.1:1003
   NonBlock: true
 
-UsercenterRpcConf:
-  Endpoints:
-    - 127.0.0.1:1001
-  NonBlock: true
