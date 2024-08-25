@@ -49,7 +49,7 @@ type (
 		FindPageListByIdASC(ctx context.Context, rowBuilder squirrel.SelectBuilder, preMaxId, pageSize int64) ([]*CommentLikes, error)
 		Delete(ctx context.Context, session sqlx.Session, id int64) error
 
-		DeleteByUserIdContentId(ctx context.Context, session sqlx.Session,userID, contentId int64) error
+		DeleteByUserIdContentId(ctx context.Context, session sqlx.Session, userID, contentId int64) error
 	}
 
 	defaultCommentLikesModel struct {
@@ -94,7 +94,7 @@ func (m *defaultCommentLikesModel) Delete(ctx context.Context, session sqlx.Sess
 	return err
 }
 
-func (m *defaultCommentLikesModel) DeleteByUserIdContentId(ctx context.Context, session sqlx.Session,userID, contentId int64) error {
+func (m *defaultCommentLikesModel) DeleteByUserIdContentId(ctx context.Context, session sqlx.Session, userID, contentId int64) error {
 	data, err := m.FindOneByUserIdContentId(ctx, userID, contentId)
 	if err != nil {
 		return err

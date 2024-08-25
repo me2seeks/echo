@@ -22,7 +22,7 @@ KqConsumerConf:
   Processors: 8
 
 Log:
-  ServiceName: interaction-rpc
+  ServiceName: counter-rpc
   Level: error
 
 
@@ -30,7 +30,7 @@ Redis:
   Host: 10.2.12.14:31000
   Type: node
   Pass: 
-  Key: interaction-rpc
+  Key: counter-rpc
 Mysql:
   DataSource: root:bf17tk6d7t56@tcp(10.2.12.14:32000)/echo-hub?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
 Cache:

@@ -17,6 +17,8 @@ const (
 	CopyError
 	KqPusherError
 	MarshalError
+	UnmarshalError
+	InvalidEvent
 )
 
 // 用户模块

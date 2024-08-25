@@ -49,7 +49,7 @@ type (
 		FindPageListByIdASC(ctx context.Context, rowBuilder squirrel.SelectBuilder, preMaxId, pageSize int64) ([]*FeedLikes, error)
 		Delete(ctx context.Context, session sqlx.Session, id int64) error
 
-		DeleteByUserIdContentId(ctx context.Context, session sqlx.Session,userID, contentId int64) error
+		DeleteByUserIdContentId(ctx context.Context, session sqlx.Session, userID, contentId int64) error
 	}
 
 	defaultFeedLikesModel struct {

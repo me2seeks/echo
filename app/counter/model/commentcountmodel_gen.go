@@ -23,16 +23,16 @@ import (
 var (
 	commentCountFieldNames          = builder.RawFieldNames(&CommentCount{})
 	commentCountRows                = strings.Join(commentCountFieldNames, ",")
-	commentCountRowsExpectAutoSet   = strings.Join(stringx.Remove(commentCountFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
-	commentCountRowsWithPlaceHolder = strings.Join(stringx.Remove(commentCountFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
+	commentCountRowsExpectAutoSet   = strings.Join(stringx.Remove(commentCountFieldNames, "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
+	commentCountRowsWithPlaceHolder = strings.Join(stringx.Remove(commentCountFieldNames, "`comment_id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
 
-	cacheCommentCountIdPrefix = "cache:commentCount:id:"
+	cacheCommentCountCommentIdPrefix = "cache:commentCount:commentId:"
 )
 
 type (
 	commentCountModel interface {
 		Insert(ctx context.Context, session sqlx.Session, data *CommentCount) (sql.Result, error)
-		FindOne(ctx context.Context, id int64) (*CommentCount, error)
+		FindOne(ctx context.Context, commentId int64) (*CommentCount, error)
 		Update(ctx context.Context, session sqlx.Session, data *CommentCount) (sql.Result, error)
 		UpdateWithVersion(ctx context.Context, session sqlx.Session, data *CommentCount) error
 		Trans(ctx context.Context, fn func(context context.Context, session sqlx.Session) error) error
@@ -45,7 +45,13 @@ type (
 		FindPageListByPageWithTotal(ctx context.Context, rowBuilder squirrel.SelectBuilder, page, pageSize int64, orderBy string) ([]*CommentCount, int64, error)
 		FindPageListByIdDESC(ctx context.Context, rowBuilder squirrel.SelectBuilder, preMinId, pageSize int64) ([]*CommentCount, error)
 		FindPageListByIdASC(ctx context.Context, rowBuilder squirrel.SelectBuilder, preMaxId, pageSize int64) ([]*CommentCount, error)
-		Delete(ctx context.Context, session sqlx.Session, id int64) error
+		Delete(ctx context.Context, session sqlx.Session, commentId int64) error
+
+		IncreaseLikeCount(ctx context.Context, session sqlx.Session, commentID int64) error
+		DecreaseLikeCount(ctx context.Context, session sqlx.Session, commentID int64) error
+		IncreaseViewCount(ctx context.Context, session sqlx.Session, commentID int64) error
+		IncreaseCommentCount(ctx context.Context, session sqlx.Session, feedID int64) error
+		DecreaseCommentCount(ctx context.Context, session sqlx.Session, feedID int64) error
 	}
 
 	defaultCommentCountModel struct {
@@ -54,17 +60,16 @@ type (
 	}
 
 	CommentCount struct {
-		Id           int64         `db:"id"`
-		CommentId    sql.NullInt64 `db:"comment_id"`
-		CommentCount sql.NullInt64 `db:"comment_count"`
-		ViewCount    sql.NullInt64 `db:"view_count"`
-		LikeCount    sql.NullInt64 `db:"like_count"`
-		RepostCount  sql.NullInt64 `db:"repost_count"`
-		CreateAt     time.Time     `db:"create_at"`
-		UpdateAt     time.Time     `db:"update_at"`
-		DeleteAt     time.Time     `db:"delete_at"`
-		DelState     int64         `db:"del_state"`
-		Version      uint64        `db:"version"` // 版本号
+		CommentId    int64     `db:"comment_id"`
+		CommentCount int64     `db:"comment_count"`
+		ViewCount    int64     `db:"view_count"`
+		LikeCount    int64     `db:"like_count"`
+		RepostCount  int64     `db:"repost_count"`
+		CreateAt     time.Time `db:"create_at"`
+		UpdateAt     time.Time `db:"update_at"`
+		DeleteAt     time.Time `db:"delete_at"`
+		DelState     int64     `db:"del_state"`
+		Version      uint64    `db:"version"` // 版本号
 	}
 )
 
@@ -75,23 +80,23 @@ func newCommentCountModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.Op
 	}
 }
 
-func (m *defaultCommentCountModel) Delete(ctx context.Context, session sqlx.Session, id int64) error {
-	commentCountIdKey := fmt.Sprintf("%s%v", cacheCommentCountIdPrefix, id)
+func (m *defaultCommentCountModel) Delete(ctx context.Context, session sqlx.Session, commentId int64) error {
+	commentCountCommentIdKey := fmt.Sprintf("%s%v", cacheCommentCountCommentIdPrefix, commentId)
 	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
+		query := fmt.Sprintf("delete from %s where `comment_id` = ?", m.table)
 		if session != nil {
-			return session.ExecCtx(ctx, query, id)
+			return session.ExecCtx(ctx, query, commentId)
 		}
-		return conn.ExecCtx(ctx, query, id)
-	}, commentCountIdKey)
+		return conn.ExecCtx(ctx, query, commentId)
+	}, commentCountCommentIdKey)
 	return err
 }
-func (m *defaultCommentCountModel) FindOne(ctx context.Context, id int64) (*CommentCount, error) {
-	commentCountIdKey := fmt.Sprintf("%s%v", cacheCommentCountIdPrefix, id)
+func (m *defaultCommentCountModel) FindOne(ctx context.Context, commentId int64) (*CommentCount, error) {
+	commentCountCommentIdKey := fmt.Sprintf("%s%v", cacheCommentCountCommentIdPrefix, commentId)
 	var resp CommentCount
-	err := m.QueryRowCtx(ctx, &resp, commentCountIdKey, func(ctx context.Context, conn sqlx.SqlConn, v interface{}) error {
-		query := fmt.Sprintf("select %s from %s where `id` = ? and del_state = ? limit 1", commentCountRows, m.table)
-		return conn.QueryRowCtx(ctx, v, query, id, globalkey.DelStateNo)
+	err := m.QueryRowCtx(ctx, &resp, commentCountCommentIdKey, func(ctx context.Context, conn sqlx.SqlConn, v interface{}) error {
+		query := fmt.Sprintf("select %s from %s where `comment_id` = ? and del_state = ? limit 1", commentCountRows, m.table)
+		return conn.QueryRowCtx(ctx, v, query, commentId, globalkey.DelStateNo)
 	})
 	switch err {
 	case nil:
@@ -106,25 +111,25 @@ func (m *defaultCommentCountModel) FindOne(ctx context.Context, id int64) (*Comm
 func (m *defaultCommentCountModel) Insert(ctx context.Context, session sqlx.Session, data *CommentCount) (sql.Result, error) {
 	data.DeleteAt = time.Unix(0, 0)
 	data.DelState = globalkey.DelStateNo
-	commentCountIdKey := fmt.Sprintf("%s%v", cacheCommentCountIdPrefix, data.Id)
+	commentCountCommentIdKey := fmt.Sprintf("%s%v", cacheCommentCountCommentIdPrefix, data.CommentId)
 	return m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?)", m.table, commentCountRowsExpectAutoSet)
 		if session != nil {
 			return session.ExecCtx(ctx, query, data.CommentId, data.CommentCount, data.ViewCount, data.LikeCount, data.RepostCount, data.DeleteAt, data.DelState, data.Version)
 		}
 		return conn.ExecCtx(ctx, query, data.CommentId, data.CommentCount, data.ViewCount, data.LikeCount, data.RepostCount, data.DeleteAt, data.DelState, data.Version)
-	}, commentCountIdKey)
+	}, commentCountCommentIdKey)
 }
 
 func (m *defaultCommentCountModel) Update(ctx context.Context, session sqlx.Session, data *CommentCount) (sql.Result, error) {
-	commentCountIdKey := fmt.Sprintf("%s%v", cacheCommentCountIdPrefix, data.Id)
+	commentCountCommentIdKey := fmt.Sprintf("%s%v", cacheCommentCountCommentIdPrefix, data.CommentId)
 	return m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, commentCountRowsWithPlaceHolder)
+		query := fmt.Sprintf("update %s set %s where `comment_id` = ?", m.table, commentCountRowsWithPlaceHolder)
 		if session != nil {
-			return session.ExecCtx(ctx, query, data.CommentId, data.CommentCount, data.ViewCount, data.LikeCount, data.RepostCount, data.DeleteAt, data.DelState, data.Version, data.Id)
+			return session.ExecCtx(ctx, query, data.CommentCount, data.ViewCount, data.LikeCount, data.RepostCount, data.DeleteAt, data.DelState, data.Version, data.CommentId)
 		}
-		return conn.ExecCtx(ctx, query, data.CommentId, data.CommentCount, data.ViewCount, data.LikeCount, data.RepostCount, data.DeleteAt, data.DelState, data.Version, data.Id)
-	}, commentCountIdKey)
+		return conn.ExecCtx(ctx, query, data.CommentCount, data.ViewCount, data.LikeCount, data.RepostCount, data.DeleteAt, data.DelState, data.Version, data.CommentId)
+	}, commentCountCommentIdKey)
 }
 
 func (m *defaultCommentCountModel) UpdateWithVersion(ctx context.Context, session sqlx.Session, data *CommentCount) error {
@@ -135,14 +140,14 @@ func (m *defaultCommentCountModel) UpdateWithVersion(ctx context.Context, sessio
 	var sqlResult sql.Result
 	var err error
 
-	commentCountIdKey := fmt.Sprintf("%s%v", cacheCommentCountIdPrefix, data.Id)
+	commentCountCommentIdKey := fmt.Sprintf("%s%v", cacheCommentCountCommentIdPrefix, data.CommentId)
 	sqlResult, err = m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("update %s set %s where `id` = ? and version = ? ", m.table, commentCountRowsWithPlaceHolder)
+		query := fmt.Sprintf("update %s set %s where `comment_id` = ? and version = ? ", m.table, commentCountRowsWithPlaceHolder)
 		if session != nil {
-			return session.ExecCtx(ctx, query, data.CommentId, data.CommentCount, data.ViewCount, data.LikeCount, data.RepostCount, data.DeleteAt, data.DelState, data.Version, data.Id, oldVersion)
+			return session.ExecCtx(ctx, query, data.CommentCount, data.ViewCount, data.LikeCount, data.RepostCount, data.DeleteAt, data.DelState, data.Version, data.CommentId, oldVersion)
 		}
-		return conn.ExecCtx(ctx, query, data.CommentId, data.CommentCount, data.ViewCount, data.LikeCount, data.RepostCount, data.DeleteAt, data.DelState, data.Version, data.Id, oldVersion)
-	}, commentCountIdKey)
+		return conn.ExecCtx(ctx, query, data.CommentCount, data.ViewCount, data.LikeCount, data.RepostCount, data.DeleteAt, data.DelState, data.Version, data.CommentId, oldVersion)
+	}, commentCountCommentIdKey)
 	if err != nil {
 		return err
 	}
@@ -360,13 +365,127 @@ func (m *defaultCommentCountModel) SelectBuilder() squirrel.SelectBuilder {
 	return squirrel.Select().From(m.table)
 }
 func (m *defaultCommentCountModel) formatPrimary(primary interface{}) string {
-	return fmt.Sprintf("%s%v", cacheCommentCountIdPrefix, primary)
+	return fmt.Sprintf("%s%v", cacheCommentCountCommentIdPrefix, primary)
 }
 func (m *defaultCommentCountModel) queryPrimary(ctx context.Context, conn sqlx.SqlConn, v, primary interface{}) error {
-	query := fmt.Sprintf("select %s from %s where `id` = ? and del_state = ? limit 1", commentCountRows, m.table)
+	query := fmt.Sprintf("select %s from %s where `comment_id` = ? and del_state = ? limit 1", commentCountRows, m.table)
 	return conn.QueryRowCtx(ctx, v, query, primary, globalkey.DelStateNo)
 }
 
 func (m *defaultCommentCountModel) tableName() string {
 	return m.table
+}
+
+func (m *defaultCommentCountModel) IncreaseLikeCount(ctx context.Context, session sqlx.Session, commentID int64) error {
+	commentCount, err := m.FindOne(ctx, commentID)
+	if err != nil {
+		if err == ErrNotFound {
+			commentCount = &CommentCount{
+				CommentId: commentID,
+				LikeCount: 1,
+			}
+			_, err = m.Insert(ctx, session, commentCount)
+			if err != nil {
+				return err
+			}
+			return nil
+		}
+		return err
+	}
+
+	commentCount.LikeCount += 1
+	err = m.UpdateWithVersion(ctx, session, commentCount)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *defaultCommentCountModel) DecreaseLikeCount(ctx context.Context, session sqlx.Session, commentID int64) error {
+	commentCount, err := m.FindOne(ctx, commentID)
+	// if err != nil {
+	// 	if err == ErrNotFound {
+	// 		commentCount = &CommentCount{
+	// 		CommentId:        commentID,
+	// 		LikeCount: 	  0,
+	// 	}
+	// 	_, err = m.Insert(ctx, session, commentCount)
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// 	return nil
+	// }
+	// 	return err
+	// }
+
+	commentCount.LikeCount -= 1
+	err = m.UpdateWithVersion(ctx, session, commentCount)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *defaultCommentCountModel) IncreaseViewCount(ctx context.Context, session sqlx.Session, commentID int64) error {
+	commentCount, err := m.FindOne(ctx, commentID)
+	if err != nil {
+		if err == ErrNotFound {
+			commentCount = &CommentCount{
+				CommentId: commentID,
+				ViewCount: 1,
+			}
+			_, err = m.Insert(ctx, session, commentCount)
+			if err != nil {
+				return err
+			}
+			return nil
+		}
+		return err
+	}
+	commentCount.ViewCount += 1
+	err = m.UpdateWithVersion(ctx, session, commentCount)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *defaultCommentCountModel) IncreaseCommentCount(ctx context.Context, session sqlx.Session, commentID int64) error {
+	commentCount, err := m.FindOne(ctx, commentID)
+	if err != nil {
+		return err
+	}
+	// if err != nil {
+	// 	if err == ErrNotFound {
+	// 		commentCount = &CommentCount{
+	// 		CommentId:        feedID,
+	// 		commentCount: 	  1,
+	// 	}
+	// 	_, err = m.Insert(ctx, session, commentCount)
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// 	return nil
+	// }
+	// 	return err
+	// }
+	commentCount.CommentCount += 1
+	err = m.UpdateWithVersion(ctx, session, commentCount)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *defaultCommentCountModel) DecreaseCommentCount(ctx context.Context, session sqlx.Session, commentID int64) error {
+	commentCount, err := m.FindOne(ctx, commentID)
+	if err != nil {
+		return err
+	}
+	commentCount.CommentCount -= 1
+	err = m.UpdateWithVersion(ctx, session, commentCount)
+	if err != nil {
+		return err
+	}
+	return nil
 }

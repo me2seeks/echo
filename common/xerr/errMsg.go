@@ -17,6 +17,8 @@ func init() {
 	message[CopyError] = "拷贝失败"
 	message[KqPusherError] = "推送失败"
 	message[MarshalError] = "序列化失败"
+	message[UnmarshalError] = "反序列化失败"
+	message[InvalidEvent] = "无效事件"
 }
 
 func MapErrMsg(errcode uint32) string {

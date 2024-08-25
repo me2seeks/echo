@@ -23,16 +23,16 @@ import (
 var (
 	feedCountFieldNames          = builder.RawFieldNames(&FeedCount{})
 	feedCountRows                = strings.Join(feedCountFieldNames, ",")
-	feedCountRowsExpectAutoSet   = strings.Join(stringx.Remove(feedCountFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
-	feedCountRowsWithPlaceHolder = strings.Join(stringx.Remove(feedCountFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
+	feedCountRowsExpectAutoSet   = strings.Join(stringx.Remove(feedCountFieldNames, "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
+	feedCountRowsWithPlaceHolder = strings.Join(stringx.Remove(feedCountFieldNames, "`feed_id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
 
-	cacheFeedCountIdPrefix = "cache:feedCount:id:"
+	cacheFeedCountFeedIdPrefix = "cache:feedCount:feedId:"
 )
 
 type (
 	feedCountModel interface {
 		Insert(ctx context.Context, session sqlx.Session, data *FeedCount) (sql.Result, error)
-		FindOne(ctx context.Context, id int64) (*FeedCount, error)
+		FindOne(ctx context.Context, feedId int64) (*FeedCount, error)
 		Update(ctx context.Context, session sqlx.Session, data *FeedCount) (sql.Result, error)
 		UpdateWithVersion(ctx context.Context, session sqlx.Session, data *FeedCount) error
 		Trans(ctx context.Context, fn func(context context.Context, session sqlx.Session) error) error
@@ -45,7 +45,13 @@ type (
 		FindPageListByPageWithTotal(ctx context.Context, rowBuilder squirrel.SelectBuilder, page, pageSize int64, orderBy string) ([]*FeedCount, int64, error)
 		FindPageListByIdDESC(ctx context.Context, rowBuilder squirrel.SelectBuilder, preMinId, pageSize int64) ([]*FeedCount, error)
 		FindPageListByIdASC(ctx context.Context, rowBuilder squirrel.SelectBuilder, preMaxId, pageSize int64) ([]*FeedCount, error)
-		Delete(ctx context.Context, session sqlx.Session, id int64) error
+		Delete(ctx context.Context, session sqlx.Session, feedId int64) error
+
+		IncreaseLikeCount(ctx context.Context, session sqlx.Session, feedID int64) error
+		DecreaseLikeCount(ctx context.Context, session sqlx.Session, feedID int64) error
+		IncreaseViewCount(ctx context.Context, session sqlx.Session, feedID int64) error
+		IncreaseCommentCount(ctx context.Context, session sqlx.Session, feedID int64) error
+		DecreaseCommentCount(ctx context.Context, session sqlx.Session, feedID int64) error
 	}
 
 	defaultFeedCountModel struct {
@@ -54,17 +60,16 @@ type (
 	}
 
 	FeedCount struct {
-		Id           int64         `db:"id"`
-		FeedId       sql.NullInt64 `db:"feed_id"`
-		CommentCount sql.NullInt64 `db:"comment_count"`
-		ViewCount    sql.NullInt64 `db:"view_count"`
-		LikeCount    sql.NullInt64 `db:"like_count"`
-		RepostCount  sql.NullInt64 `db:"repost_count"`
-		CreateAt     time.Time     `db:"create_at"`
-		UpdateAt     time.Time     `db:"update_at"`
-		DeleteAt     time.Time     `db:"delete_at"`
-		DelState     int64         `db:"del_state"`
-		Version      uint64        `db:"version"` // 版本号
+		FeedId       int64     `db:"feed_id"`
+		CommentCount int64     `db:"comment_count"`
+		ViewCount    int64     `db:"view_count"`
+		LikeCount    int64     `db:"like_count"`
+		RepostCount  int64     `db:"repost_count"`
+		CreateAt     time.Time `db:"create_at"`
+		UpdateAt     time.Time `db:"update_at"`
+		DeleteAt     time.Time `db:"delete_at"`
+		DelState     int64     `db:"del_state"`
+		Version      uint64    `db:"version"` // 版本号
 	}
 )
 
@@ -75,23 +80,23 @@ func newFeedCountModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.Optio
 	}
 }
 
-func (m *defaultFeedCountModel) Delete(ctx context.Context, session sqlx.Session, id int64) error {
-	feedCountIdKey := fmt.Sprintf("%s%v", cacheFeedCountIdPrefix, id)
+func (m *defaultFeedCountModel) Delete(ctx context.Context, session sqlx.Session, feedId int64) error {
+	feedCountFeedIdKey := fmt.Sprintf("%s%v", cacheFeedCountFeedIdPrefix, feedId)
 	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
+		query := fmt.Sprintf("delete from %s where `feed_id` = ?", m.table)
 		if session != nil {
-			return session.ExecCtx(ctx, query, id)
+			return session.ExecCtx(ctx, query, feedId)
 		}
-		return conn.ExecCtx(ctx, query, id)
-	}, feedCountIdKey)
+		return conn.ExecCtx(ctx, query, feedId)
+	}, feedCountFeedIdKey)
 	return err
 }
-func (m *defaultFeedCountModel) FindOne(ctx context.Context, id int64) (*FeedCount, error) {
-	feedCountIdKey := fmt.Sprintf("%s%v", cacheFeedCountIdPrefix, id)
+func (m *defaultFeedCountModel) FindOne(ctx context.Context, feedId int64) (*FeedCount, error) {
+	feedCountFeedIdKey := fmt.Sprintf("%s%v", cacheFeedCountFeedIdPrefix, feedId)
 	var resp FeedCount
-	err := m.QueryRowCtx(ctx, &resp, feedCountIdKey, func(ctx context.Context, conn sqlx.SqlConn, v interface{}) error {
-		query := fmt.Sprintf("select %s from %s where `id` = ? and del_state = ? limit 1", feedCountRows, m.table)
-		return conn.QueryRowCtx(ctx, v, query, id, globalkey.DelStateNo)
+	err := m.QueryRowCtx(ctx, &resp, feedCountFeedIdKey, func(ctx context.Context, conn sqlx.SqlConn, v interface{}) error {
+		query := fmt.Sprintf("select %s from %s where `feed_id` = ? and del_state = ? limit 1", feedCountRows, m.table)
+		return conn.QueryRowCtx(ctx, v, query, feedId, globalkey.DelStateNo)
 	})
 	switch err {
 	case nil:
@@ -106,25 +111,25 @@ func (m *defaultFeedCountModel) FindOne(ctx context.Context, id int64) (*FeedCou
 func (m *defaultFeedCountModel) Insert(ctx context.Context, session sqlx.Session, data *FeedCount) (sql.Result, error) {
 	data.DeleteAt = time.Unix(0, 0)
 	data.DelState = globalkey.DelStateNo
-	feedCountIdKey := fmt.Sprintf("%s%v", cacheFeedCountIdPrefix, data.Id)
+	feedCountFeedIdKey := fmt.Sprintf("%s%v", cacheFeedCountFeedIdPrefix, data.FeedId)
 	return m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?)", m.table, feedCountRowsExpectAutoSet)
 		if session != nil {
 			return session.ExecCtx(ctx, query, data.FeedId, data.CommentCount, data.ViewCount, data.LikeCount, data.RepostCount, data.DeleteAt, data.DelState, data.Version)
 		}
 		return conn.ExecCtx(ctx, query, data.FeedId, data.CommentCount, data.ViewCount, data.LikeCount, data.RepostCount, data.DeleteAt, data.DelState, data.Version)
-	}, feedCountIdKey)
+	}, feedCountFeedIdKey)
 }
 
 func (m *defaultFeedCountModel) Update(ctx context.Context, session sqlx.Session, data *FeedCount) (sql.Result, error) {
-	feedCountIdKey := fmt.Sprintf("%s%v", cacheFeedCountIdPrefix, data.Id)
+	feedCountFeedIdKey := fmt.Sprintf("%s%v", cacheFeedCountFeedIdPrefix, data.FeedId)
 	return m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, feedCountRowsWithPlaceHolder)
+		query := fmt.Sprintf("update %s set %s where `feed_id` = ?", m.table, feedCountRowsWithPlaceHolder)
 		if session != nil {
-			return session.ExecCtx(ctx, query, data.FeedId, data.CommentCount, data.ViewCount, data.LikeCount, data.RepostCount, data.DeleteAt, data.DelState, data.Version, data.Id)
+			return session.ExecCtx(ctx, query, data.CommentCount, data.ViewCount, data.LikeCount, data.RepostCount, data.DeleteAt, data.DelState, data.Version, data.FeedId)
 		}
-		return conn.ExecCtx(ctx, query, data.FeedId, data.CommentCount, data.ViewCount, data.LikeCount, data.RepostCount, data.DeleteAt, data.DelState, data.Version, data.Id)
-	}, feedCountIdKey)
+		return conn.ExecCtx(ctx, query, data.CommentCount, data.ViewCount, data.LikeCount, data.RepostCount, data.DeleteAt, data.DelState, data.Version, data.FeedId)
+	}, feedCountFeedIdKey)
 }
 
 func (m *defaultFeedCountModel) UpdateWithVersion(ctx context.Context, session sqlx.Session, data *FeedCount) error {
@@ -135,14 +140,14 @@ func (m *defaultFeedCountModel) UpdateWithVersion(ctx context.Context, session s
 	var sqlResult sql.Result
 	var err error
 
-	feedCountIdKey := fmt.Sprintf("%s%v", cacheFeedCountIdPrefix, data.Id)
+	feedCountFeedIdKey := fmt.Sprintf("%s%v", cacheFeedCountFeedIdPrefix, data.FeedId)
 	sqlResult, err = m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("update %s set %s where `id` = ? and version = ? ", m.table, feedCountRowsWithPlaceHolder)
+		query := fmt.Sprintf("update %s set %s where `feed_id` = ? and version = ? ", m.table, feedCountRowsWithPlaceHolder)
 		if session != nil {
-			return session.ExecCtx(ctx, query, data.FeedId, data.CommentCount, data.ViewCount, data.LikeCount, data.RepostCount, data.DeleteAt, data.DelState, data.Version, data.Id, oldVersion)
+			return session.ExecCtx(ctx, query, data.CommentCount, data.ViewCount, data.LikeCount, data.RepostCount, data.DeleteAt, data.DelState, data.Version, data.FeedId, oldVersion)
 		}
-		return conn.ExecCtx(ctx, query, data.FeedId, data.CommentCount, data.ViewCount, data.LikeCount, data.RepostCount, data.DeleteAt, data.DelState, data.Version, data.Id, oldVersion)
-	}, feedCountIdKey)
+		return conn.ExecCtx(ctx, query, data.CommentCount, data.ViewCount, data.LikeCount, data.RepostCount, data.DeleteAt, data.DelState, data.Version, data.FeedId, oldVersion)
+	}, feedCountFeedIdKey)
 	if err != nil {
 		return err
 	}
@@ -360,13 +365,118 @@ func (m *defaultFeedCountModel) SelectBuilder() squirrel.SelectBuilder {
 	return squirrel.Select().From(m.table)
 }
 func (m *defaultFeedCountModel) formatPrimary(primary interface{}) string {
-	return fmt.Sprintf("%s%v", cacheFeedCountIdPrefix, primary)
+	return fmt.Sprintf("%s%v", cacheFeedCountFeedIdPrefix, primary)
 }
 func (m *defaultFeedCountModel) queryPrimary(ctx context.Context, conn sqlx.SqlConn, v, primary interface{}) error {
-	query := fmt.Sprintf("select %s from %s where `id` = ? and del_state = ? limit 1", feedCountRows, m.table)
+	query := fmt.Sprintf("select %s from %s where `feed_id` = ? and del_state = ? limit 1", feedCountRows, m.table)
 	return conn.QueryRowCtx(ctx, v, query, primary, globalkey.DelStateNo)
 }
 
 func (m *defaultFeedCountModel) tableName() string {
 	return m.table
+}
+
+func (m *defaultFeedCountModel) IncreaseLikeCount(ctx context.Context, session sqlx.Session, feedID int64) error {
+	feedCount, err := m.FindOne(ctx, feedID)
+	if err != nil {
+		return err
+	}
+	// if err != nil {
+	// 	if err == ErrNotFound {
+	// 		feedCount = &FeedCount{
+	// 		FeedId:        feedID,
+	// 		LikeCount: 	  1,
+	// 	}
+	// 	_, err = m.Insert(ctx, session, feedCount)
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// 	return nil
+	// }
+	// 	return err
+	// }
+
+	feedCount.LikeCount += 1
+	err = m.UpdateWithVersion(ctx, session, feedCount)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *defaultFeedCountModel) DecreaseLikeCount(ctx context.Context, session sqlx.Session, feedID int64) error {
+	feedCount, err := m.FindOne(ctx, feedID)
+	if err != nil {
+		return err
+	}
+	feedCount.LikeCount -= 1
+	err = m.UpdateWithVersion(ctx, session, feedCount)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *defaultFeedCountModel) IncreaseViewCount(ctx context.Context, session sqlx.Session, feedID int64) error {
+	feedCount, err := m.FindOne(ctx, feedID)
+	if err != nil {
+		if err == ErrNotFound {
+			feedCount = &FeedCount{
+				FeedId:    feedID,
+				ViewCount: 1,
+			}
+			_, err = m.Insert(ctx, session, feedCount)
+			if err != nil {
+				return err
+			}
+			return nil
+		}
+		return err
+	}
+	feedCount.ViewCount += 1
+	err = m.UpdateWithVersion(ctx, session, feedCount)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *defaultFeedCountModel) IncreaseCommentCount(ctx context.Context, session sqlx.Session, feedID int64) error {
+	feedCount, err := m.FindOne(ctx, feedID)
+	if err != nil {
+		return err
+	}
+	// if err != nil {
+	// 	if err == ErrNotFound {
+	// 		feedCount = &FeedCount{
+	// 		FeedId:        feedID,
+	// 		CommentCount: 	  1,
+	// 	}
+	// 	_, err = m.Insert(ctx, session, feedCount)
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// 	return nil
+	// }
+	// 	return err
+	// }
+	feedCount.CommentCount += 1
+	err = m.UpdateWithVersion(ctx, session, feedCount)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *defaultFeedCountModel) DecreaseCommentCount(ctx context.Context, session sqlx.Session, feedID int64) error {
+	feedCount, err := m.FindOne(ctx, feedID)
+	if err != nil {
+		return err
+	}
+	feedCount.CommentCount -= 1
+	err = m.UpdateWithVersion(ctx, session, feedCount)
+	if err != nil {
+		return err
+	}
+	return nil
 }
