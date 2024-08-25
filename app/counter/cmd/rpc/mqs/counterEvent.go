@@ -103,6 +103,11 @@ func (l *CounterEvent) Consume(ctx context.Context, key, val string) error {
 			if err != nil {
 				return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "increase view count err:%v", err)
 			}
+		case kqueue.Feed:
+			err := l.svcCtx.UserStateModel.IncreaseFeedCount(l.ctx, nil, event.ID)
+			if err != nil {
+				return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "increase feed count err:%v", err)
+			}
 		default:
 			return errors.Wrapf(xerr.NewErrCode(xerr.InvalidEvent), "invalid event type:%d", event.Type)
 		}

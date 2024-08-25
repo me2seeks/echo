@@ -13,6 +13,7 @@ const (
 	Repost
 	UnRepost
 	View
+	Feed
 )
 
 type Event struct {

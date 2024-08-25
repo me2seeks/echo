@@ -51,6 +51,7 @@ type (
 		DecreaseFollowerCount(ctx context.Context, session sqlx.Session, userId int64) error
 		IncreaseFollowingCount(ctx context.Context, session sqlx.Session, userId int64) error
 		DecreaseFollowingCount(ctx context.Context, session sqlx.Session, userId int64) error
+		IncreaseFeedCount(ctx context.Context, session sqlx.Session, userId int64) error
 	}
 
 	defaultUserStateModel struct {
@@ -62,6 +63,7 @@ type (
 		UserId         int64     `db:"user_id"`
 		FollowingCount int64     `db:"following_count"` // 关注数
 		FollowerCount  int64     `db:"follower_count"`  // 粉丝数
+		FeedCount      int64     `db:"feed_count"`      // 动态数
 		CreateAt       time.Time `db:"create_at"`
 		UpdateAt       time.Time `db:"update_at"`
 		DeleteAt       time.Time `db:"delete_at"`
@@ -110,11 +112,11 @@ func (m *defaultUserStateModel) Insert(ctx context.Context, session sqlx.Session
 	data.DelState = globalkey.DelStateNo
 	userStateUserIdKey := fmt.Sprintf("%s%v", cacheUserStateUserIdPrefix, data.UserId)
 	return m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?)", m.table, userStateRowsExpectAutoSet)
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?)", m.table, userStateRowsExpectAutoSet)
 		if session != nil {
-			return session.ExecCtx(ctx, query, data.UserId, data.FollowingCount, data.FollowerCount, data.DeleteAt, data.DelState, data.Version)
+			return session.ExecCtx(ctx, query, data.UserId, data.FollowingCount, data.FollowerCount, data.FeedCount, data.DeleteAt, data.DelState, data.Version)
 		}
-		return conn.ExecCtx(ctx, query, data.UserId, data.FollowingCount, data.FollowerCount, data.DeleteAt, data.DelState, data.Version)
+		return conn.ExecCtx(ctx, query, data.UserId, data.FollowingCount, data.FollowerCount, data.FeedCount, data.DeleteAt, data.DelState, data.Version)
 	}, userStateUserIdKey)
 }
 
@@ -123,9 +125,9 @@ func (m *defaultUserStateModel) Update(ctx context.Context, session sqlx.Session
 	return m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `user_id` = ?", m.table, userStateRowsWithPlaceHolder)
 		if session != nil {
-			return session.ExecCtx(ctx, query, data.FollowingCount, data.FollowerCount, data.DeleteAt, data.DelState, data.Version, data.UserId)
+			return session.ExecCtx(ctx, query, data.FollowingCount, data.FollowerCount, data.FeedCount, data.DeleteAt, data.DelState, data.Version, data.UserId)
 		}
-		return conn.ExecCtx(ctx, query, data.FollowingCount, data.FollowerCount, data.DeleteAt, data.DelState, data.Version, data.UserId)
+		return conn.ExecCtx(ctx, query, data.FollowingCount, data.FollowerCount, data.FeedCount, data.DeleteAt, data.DelState, data.Version, data.UserId)
 	}, userStateUserIdKey)
 }
 
@@ -141,9 +143,9 @@ func (m *defaultUserStateModel) UpdateWithVersion(ctx context.Context, session s
 	sqlResult, err = m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `user_id` = ? and version = ? ", m.table, userStateRowsWithPlaceHolder)
 		if session != nil {
-			return session.ExecCtx(ctx, query, data.FollowingCount, data.FollowerCount, data.DeleteAt, data.DelState, data.Version, data.UserId, oldVersion)
+			return session.ExecCtx(ctx, query, data.FollowingCount, data.FollowerCount, data.FeedCount, data.DeleteAt, data.DelState, data.Version, data.UserId, oldVersion)
 		}
-		return conn.ExecCtx(ctx, query, data.FollowingCount, data.FollowerCount, data.DeleteAt, data.DelState, data.Version, data.UserId, oldVersion)
+		return conn.ExecCtx(ctx, query, data.FollowingCount, data.FollowerCount, data.FeedCount, data.DeleteAt, data.DelState, data.Version, data.UserId, oldVersion)
 	}, userStateUserIdKey)
 	if err != nil {
 		return err
@@ -444,6 +446,31 @@ func (m *defaultUserStateModel) DecreaseFollowingCount(ctx context.Context, sess
 		return err
 	}
 	userState.FollowingCount -= 1
+	err = m.UpdateWithVersion(ctx, session, userState)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *defaultUserStateModel) IncreaseFeedCount(ctx context.Context, session sqlx.Session, userId int64) error {
+	userState, err := m.FindOne(ctx, userId)
+	if err != nil {
+		if err == ErrNotFound {
+			userState = &UserState{
+				UserId:         userId,
+				FeedCount:      1,
+			}
+			_, err = m.Insert(ctx, session, userState)
+			if err != nil {
+				return err
+			}
+			return nil
+		}
+		return err
+	}
+
+	userState.FeedCount += 1
 	err = m.UpdateWithVersion(ctx, session, userState)
 	if err != nil {
 		return err

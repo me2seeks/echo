@@ -3,10 +3,14 @@ package logic
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
+	"strconv"
 
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/internal/svc"
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/pb"
 	"github.com/me2seeks/echo-hub/app/content/model"
+	"github.com/me2seeks/echo-hub/common/kqueue"
+	"github.com/me2seeks/echo-hub/common/tool"
 	"github.com/me2seeks/echo-hub/common/uniqueid"
 	"github.com/me2seeks/echo-hub/common/xerr"
 	"github.com/pkg/errors"
@@ -40,6 +44,21 @@ func (l *CreateFeedLogic) CreateFeed(in *pb.CreateFeedReq) (*pb.CreateFeedResp, 
 	})
 	if err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "insert feed failed: %v", err)
+	}
+
+	msg := kqueue.Event{
+		Type:      kqueue.Feed,
+		ID:        in.UserID,
+		IsComment: false,
+	}
+	msgBytes, err := json.Marshal(msg)
+	if err != nil {
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.MarshalError), "failed to marshal feed event, err: %v", err)
+	}
+	userIDStr := strconv.FormatInt(in.UserID, 10)
+	err = l.svcCtx.KqPusherClient.PushWithKey(l.ctx, userIDStr, tool.BytesToString(msgBytes))
+	if err != nil {
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.KqPusherError), "failed to push feed event userID:%d,err:%v", in.UserID, err)
 	}
 	return &pb.CreateFeedResp{}, nil
 }

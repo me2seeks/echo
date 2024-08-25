@@ -20,7 +20,7 @@ ListenOn: 0.0.0.0:1003
 KqPusherConf:
   Brokers:
     - 10.2.12.14:30092
-  Topic: reletion-event
+  Topic: counter-event
 
 Log:
   ServiceName: content-rpc

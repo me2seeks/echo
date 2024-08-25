@@ -5,7 +5,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `feed_count`;
 CREATE TABLE `feed_count` (
-    `feed_id` bigint NULL DEFAULT NULL,
+    `feed_id` bigint NOT NULL,
     `comment_count` int NOT NULL DEFAULT 0,
     `view_count` int NOT NULL DEFAULT 0,
     `like_count` int NOT NULL DEFAULT 0,
@@ -39,6 +39,7 @@ CREATE TABLE `user_state` (
     `user_id` bigint NOT NULL,
     `following_count` int NOT NULL DEFAULT NULL DEFAULT 0 COMMENT '关注数',
     `follower_count` int NOT NULL DEFAULT NULL DEFAULT 0 COMMENT '粉丝数',
+    `feed_count` int NOT NULL DEFAULT NULL DEFAULT 0 COMMENT '动态数',
     `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `update_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `delete_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
