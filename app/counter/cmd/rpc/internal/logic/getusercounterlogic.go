@@ -5,6 +5,8 @@ import (
 
 	"github.com/me2seeks/echo-hub/app/counter/cmd/rpc/internal/svc"
 	"github.com/me2seeks/echo-hub/app/counter/cmd/rpc/pb"
+	"github.com/me2seeks/echo-hub/common/xerr"
+	"github.com/pkg/errors"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,6 +27,14 @@ func NewGetUserCounterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 
 func (l *GetUserCounterLogic) GetUserCounter(in *pb.GetUserCounterRequest) (*pb.GetUserCounterResponse, error) {
 	// TODO use redis hash
+	userCount, err := l.svcCtx.UserStateModel.FindOne(l.ctx, in.UserId)
+	if err != nil {
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "find user counter error: %v", err)
+	}
 
-	return &pb.GetUserCounterResponse{}, nil
+	return &pb.GetUserCounterResponse{
+		FollowingCount: userCount.FollowingCount,
+		FollowerCount:  userCount.FollowerCount,
+		FeedCount:      userCount.FeedCount,
+	}, nil
 }

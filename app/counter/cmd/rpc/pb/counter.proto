@@ -5,22 +5,22 @@ option go_package = "./pb";
 package pb;
 
 message GetContentCounterRequest {
-    string contentID = 1;
+    int64 ID = 1;
     bool is_comment = 2;
 }
 message GetContentCounterResponse {
-    int32 commentCount = 1;
-    int32 likeCount = 2;
-    int32 viewCount = 3;
+    int64 commentCount = 1;
+    int64 likeCount = 2;
+    int64 viewCount = 3;
 }
 
 message GetUserCounterRequest {
-    string user_id = 1;
+    int64 user_id = 1;
 }
 message GetUserCounterResponse {
-    int32 followingCount = 1;
-    int32 followerCount = 2;
-    int32 feedCount = 3;
+    int64 followingCount = 1;
+    int64 followerCount = 2;
+    int64 feedCount = 3;
 }
 
 
