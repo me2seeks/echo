@@ -18,12 +18,12 @@ Log:
 
 
 #rpc service
-InteractionRpcConf:
+InteractionRPCConf:
   Endpoints:
-    - 127.0.0.1:2005
+    - 127.0.0.1:1005
   NonBlock: true
 
-UsercenterRpcConf:
+UsercenterRPCConf:
   Endpoints:
-    - 127.0.0.1:2001
+    - 127.0.0.1:1001
   NonBlock: true

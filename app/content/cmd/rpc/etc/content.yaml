@@ -17,10 +17,15 @@ ListenOn: 0.0.0.0:1003
 #   Sampler: 1.0
 #   Batcher: jaeger
 
-KqPusherConf:
+KqPusherCounterEventConf:
   Brokers:
     - 10.2.12.14:30092
   Topic: counter-event
+
+KqPusherEsEventConf:
+  Brokers:
+    - 10.2.12.14:30092
+  Topic: es-event
 
 Log:
   ServiceName: content-rpc

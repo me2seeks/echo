@@ -11,8 +11,8 @@ ListenOn: 0.0.0.0:1009
 #   Path: /metrics
 
 EsConf:
-  Addrs: 
-  - 10.2.12.14:30200
+  Address: 
+  - https://10.2.12.14:30200
   Username: elastic
   Password: Kmin*YUxdE4nN0hizzKp
   certFile: 

@@ -20,7 +20,7 @@ JwtAuth:
   AccessExpire: 31536000
 
 Log:
-  ServiceName: interaction-api
+  ServiceName: content-api
   Level: error
 
 
