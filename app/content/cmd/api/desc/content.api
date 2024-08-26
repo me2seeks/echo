@@ -16,7 +16,7 @@ service content {
 
 	@doc "get comment list by page"
 	@handler listComment
-	get /:feedID/comment/ (GetFeedCommentsByPageReq) returns (GetFeedCommentsByPageResp)
+	get /:feedID/comment (GetFeedCommentsByPageReq) returns (GetFeedCommentsByPageResp)
 }
 
 @server (
@@ -48,7 +48,7 @@ service content {
 	// put / (UpdateFeedReq) returns (UpdateFeedResp)
 	@doc "create feed comment"
 	@handler createComment
-	post /:feedID/comment/ (CreateFeedCommentReq) returns (CreateFeedCommentResp)
+	post /:feedID/comment (CreateFeedCommentReq) returns (CreateFeedCommentResp)
 }
 
 @server (

@@ -48,7 +48,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				// get comment list by page
 				Method:  http.MethodGet,
-				Path:    "/:feedID/comment/",
+				Path:    "/:feedID/comment",
 				Handler: feed.ListCommentHandler(serverCtx),
 			},
 			{
@@ -78,7 +78,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				// create feed comment
 				Method:  http.MethodPost,
-				Path:    "/:feedID/comment/",
+				Path:    "/:feedID/comment",
 				Handler: feed.CreateCommentHandler(serverCtx),
 			},
 		},
