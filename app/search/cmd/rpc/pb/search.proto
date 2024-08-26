@@ -4,13 +4,20 @@ option go_package = "./pb";
 
 package pb;
 
+message User{
+    int64 id =1;
+    string nickname = 2;
+    string handle = 3;
+}
+
+
 message SearchReq {
     string keyword = 1;
     int32 page = 2;
     int32 pageSize = 3;
 }
 message SearchUsersResp {
-    repeated int64 usersID = 1;
+    repeated User users = 1;
 }
 
 

@@ -16,6 +16,7 @@ type (
 	SearchContentResp = pb.SearchContentResp
 	SearchReq         = pb.SearchReq
 	SearchUsersResp   = pb.SearchUsersResp
+	User              = pb.User
 
 	Search interface {
 		SearchUsers(ctx context.Context, in *SearchReq, opts ...grpc.CallOption) (*SearchUsersResp, error)

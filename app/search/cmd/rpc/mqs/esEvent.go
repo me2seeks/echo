@@ -27,18 +27,6 @@ func NewEsEvent(ctx context.Context, svcCtx *svc.ServiceContext) *EsEvent {
 	}
 }
 
-type User struct {
-	ID       int64
-	Nickname string
-	Handle   string
-}
-
-type Feed struct {
-	ID      int64
-	UserID  int64
-	Content string
-}
-
 func (l *EsEvent) Consume(ctx context.Context, key, val string) error {
 	logx.Infof("EsEvent key :%s , val :%s", key, val)
 	var event kqueue.EsEvent
@@ -58,7 +46,7 @@ func (l *EsEvent) Consume(ctx context.Context, key, val string) error {
 			return errors.Wrapf(xerr.NewErrCode(xerr.MarshalError), "marshal user err:%v", err)
 		}
 		req := esapi.IndexRequest{
-			Index:      "user",
+			Index:      "users",
 			DocumentID: strconv.FormatInt(event.ID, 10),
 			Body:       strings.NewReader(string(userJSON)),
 			Refresh:    "true",
@@ -67,6 +55,7 @@ func (l *EsEvent) Consume(ctx context.Context, key, val string) error {
 		if err != nil {
 			return errors.Wrapf(xerr.NewErrCode(xerr.EsError), "es request err:%v", err)
 		}
+		defer res.Body.Close()
 		if res.IsError() {
 			return errors.Wrapf(xerr.NewErrCode(xerr.EsError), "es response err:%v", res.String())
 		}
@@ -84,7 +73,7 @@ func (l *EsEvent) Consume(ctx context.Context, key, val string) error {
 			return errors.Wrapf(xerr.NewErrCode(xerr.MarshalError), "marshal feed err:%v", err)
 		}
 		req := esapi.IndexRequest{
-			Index:      "feed",
+			Index:      "feeds",
 			DocumentID: strconv.FormatInt(event.ID, 10),
 			Body:       strings.NewReader(string(feedJSON)),
 			Refresh:    "true",
@@ -93,6 +82,7 @@ func (l *EsEvent) Consume(ctx context.Context, key, val string) error {
 		if err != nil {
 			return errors.Wrapf(xerr.NewErrCode(xerr.EsError), "es request err:%v", err)
 		}
+		defer res.Body.Close()
 		if res.IsError() {
 			return errors.Wrapf(xerr.NewErrCode(xerr.EsError), "es response err:%v", res.String())
 		}
