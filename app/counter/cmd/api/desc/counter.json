@@ -1,0 +1,152 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "",
+    "version": ""
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/counter/content/{id}": {
+      "get": {
+        "summary": "get content counter",
+        "operationId": "getContentCounter",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetContentCounterResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "is_comment",
+            "in": "query",
+            "required": true,
+            "type": "boolean",
+            "format": "boolean"
+          }
+        ],
+        "tags": [
+          "counter"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      }
+    },
+    "/counter/user/{id}": {
+      "get": {
+        "summary": "get user counter",
+        "operationId": "getUserCounter",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetUserCounterResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "counter"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "GetContentCounterReq": {
+      "type": "object",
+      "properties": {
+        "is_comment": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      },
+      "title": "GetContentCounterReq",
+      "required": [
+        "is_comment"
+      ]
+    },
+    "GetContentCounterResp": {
+      "type": "object",
+      "properties": {
+        "comment_count": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "like_count": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "view_count": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "GetContentCounterResp",
+      "required": [
+        "comment_count",
+        "like_count",
+        "view_count"
+      ]
+    },
+    "GetUserCounterReq": {
+      "type": "object",
+      "title": "GetUserCounterReq"
+    },
+    "GetUserCounterResp": {
+      "type": "object",
+      "properties": {
+        "following_count": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "follower_count": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "feed_count": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "GetUserCounterResp",
+      "required": [
+        "following_count",
+        "follower_count",
+        "feed_count"
+      ]
+    }
+  },
+  "securityDefinitions": {
+    "apiKey": {
+      "type": "apiKey",
+      "description": "Enter JWT Bearer token **_only_**",
+      "name": "Authorization",
+      "in": "header"
+    }
+  }
+}

@@ -1,0 +1,725 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "",
+    "version": ""
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/comment/": {
+      "delete": {
+        "summary": "delete comment",
+        "operationId": "delete",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/DeleteCommentResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeleteCommentReq"
+            }
+          }
+        ],
+        "tags": [
+          "comment"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "create comment",
+        "operationId": "create",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CreateCommentResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateCommentReq"
+            }
+          }
+        ],
+        "tags": [
+          "comment"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
+    "/comment/{commentID}": {
+      "get": {
+        "summary": "get comment comment list by page",
+        "operationId": "list",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetCommentsByPageResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "commentID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "comment"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      }
+    },
+    "/feed/": {
+      "delete": {
+        "summary": "delete feed",
+        "operationId": "delete",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/DeleteFeedResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeleteFeedReq"
+            }
+          }
+        ],
+        "tags": [
+          "feed"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "create feed",
+        "operationId": "create",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CreateFeedResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateFeedReq"
+            }
+          }
+        ],
+        "tags": [
+          "feed"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
+    "/feed/{feedID}/comment": {
+      "get": {
+        "summary": "get comment list by page",
+        "operationId": "listComment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetFeedCommentsByPageResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "feedID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "feed"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      },
+      "post": {
+        "summary": "create feed comment",
+        "operationId": "createComment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CreateFeedCommentResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "feedID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateFeedCommentReq"
+            }
+          }
+        ],
+        "tags": [
+          "feed"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
+    "/feed/{userID}": {
+      "get": {
+        "summary": "get feed list by page",
+        "operationId": "listFeed",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetFeedsByPageResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "feed"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "Comment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "feedID": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "userID": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "content": {
+          "type": "string"
+        },
+        "media0": {
+          "type": "string"
+        },
+        "media1": {
+          "type": "string"
+        },
+        "media2": {
+          "type": "string"
+        },
+        "media3": {
+          "type": "string"
+        },
+        "create_time": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "Comment",
+      "required": [
+        "id",
+        "feedID",
+        "userID",
+        "content",
+        "media0",
+        "media1",
+        "media2",
+        "media3",
+        "create_time"
+      ]
+    },
+    "CreateCommentReq": {
+      "type": "object",
+      "properties": {
+        "comment_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "content": {
+          "type": "string"
+        },
+        "media0": {
+          "type": "string"
+        },
+        "media1": {
+          "type": "string"
+        },
+        "media2": {
+          "type": "string"
+        },
+        "media3": {
+          "type": "string"
+        }
+      },
+      "title": "CreateCommentReq",
+      "required": [
+        "comment_id",
+        "content",
+        "media0",
+        "media1",
+        "media2",
+        "media3"
+      ]
+    },
+    "CreateCommentResp": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "CreateCommentResp",
+      "required": [
+        "id"
+      ]
+    },
+    "CreateFeedCommentReq": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "media0": {
+          "type": "string"
+        },
+        "media1": {
+          "type": "string"
+        },
+        "media2": {
+          "type": "string"
+        },
+        "media3": {
+          "type": "string"
+        }
+      },
+      "title": "CreateFeedCommentReq",
+      "required": [
+        "content",
+        "media0",
+        "media1",
+        "media2",
+        "media3"
+      ]
+    },
+    "CreateFeedCommentResp": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "CreateFeedCommentResp",
+      "required": [
+        "id"
+      ]
+    },
+    "CreateFeedReq": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "media0": {
+          "type": "string"
+        },
+        "media1": {
+          "type": "string"
+        },
+        "media2": {
+          "type": "string"
+        },
+        "media3": {
+          "type": "string"
+        }
+      },
+      "title": "CreateFeedReq",
+      "required": [
+        "content",
+        "media0",
+        "media1",
+        "media2",
+        "media3"
+      ]
+    },
+    "CreateFeedResp": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "CreateFeedResp",
+      "required": [
+        "id"
+      ]
+    },
+    "DeleteCommentReq": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "parent_id": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "DeleteCommentReq",
+      "required": [
+        "id",
+        "parent_id"
+      ]
+    },
+    "DeleteCommentResp": {
+      "type": "object",
+      "title": "DeleteCommentResp"
+    },
+    "DeleteFeedReq": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "DeleteFeedReq",
+      "required": [
+        "id"
+      ]
+    },
+    "DeleteFeedResp": {
+      "type": "object",
+      "title": "DeleteFeedResp"
+    },
+    "Feed": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "userID": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "content": {
+          "type": "string"
+        },
+        "media0": {
+          "type": "string"
+        },
+        "media1": {
+          "type": "string"
+        },
+        "media2": {
+          "type": "string"
+        },
+        "media3": {
+          "type": "string"
+        },
+        "create_time": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "Feed",
+      "required": [
+        "id",
+        "userID",
+        "content",
+        "media0",
+        "media1",
+        "media2",
+        "media3",
+        "create_time"
+      ]
+    },
+    "GetCommentsByPageReq": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "page_size": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "GetCommentsByPageReq",
+      "required": [
+        "page",
+        "page_size"
+      ]
+    },
+    "GetCommentsByPageResp": {
+      "type": "object",
+      "properties": {
+        "comment": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Comment"
+          }
+        },
+        "total": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "GetCommentsByPageResp",
+      "required": [
+        "comment",
+        "total"
+      ]
+    },
+    "GetFeedCommentsByPageReq": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "page_size": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "GetFeedCommentsByPageReq",
+      "required": [
+        "page",
+        "page_size"
+      ]
+    },
+    "GetFeedCommentsByPageResp": {
+      "type": "object",
+      "properties": {
+        "comment": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Comment"
+          }
+        },
+        "total": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "GetFeedCommentsByPageResp",
+      "required": [
+        "comment",
+        "total"
+      ]
+    },
+    "GetFeedsByPageReq": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "page_size": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "GetFeedsByPageReq",
+      "required": [
+        "page",
+        "page_size"
+      ]
+    },
+    "GetFeedsByPageResp": {
+      "type": "object",
+      "properties": {
+        "feed": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Feed"
+          }
+        },
+        "total": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "GetFeedsByPageResp",
+      "required": [
+        "feed",
+        "total"
+      ]
+    },
+    "GetFollowingFeedListByPageReq": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "page_size": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "GetFollowingFeedListByPageReq",
+      "required": [
+        "page",
+        "page_size"
+      ]
+    },
+    "GetFollowingFeedListByPageResp": {
+      "type": "object",
+      "properties": {
+        "feed": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Feed"
+          }
+        },
+        "total": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "GetFollowingFeedListByPageResp",
+      "required": [
+        "feed",
+        "total"
+      ]
+    }
+  },
+  "securityDefinitions": {
+    "apiKey": {
+      "type": "apiKey",
+      "description": "Enter JWT Bearer token **_only_**",
+      "name": "Authorization",
+      "in": "header"
+    }
+  }
+}

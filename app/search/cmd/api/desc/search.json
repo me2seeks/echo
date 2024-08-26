@@ -1,0 +1,213 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "",
+    "version": ""
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/search/feeds/{keyword}": {
+      "post": {
+        "summary": "search feeds",
+        "operationId": "search",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/SearchFeedsResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SearchReq"
+            }
+          }
+        ],
+        "tags": [
+          "feed"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      }
+    },
+    "/search/users/{keyword}": {
+      "post": {
+        "summary": "search users",
+        "operationId": "search",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/SearchUsersResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SearchReq"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "Feed": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "content": {
+          "type": "string"
+        },
+        "userID": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "media0": {
+          "type": "string"
+        },
+        "media1": {
+          "type": "string"
+        },
+        "media2": {
+          "type": "string"
+        },
+        "media3": {
+          "type": "string"
+        },
+        "created": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "Feed",
+      "required": [
+        "id",
+        "content",
+        "userID",
+        "media0",
+        "media1",
+        "media2",
+        "media3",
+        "created"
+      ]
+    },
+    "SearchFeedsResp": {
+      "type": "object",
+      "properties": {
+        "feeds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Feed"
+          }
+        }
+      },
+      "title": "SearchFeedsResp",
+      "required": [
+        "feeds"
+      ]
+    },
+    "SearchReq": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "SearchReq",
+      "required": [
+        "page",
+        "pageSize"
+      ]
+    },
+    "SearchUsersResp": {
+      "type": "object",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          }
+        }
+      },
+      "title": "SearchUsersResp",
+      "required": [
+        "users"
+      ]
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "nickname": {
+          "type": "string"
+        },
+        "Handle": {
+          "type": "string"
+        }
+      },
+      "title": "User",
+      "required": [
+        "id",
+        "nickname",
+        "Handle"
+      ]
+    }
+  },
+  "securityDefinitions": {
+    "apiKey": {
+      "type": "apiKey",
+      "description": "Enter JWT Bearer token **_only_**",
+      "name": "Authorization",
+      "in": "header"
+    }
+  }
+}

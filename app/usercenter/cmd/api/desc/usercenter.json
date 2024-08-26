@@ -1,0 +1,522 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "",
+    "version": ""
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/user/": {
+      "get": {
+        "summary": "get user info",
+        "operationId": "detail",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/UserInfoResp"
+            }
+          }
+        },
+        "tags": [
+          "user"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "update user info",
+        "operationId": "update",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/UpdateUserInfoResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateUserInfoReq"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
+    "/user/follow": {
+      "post": {
+        "summary": "follow",
+        "operationId": "follow",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/FollowResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FollowReq"
+            }
+          }
+        ],
+        "tags": [
+          "relation"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
+    "/user/followers": {
+      "post": {
+        "summary": "get followers",
+        "operationId": "followers",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/FollowersResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FollowersReq"
+            }
+          }
+        ],
+        "tags": [
+          "relation"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
+    "/user/following": {
+      "post": {
+        "summary": "get following",
+        "operationId": "following",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/FollowingResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FollowingReq"
+            }
+          }
+        ],
+        "tags": [
+          "relation"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
+    "/user/login": {
+      "post": {
+        "summary": "login",
+        "operationId": "login",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/LoginResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LoginReq"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/user/register": {
+      "post": {
+        "summary": "register",
+        "operationId": "register",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/RegisterResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RegisterReq"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/user/unfollow": {
+      "post": {
+        "summary": "unfollow",
+        "operationId": "unfollow",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/UnfollowResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UnfollowReq"
+            }
+          }
+        ],
+        "tags": [
+          "relation"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "FollowReq": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "FollowReq",
+      "required": [
+        "userId"
+      ]
+    },
+    "FollowResp": {
+      "type": "object",
+      "title": "FollowResp"
+    },
+    "FollowersReq": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "FollowersReq",
+      "required": [
+        "userId"
+      ]
+    },
+    "FollowersResp": {
+      "type": "object",
+      "properties": {
+        "followers": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "title": "FollowersResp",
+      "required": [
+        "followers"
+      ]
+    },
+    "FollowingReq": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "FollowingReq",
+      "required": [
+        "userId"
+      ]
+    },
+    "FollowingResp": {
+      "type": "object",
+      "properties": {
+        "following": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "title": "FollowingResp",
+      "required": [
+        "following"
+      ]
+    },
+    "LoginReq": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "title": "LoginReq",
+      "required": [
+        "email",
+        "password"
+      ]
+    },
+    "LoginResp": {
+      "type": "object",
+      "properties": {
+        "accessToken": {
+          "type": "string"
+        },
+        "accessExpire": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "refreshAfter": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "LoginResp",
+      "required": [
+        "accessToken",
+        "accessExpire",
+        "refreshAfter"
+      ]
+    },
+    "RegisterReq": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "handle": {
+          "type": "string"
+        },
+        "nickname": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "title": "RegisterReq",
+      "required": [
+        "email",
+        "handle",
+        "nickname",
+        "password"
+      ]
+    },
+    "RegisterResp": {
+      "type": "object",
+      "properties": {
+        "accessToken": {
+          "type": "string"
+        },
+        "accessExpire": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "refreshAfter": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "RegisterResp",
+      "required": [
+        "accessToken",
+        "accessExpire",
+        "refreshAfter"
+      ]
+    },
+    "UnfollowReq": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "UnfollowReq",
+      "required": [
+        "userId"
+      ]
+    },
+    "UnfollowResp": {
+      "type": "object",
+      "title": "UnfollowResp"
+    },
+    "UpdateUserInfoReq": {
+      "type": "object",
+      "properties": {
+        "nickname": {
+          "type": "string"
+        },
+        "sex": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "avatar": {
+          "type": "string"
+        },
+        "bio": {
+          "type": "string"
+        }
+      },
+      "title": "UpdateUserInfoReq",
+      "required": [
+        "nickname",
+        "sex",
+        "avatar",
+        "bio"
+      ]
+    },
+    "UpdateUserInfoResp": {
+      "type": "object",
+      "title": "UpdateUserInfoResp"
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "email": {
+          "type": "string"
+        },
+        "nickname": {
+          "type": "string"
+        },
+        "Handle": {
+          "type": "string"
+        },
+        "sex": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "avatar": {
+          "type": "string"
+        },
+        "bio": {
+          "type": "string"
+        }
+      },
+      "title": "User",
+      "required": [
+        "id",
+        "email",
+        "nickname",
+        "Handle",
+        "sex",
+        "avatar",
+        "bio"
+      ]
+    },
+    "UserInfoReq": {
+      "type": "object",
+      "title": "UserInfoReq"
+    },
+    "UserInfoResp": {
+      "type": "object",
+      "properties": {
+        "userInfo": {
+          "$ref": "#/definitions/User"
+        }
+      },
+      "title": "UserInfoResp",
+      "required": [
+        "userInfo"
+      ]
+    }
+  },
+  "securityDefinitions": {
+    "apiKey": {
+      "type": "apiKey",
+      "description": "Enter JWT Bearer token **_only_**",
+      "name": "Authorization",
+      "in": "header"
+    }
+  }
+}
