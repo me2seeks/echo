@@ -16,7 +16,8 @@ type ServiceContext struct {
 	UserAuthModel     model.UserAuthModel
 	UserRelationModel model.UserRelationModel
 
-	KqPusherClient *kq.Pusher
+	KqPusherCounterEventClient *kq.Pusher
+	KqPusherEsEventClient      *kq.Pusher
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -27,9 +28,10 @@ func NewServiceContext(c config.Config) *ServiceContext {
 			r.Type = c.Redis.Type
 			r.Pass = c.Redis.Pass
 		}),
-		UserModel:         model.NewUserModel(sqlConn, c.Cache),
-		UserAuthModel:     model.NewUserAuthModel(sqlConn, c.Cache),
-		UserRelationModel: model.NewUserRelationModel(sqlConn, c.Cache),
-		KqPusherClient:    kq.NewPusher(c.KqPusherConf.Brokers, c.KqPusherConf.Topic),
+		UserModel:                  model.NewUserModel(sqlConn, c.Cache),
+		UserAuthModel:              model.NewUserAuthModel(sqlConn, c.Cache),
+		UserRelationModel:          model.NewUserRelationModel(sqlConn, c.Cache),
+		KqPusherCounterEventClient: kq.NewPusher(c.KqPusherCounterEventConf.Brokers, c.KqPusherCounterEventConf.Topic),
+		KqPusherEsEventClient:      kq.NewPusher(c.KqPusherEsEventConf.Brokers, c.KqPusherEsEventConf.Topic),
 	}
 }

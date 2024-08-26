@@ -2,11 +2,13 @@ package logic
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/rpc/internal/svc"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/rpc/pb"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/rpc/usercenter"
 	"github.com/me2seeks/echo-hub/app/usercenter/model"
+	"github.com/me2seeks/echo-hub/common/kqueue"
 	"github.com/me2seeks/echo-hub/common/tool"
 	"github.com/me2seeks/echo-hub/common/uniqueid"
 	"github.com/me2seeks/echo-hub/common/xerr"
@@ -73,6 +75,23 @@ func (l *RegisterLogic) Register(in *pb.RegisterReq) (*pb.RegisterResp, error) {
 	}); err != nil {
 		return nil, err
 	}
+
+	go func() {
+		msg := kqueue.EsEvent{
+			Type:     kqueue.Register,
+			ID:       user.Id,
+			Nickname: user.Nickname,
+			Content:  user.Handle,
+		}
+		msgBytes, err := json.Marshal(msg)
+		if err != nil {
+			logx.Errorf("failed to marshal register event ,err:%v", err)
+		}
+		err = l.svcCtx.KqPusherEsEventClient.Push(l.ctx, tool.BytesToString(msgBytes))
+		if err != nil {
+			logx.Errorf("failed push register event userID:%d,err:%v", user.Id, err)
+		}
+	}()
 
 	// 2、Generate the token, so that the service doesn't call rpc internally
 	generateTokenLogic := NewGenerateTokenLogic(l.ctx, l.svcCtx)

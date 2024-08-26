@@ -54,7 +54,7 @@ func (l *CreateCommentLogic) CreateComment(in *pb.CreateCommentReq) (*pb.CreateC
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "insert comment failed: %v", err)
 	}
 
-	msg := kqueue.Event{
+	msg := kqueue.CountEvent{
 		Type:      kqueue.Comment,
 		ID:        in.FeedID,
 		IsComment: false,
@@ -71,7 +71,7 @@ func (l *CreateCommentLogic) CreateComment(in *pb.CreateCommentReq) (*pb.CreateC
 	}
 	feedIDStr := strconv.FormatInt(in.FeedID, 10)
 
-	err = l.svcCtx.KqPusherClient.PushWithKey(l.ctx, feedIDStr, tool.BytesToString(msgBytes))
+	err = l.svcCtx.KqPusherCounterEventClient.PushWithKey(l.ctx, feedIDStr, tool.BytesToString(msgBytes))
 	if err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.KqPusherError), "failed to push follow event feed:%d,comment:%d,err:%v", in.FeedID, in.CommentID, err)
 	}

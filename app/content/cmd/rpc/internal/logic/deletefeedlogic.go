@@ -39,7 +39,23 @@ func (l *DeleteFeedLogic) DeleteFeed(in *pb.DeleteFeedReq) (*pb.DeleteFeedResp, 
 		return nil, err
 	}
 
-	msg := kqueue.Event{
+	go func() {
+		msg := kqueue.EsEvent{
+			Type:     kqueue.DeleteFeed,
+			ID:       in.Id,
+			Nickname: strconv.FormatInt(in.UserID, 10),
+		}
+		msgBytes, err := json.Marshal(msg)
+		if err != nil {
+			logx.Errorf("failed to marshal DeleteFeed event ,err:%v", err)
+		}
+		err = l.svcCtx.KqPusherEsEventClient.Push(l.ctx, tool.BytesToString(msgBytes))
+		if err != nil {
+			logx.Errorf("failed push  DeleteFeed event feedID:%d,err:%v", in.Id, err)
+		}
+	}()
+
+	msg := kqueue.CountEvent{
 		Type:      kqueue.DeleteFeed,
 		ID:        in.UserID,
 		IsComment: false,
@@ -49,7 +65,7 @@ func (l *DeleteFeedLogic) DeleteFeed(in *pb.DeleteFeedReq) (*pb.DeleteFeedResp, 
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.MarshalError), "failed to marshal DeleteFeed event, err: %v", err)
 	}
 	userIDStr := strconv.FormatInt(in.UserID, 10)
-	err = l.svcCtx.KqPusherClient.PushWithKey(l.ctx, userIDStr, tool.BytesToString(msgBytes))
+	err = l.svcCtx.KqPusherCounterEventClient.PushWithKey(l.ctx, userIDStr, tool.BytesToString(msgBytes))
 	if err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.KqPusherError), "failed to push DeleteFeed event userID:%d,err:%v", in.UserID, err)
 	}

@@ -10,5 +10,7 @@ logs/
 # Files
 *.log
 *.exe
+*.crt
+*.p12
 
 

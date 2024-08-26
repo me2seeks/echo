@@ -49,7 +49,7 @@ func (l *CreateLikeLogic) CreateLike(in *pb.CreateLikeReq) (*pb.CreateLikeResp, 
 		}
 	}
 
-	msg := kqueue.Event{
+	msg := kqueue.CountEvent{
 		Type:      kqueue.Like,
 		ID:        in.Id,
 		IsComment: false,

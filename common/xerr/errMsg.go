@@ -19,6 +19,8 @@ func init() {
 	message[MarshalError] = "序列化失败"
 	message[UnmarshalError] = "反序列化失败"
 	message[InvalidEvent] = "无效事件"
+	message[EsError] = "es操作失败"
+	message[Str2Int64Error] = "字符串转int64失败"
 }
 
 func MapErrMsg(errcode uint32) string {

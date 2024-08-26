@@ -48,7 +48,7 @@ func (l *FollowLogic) Follow(in *pb.FollowReq) (*pb.FollowResp, error) {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "restore user relation error userID:%d,followeeID:%d,err:%v", in.UserId, in.FolloweeId, err)
 	}
 
-	msg := kqueue.Event{
+	msg := kqueue.CountEvent{
 		Type:      kqueue.Follow,
 		ID:        in.FolloweeId,
 		IsComment: false,
@@ -59,7 +59,7 @@ func (l *FollowLogic) Follow(in *pb.FollowReq) (*pb.FollowResp, error) {
 	}
 	followeeIDStr := strconv.FormatInt(in.FolloweeId, 10)
 
-	err = l.svcCtx.KqPusherClient.PushWithKey(l.ctx, followeeIDStr, tool.BytesToString(msgBytes))
+	err = l.svcCtx.KqPusherCounterEventClient.PushWithKey(l.ctx, followeeIDStr, tool.BytesToString(msgBytes))
 	if err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.KqPusherError), "failed to push follow event followeeID:%d,err:%v", in.FolloweeId, err)
 	}

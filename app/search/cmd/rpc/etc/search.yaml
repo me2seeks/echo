@@ -1,0 +1,35 @@
+Name: search.rpc
+ListenOn: 0.0.0.0:1009
+# Etcd:
+#   Hosts:
+#   - 127.0.0.1:2379
+#   Key: search.rpc
+
+# Prometheus:
+#   Host: 0.0.0.0
+#   Port: 4009
+#   Path: /metrics
+
+EsConf:
+  Addrs: 
+  - 10.2.12.14:30200
+  Username: elastic
+  Password: Kmin*YUxdE4nN0hizzKp
+  certFile: 
+  keyFile: 
+  InsecureSkipVerify: true
+    
+
+KqConsumerConf:
+  Name: es
+  Brokers:
+    - 10.2.12.14:30092
+  Group: es
+  Topic: es-event
+  Offset: first
+  Consumers: 8
+  Processors: 8
+
+Log:
+  ServiceName: search-rpc
+  Level: error

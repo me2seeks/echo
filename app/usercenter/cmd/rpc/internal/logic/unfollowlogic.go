@@ -40,7 +40,7 @@ func (l *UnfollowLogic) Unfollow(in *pb.UnfollowReq) (*pb.UnfollowResp, error) {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.UnFollowError), "unfollow err:%v", err)
 	}
 
-	msg := kqueue.Event{
+	msg := kqueue.CountEvent{
 		Type:      kqueue.UnFollow,
 		ID:        in.FolloweeId,
 		IsComment: false,
@@ -51,7 +51,7 @@ func (l *UnfollowLogic) Unfollow(in *pb.UnfollowReq) (*pb.UnfollowResp, error) {
 	}
 	followeeIDStr := strconv.FormatInt(in.FolloweeId, 10)
 
-	err = l.svcCtx.KqPusherClient.PushWithKey(l.ctx, followeeIDStr, tool.BytesToString(msgBytes))
+	err = l.svcCtx.KqPusherCounterEventClient.PushWithKey(l.ctx, followeeIDStr, tool.BytesToString(msgBytes))
 	if err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.KqPusherError), "failed push unfollow event followeeID:%d,err:%v", in.FolloweeId, err)
 	}

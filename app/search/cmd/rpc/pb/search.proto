@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option go_package = "./pb";
+
+package pb;
+
+message SearchReq {
+    string keyword = 1;
+    int32 page = 2;
+    int32 pageSize = 3;
+}
+message SearchUsersResp {
+    repeated int64 usersID = 1;
+}
+
+
+message SearchContentResp {
+    repeated int64 contentID = 1;
+}   
+
+
+service search {
+    rpc SearchUsers(SearchReq) returns (SearchUsersResp) {}
+    rpc SearchContent(SearchReq) returns (SearchContentResp) {}
+}

@@ -4,6 +4,7 @@ go 1.23.0
 
 require (
 	github.com/Masterminds/squirrel v1.5.4
+	github.com/elastic/go-elasticsearch/v8 v8.14.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/jinzhu/copier v0.4.0
 	github.com/zeromicro/go-queue v1.2.2
@@ -14,6 +15,7 @@ require (
 	github.com/coreos/go-semver v0.3.1 // indirect
 	github.com/coreos/go-systemd/v22 v22.5.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/elastic/elastic-transport-go/v8 v8.6.0 // indirect
 	github.com/emicklei/go-restful/v3 v3.11.0 // indirect
 	github.com/go-openapi/jsonpointer v0.19.6 // indirect
 	github.com/go-openapi/jsonreference v0.20.2 // indirect

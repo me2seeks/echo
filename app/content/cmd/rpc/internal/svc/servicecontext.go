@@ -9,12 +9,13 @@ import (
 )
 
 type ServiceContext struct {
-	Config               config.Config
-	RedisClient          *redis.Redis
-	CommentsModel        model.CommentsModel
-	FeedsModel           model.FeedsModel
-	UserLastRequestModel model.UserLastRequestModel
-	KqPusherClient       *kq.Pusher
+	Config                     config.Config
+	RedisClient                *redis.Redis
+	CommentsModel              model.CommentsModel
+	FeedsModel                 model.FeedsModel
+	UserLastRequestModel       model.UserLastRequestModel
+	KqPusherCounterEventClient *kq.Pusher
+	KqPusherEsEventClient      *kq.Pusher
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -25,9 +26,10 @@ func NewServiceContext(c config.Config) *ServiceContext {
 			r.Type = c.Redis.Type
 			r.Pass = c.Redis.Pass
 		}),
-		CommentsModel:        model.NewCommentsModel(sqlConn, c.Cache),
-		FeedsModel:           model.NewFeedsModel(sqlConn, c.Cache),
-		UserLastRequestModel: model.NewUserLastRequestModel(sqlConn, c.Cache),
-		KqPusherClient:       kq.NewPusher(c.KqPusherConf.Brokers, c.KqPusherConf.Topic),
+		CommentsModel:              model.NewCommentsModel(sqlConn, c.Cache),
+		FeedsModel:                 model.NewFeedsModel(sqlConn, c.Cache),
+		UserLastRequestModel:       model.NewUserLastRequestModel(sqlConn, c.Cache),
+		KqPusherCounterEventClient: kq.NewPusher(c.KqPusherCounterEventConf.Brokers, c.KqPusherCounterEventConf.Topic),
+		KqPusherEsEventClient:      kq.NewPusher(c.KqPusherEsEventConf.Brokers, c.KqPusherEsEventConf.Topic),
 	}
 }

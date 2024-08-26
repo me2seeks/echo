@@ -19,6 +19,8 @@ const (
 	MarshalError
 	UnmarshalError
 	InvalidEvent
+	EsError
+	Str2Int64Error
 )
 
 // 用户模块

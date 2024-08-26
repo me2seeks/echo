@@ -38,7 +38,7 @@ func (l *DeleteCommentLogic) DeleteComment(in *pb.DeleteCommentReq) (*pb.DeleteC
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "delete comment failed: %v", err)
 	}
 
-	msg := kqueue.Event{
+	msg := kqueue.CountEvent{
 		Type:      kqueue.UnComment,
 		ID:        in.Id,
 		IsComment: false,
@@ -55,7 +55,7 @@ func (l *DeleteCommentLogic) DeleteComment(in *pb.DeleteCommentReq) (*pb.DeleteC
 	}
 	IDStr := strconv.FormatInt(in.Id, 10)
 
-	err = l.svcCtx.KqPusherClient.PushWithKey(l.ctx, IDStr, tool.BytesToString(msgBytes))
+	err = l.svcCtx.KqPusherCounterEventClient.PushWithKey(l.ctx, IDStr, tool.BytesToString(msgBytes))
 	if err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.KqPusherError), "failed push delete comment event ParentID:%d,IsComment:%t,err:%v", in.ParentID, in.IsComment, err)
 	}

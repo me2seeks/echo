@@ -33,8 +33,9 @@ func NewCreateFeedLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Create
 }
 
 func (l *CreateFeedLogic) CreateFeed(in *pb.CreateFeedReq) (*pb.CreateFeedResp, error) {
+	id := uniqueid.GenFeedID()
 	_, err := l.svcCtx.FeedsModel.Insert(l.ctx, nil, &model.Feeds{
-		Id:      uniqueid.GenFeedID(),
+		Id:      id,
 		Content: in.Content,
 		UserId:  in.UserID,
 		Media0:  sql.NullString{String: in.Media0, Valid: in.Media0 != ""},
@@ -46,7 +47,24 @@ func (l *CreateFeedLogic) CreateFeed(in *pb.CreateFeedReq) (*pb.CreateFeedResp, 
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "insert feed failed: %v", err)
 	}
 
-	msg := kqueue.Event{
+	go func() {
+		msg := kqueue.EsEvent{
+			Type:     kqueue.Feed,
+			ID:       id,
+			Nickname: strconv.FormatInt(in.UserID, 10),
+			Content:  in.Content,
+		}
+		msgBytes, err := json.Marshal(msg)
+		if err != nil {
+			logx.Errorf("failed to marshal feed event ,err:%v", err)
+		}
+		err = l.svcCtx.KqPusherEsEventClient.Push(l.ctx, tool.BytesToString(msgBytes))
+		if err != nil {
+			logx.Errorf("failed push feed event feedID:%d,err:%v", id, err)
+		}
+	}()
+
+	msg := kqueue.CountEvent{
 		Type:      kqueue.Feed,
 		ID:        in.UserID,
 		IsComment: false,
@@ -56,9 +74,11 @@ func (l *CreateFeedLogic) CreateFeed(in *pb.CreateFeedReq) (*pb.CreateFeedResp, 
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.MarshalError), "failed to marshal feed event, err: %v", err)
 	}
 	userIDStr := strconv.FormatInt(in.UserID, 10)
-	err = l.svcCtx.KqPusherClient.PushWithKey(l.ctx, userIDStr, tool.BytesToString(msgBytes))
+	err = l.svcCtx.KqPusherCounterEventClient.PushWithKey(l.ctx, userIDStr, tool.BytesToString(msgBytes))
 	if err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.KqPusherError), "failed to push feed event userID:%d,err:%v", in.UserID, err)
 	}
-	return &pb.CreateFeedResp{}, nil
+	return &pb.CreateFeedResp{
+		Id: id,
+	}, nil
 }

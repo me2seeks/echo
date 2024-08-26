@@ -26,7 +26,7 @@ func NewCounterEvent(ctx context.Context, svcCtx *svc.ServiceContext) *CounterEv
 
 func (l *CounterEvent) Consume(ctx context.Context, key, val string) error {
 	logx.Infof("CounterEvent key :%s , val :%s", key, val)
-	var event kqueue.Event
+	var event kqueue.CountEvent
 	err := json.Unmarshal(tool.StringToBytes(val), &event)
 	if err != nil {
 		return errors.Wrapf(xerr.NewErrCode(xerr.UnmarshalError), "unmarshal event err:%v", err)
