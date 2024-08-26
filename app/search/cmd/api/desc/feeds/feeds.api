@@ -1,0 +1,18 @@
+syntax = "v1"
+
+type Feed {
+	Id      int64  `json:"id"`
+	Content string `json:"content"`
+	UserID  int64  `json:"userID"`
+	Media0  string `json:"media0"`
+	Media1  string `json:"media1"`
+	Media2  string `json:"media2"`
+	Media3  string `json:"media3"`
+	Created int64  `json:"created"`
+}
+
+type (
+	SearchFeedsResp {
+		Feeds []Feed `json:"feeds"`
+	}
+)

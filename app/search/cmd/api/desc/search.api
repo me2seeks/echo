@@ -1,0 +1,35 @@
+syntax = "v1"
+
+import (
+	"feeds/feeds.api"
+	"users/users.api"
+)
+
+type (
+	SearchReq {
+		keyword  string `path:"keyword"`
+		page     int32  `form:"page"`
+		pageSize int32  `form:"pageSize"`
+	}
+)
+
+@server (
+	prefix: search/users
+	group:  user
+)
+service search {
+	@doc "search users"
+	@handler search
+	post /:keyword (SearchReq) returns (SearchUsersResp)
+}
+
+@server (
+	prefix: search/feeds
+	group:  feed
+)
+service search {
+	@doc "search feeds"
+	@handler search
+	post /:keyword (SearchReq) returns (SearchFeedsResp)
+}
+

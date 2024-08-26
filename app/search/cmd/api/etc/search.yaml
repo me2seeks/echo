@@ -1,0 +1,36 @@
+Name: search
+Host: 0.0.0.0
+Port: 1008
+
+JwtAuth:
+  AccessSecret: ae0536f9-6450-4606-8e13-5a19ed505da0
+  AccessExpire: 31536000
+
+#监控
+# Prometheus:
+#   Host: 0.0.0.0
+#   Port: 4008
+#   Path: /metrics
+
+#链路追踪
+# Telemetry:
+#   Name: usercenter-api
+#   Endpoint: http://jaeger:14268/api/traces
+#   Sampler: 1.0
+#   Batcher: jaeger
+
+Log:
+  ServiceName: search-api
+  Level: error
+
+
+#rpc service
+SearchRPCConf:
+  Endpoints:
+    - 127.0.0.1:1009
+  NonBlock: true
+
+ContentRPCConf:
+  Endpoints:
+    - 127.0.0.1:1003
+  NonBlock: true

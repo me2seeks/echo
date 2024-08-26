@@ -29,6 +29,8 @@ type (
 	GetCommentListResp             = pb.GetCommentListResp
 	GetFeedListByPageReq           = pb.GetFeedListByPageReq
 	GetFeedListByPageResp          = pb.GetFeedListByPageResp
+	GetFeedsByIDByPageReq          = pb.GetFeedsByIDByPageReq
+	GetFeedsByIDByPageResp         = pb.GetFeedsByIDByPageResp
 	GetFollowingFeedListByPageReq  = pb.GetFollowingFeedListByPageReq
 	GetFollowingFeedListByPageResp = pb.GetFollowingFeedListByPageResp
 	UpdateCommentReq               = pb.UpdateCommentReq
@@ -37,6 +39,7 @@ type (
 	UpdateFeedResp                 = pb.UpdateFeedResp
 
 	Content interface {
+		GetFeedsByIDByPage(ctx context.Context, in *GetFeedsByIDByPageReq, opts ...grpc.CallOption) (*GetFeedsByIDByPageResp, error)
 		GetFollowingFeedListByPage(ctx context.Context, in *GetFollowingFeedListByPageReq, opts ...grpc.CallOption) (*GetFollowingFeedListByPageResp, error)
 		GetFeedListByPage(ctx context.Context, in *GetFeedListByPageReq, opts ...grpc.CallOption) (*GetFeedListByPageResp, error)
 		CreateFeed(ctx context.Context, in *CreateFeedReq, opts ...grpc.CallOption) (*CreateFeedResp, error)
@@ -59,6 +62,11 @@ func NewContent(cli zrpc.Client) Content {
 	return &defaultContent{
 		cli: cli,
 	}
+}
+
+func (m *defaultContent) GetFeedsByIDByPage(ctx context.Context, in *GetFeedsByIDByPageReq, opts ...grpc.CallOption) (*GetFeedsByIDByPageResp, error) {
+	client := pb.NewContentClient(m.cli.Conn())
+	return client.GetFeedsByIDByPage(ctx, in, opts...)
 }
 
 func (m *defaultContent) GetFollowingFeedListByPage(ctx context.Context, in *GetFollowingFeedListByPageReq, opts ...grpc.CallOption) (*GetFollowingFeedListByPageResp, error) {
