@@ -1,0 +1,38 @@
+syntax = "v1"
+
+type (
+	GetContentCounterReq {
+		ID        int64 `path:"id"`
+		IsComment bool  `form:"is_comment"`
+	}
+	GetContentCounterResp {
+		CommentCount int64 `json:"comment_count"`
+		LikeCount    int64 `json:"like_count"`
+		ViewCount    int64 `json:"view_count"`
+	}
+)
+
+type (
+	GetUserCounterReq {
+		UserID int64 `path:"id"`
+	}
+	GetUserCounterResp {
+		FollowingCount int64 `json:"following_count"`
+		FollowerCount  int64 `json:"follower_count"`
+		FeedCount      int64 `json:"feed_count"`
+	}
+)
+
+@server (
+	prefix: counter
+)
+service counter {
+	@doc "get content counter"
+	@handler getContentCounter
+	get /content/:id (GetContentCounterReq) returns (GetContentCounterResp)
+
+	@doc "get user counter"
+	@handler getUserCounter
+	get /user/:id (GetUserCounterReq) returns (GetUserCounterResp)
+}
+

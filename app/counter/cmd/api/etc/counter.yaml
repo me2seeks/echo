@@ -1,0 +1,24 @@
+Name: counter
+Host: 0.0.0.0
+Port: 1006
+
+
+# Prometheus:
+#   Host: 0.0.0.0
+#   Port: 4006
+#   Path: /metrics
+
+JwtAuth:
+  AccessSecret: ae0536f9-6450-4606-8e13-5a19ed505da0
+  AccessExpire: 31536000
+
+Log:
+  ServiceName: counter-api
+  Level: error
+
+
+#rpc service
+CounterRPCConf:
+  Endpoints:
+    - 127.0.0.1:1007
+  NonBlock: true
