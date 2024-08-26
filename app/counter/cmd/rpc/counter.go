@@ -25,8 +25,8 @@ func main() {
 
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
-	svcCtx := svc.NewServiceContext(c)
 
+	svcCtx := svc.NewServiceContext(c)
 	ctx := context.Background()
 	serviceGroup := service.NewServiceGroup()
 	defer serviceGroup.Stop()

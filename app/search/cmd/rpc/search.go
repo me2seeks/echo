@@ -1,12 +1,14 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 
 	"github.com/me2seeks/echo-hub/app/search/cmd/rpc/internal/config"
 	"github.com/me2seeks/echo-hub/app/search/cmd/rpc/internal/server"
 	"github.com/me2seeks/echo-hub/app/search/cmd/rpc/internal/svc"
+	"github.com/me2seeks/echo-hub/app/search/cmd/rpc/mqs"
 	"github.com/me2seeks/echo-hub/app/search/cmd/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/conf"
@@ -23,10 +25,18 @@ func main() {
 
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
-	ctx := svc.NewServiceContext(c)
+
+	svcCtx := svc.NewServiceContext(c)
+	ctx := context.Background()
+	serviceGroup := service.NewServiceGroup()
+	defer serviceGroup.Stop()
+
+	for _, mq := range mqs.Consumers(c, ctx, svcCtx) {
+		serviceGroup.Add(mq)
+	}
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
-		pb.RegisterSearchServer(grpcServer, server.NewSearchServer(ctx))
+		pb.RegisterSearchServer(grpcServer, server.NewSearchServer(svcCtx))
 
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
 			reflection.Register(grpcServer)
