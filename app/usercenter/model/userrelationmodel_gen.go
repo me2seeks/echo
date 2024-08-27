@@ -35,6 +35,7 @@ type (
 		Insert(ctx context.Context, session sqlx.Session, data *UserRelation) (sql.Result, error)
 		FindOne(ctx context.Context, id int64) (*UserRelation, error)
 		FindOneByFollowerIdFolloweeId(ctx context.Context, followerId int64, followeeId int64) (*UserRelation, error)
+		FindOneByFollowerIdFolloweeIdWithOutDelState(ctx context.Context, followerId int64, followeeId int64) (*UserRelation, error)
 		Update(ctx context.Context, session sqlx.Session, data *UserRelation) (sql.Result, error)
 		UpdateWithVersion(ctx context.Context, session sqlx.Session, data *UserRelation) error
 		Trans(ctx context.Context, fn func(context context.Context, session sqlx.Session) error) error
@@ -51,7 +52,7 @@ type (
 
 		FindFollowers(ctx context.Context, followerId int64) ([]int64, error)
 		FindFollowees(ctx context.Context, followeeId int64) ([]int64, error)
-		RestoreSoft(ctx context.Context, session sqlx.Session, followerId, followeeId int64) error
+		RestoreSoft(ctx context.Context, session sqlx.Session, id int64) error
 	}
 
 	defaultUserRelationModel struct {
@@ -117,6 +118,27 @@ func (m *defaultUserRelationModel) FindOneByFollowerIdFolloweeId(ctx context.Con
 	err := m.QueryRowIndexCtx(ctx, &resp, userRelationFollowerIdFolloweeIdKey, m.formatPrimary, func(ctx context.Context, conn sqlx.SqlConn, v interface{}) (i interface{}, e error) {
 		query := fmt.Sprintf("select %s from %s where `follower_id` = ? and `followee_id` = ? and del_state = ? limit 1", userRelationRows, m.table)
 		if err := conn.QueryRowCtx(ctx, &resp, query, followerId, followeeId, globalkey.DelStateNo); err != nil {
+			return nil, err
+		}
+		return resp.Id, nil
+	}, m.queryPrimary)
+	switch err {
+	case nil:
+		return &resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
+
+
+func (m *defaultUserRelationModel) FindOneByFollowerIdFolloweeIdWithOutDelState(ctx context.Context, followerId int64, followeeId int64) (*UserRelation, error) {
+	userRelationFollowerIdFolloweeIdKey := fmt.Sprintf("%s%v:%v", cacheUserRelationFollowerIdFolloweeIdPrefix, followerId, followeeId)
+	var resp UserRelation
+	err := m.QueryRowIndexCtx(ctx, &resp, userRelationFollowerIdFolloweeIdKey, m.formatPrimary, func(ctx context.Context, conn sqlx.SqlConn, v interface{}) (i interface{}, e error) {
+		query := fmt.Sprintf("select %s from %s where `follower_id` = ? and `followee_id` = ?  limit 1", userRelationRows, m.table)
+		if err := conn.QueryRowCtx(ctx, &resp, query, followerId, followeeId); err != nil {
 			return nil, err
 		}
 		return resp.Id, nil
@@ -306,8 +328,8 @@ func (m *defaultUserRelationModel) FindFollowees(ctx context.Context, followerId
 	}
 }
 
-func (m *defaultUserRelationModel) RestoreSoft(ctx context.Context, session sqlx.Session, followerId, followeeId int64) error {
-	builder := squirrel.Update(m.table).Set("del_state", globalkey.DelStateNo).Set("delete_at", time.Unix(0, 0)).Where("follower_id = ?", followerId).Where("followee_id = ?", followeeId)
+func (m *defaultUserRelationModel) RestoreSoft(ctx context.Context, session sqlx.Session, id int64) error {
+	builder := squirrel.Update(m.table).Set("del_state", globalkey.DelStateNo).Where("id = ?", id)
 	query, values, err := builder.ToSql()
 	if err != nil {
 		return err

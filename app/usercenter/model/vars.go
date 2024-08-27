@@ -1,8 +1,7 @@
 package model
 
 import (
-	"errors"
-
+	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
 

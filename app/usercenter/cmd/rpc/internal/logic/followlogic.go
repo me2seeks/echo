@@ -8,6 +8,7 @@ import (
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/rpc/internal/svc"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/rpc/pb"
 	"github.com/me2seeks/echo-hub/app/usercenter/model"
+	"github.com/me2seeks/echo-hub/common/globalkey"
 	"github.com/me2seeks/echo-hub/common/kqueue"
 	"github.com/me2seeks/echo-hub/common/tool"
 	"github.com/me2seeks/echo-hub/common/uniqueid"
@@ -32,20 +33,25 @@ func NewFollowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FollowLogi
 }
 
 func (l *FollowLogic) Follow(in *pb.FollowReq) (*pb.FollowResp, error) {
-	err := l.svcCtx.UserRelationModel.RestoreSoft(l.ctx, nil, in.UserId, in.FolloweeId)
-	if err == model.ErrNoRowsUpdate {
-		_, err = l.svcCtx.UserRelationModel.Insert(l.ctx, nil, &model.UserRelation{
-			Id:         uniqueid.GenUserRelationID(),
-			FollowerId: in.UserId,
-			FolloweeId: in.FolloweeId,
-		})
-		if err != nil {
-			return &pb.FollowResp{}, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "insert user relation err:%v", err)
-		}
-		return &pb.FollowResp{}, err
-	}
+	relation, err := l.svcCtx.UserRelationModel.FindOneByFollowerIdFolloweeIdWithOutDelState(l.ctx, in.UserId, in.FolloweeId)
 	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "restore user relation error userID:%d,followeeID:%d,err:%v", in.UserId, in.FolloweeId, err)
+		if err == model.ErrNotFound {
+			_, err = l.svcCtx.UserRelationModel.Insert(l.ctx, nil, &model.UserRelation{
+				Id:         uniqueid.GenUserRelationID(),
+				FollowerId: in.UserId,
+				FolloweeId: in.FolloweeId,
+			})
+			if err != nil {
+				return &pb.FollowResp{}, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "insert user relation err:%v", err)
+			}
+		} else {
+			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "find user relation error userID:%d, followeeID:%d, err:%v", in.UserId, in.FolloweeId, err)
+		}
+	} else if relation.DelState == globalkey.DelStateYes {
+		err = l.svcCtx.UserRelationModel.RestoreSoft(l.ctx, nil, relation.Id)
+		if err != nil {
+			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "restore user relation error userID:%d, followeeID:%d, err:%v", in.UserId, in.FolloweeId, err)
+		}
 	}
 
 	msg := kqueue.CountEvent{

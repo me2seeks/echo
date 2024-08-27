@@ -7,6 +7,7 @@ import (
 
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/rpc/internal/svc"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/rpc/pb"
+	"github.com/me2seeks/echo-hub/app/usercenter/model"
 	"github.com/me2seeks/echo-hub/common/kqueue"
 	"github.com/me2seeks/echo-hub/common/tool"
 	"github.com/me2seeks/echo-hub/common/xerr"
@@ -32,6 +33,9 @@ func NewUnfollowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Unfollow
 func (l *UnfollowLogic) Unfollow(in *pb.UnfollowReq) (*pb.UnfollowResp, error) {
 	userRelation, err := l.svcCtx.UserRelationModel.FindOneByFollowerIdFolloweeId(l.ctx, in.UserId, in.FolloweeId)
 	if err != nil {
+		if err == model.ErrNotFound {
+			return &pb.UnfollowResp{}, nil
+		}
 		return &pb.UnfollowResp{}, errors.Wrapf(xerr.NewErrCode(xerr.UnFollowError), "not followed err:%v", err)
 	}
 
