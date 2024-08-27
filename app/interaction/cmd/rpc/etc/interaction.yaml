@@ -10,6 +10,12 @@ ListenOn: 0.0.0.0:2005
 #   Port: 4005
 #   Path: /metrics
 
+# Telemetry:
+#   Name: usercenter-rpc
+#   Endpoint: http://jaeger:14268/api/traces
+#   Sampler: 1.0
+#   Batcher: jaeger
+
 KqPusherConf:
   Brokers:
     - 10.2.12.14:30092

@@ -7,10 +7,12 @@ import (
 	"strings"
 
 	"github.com/elastic/go-elasticsearch/v8/esapi"
-	"github.com/me2seeks/echo-hub/app/search/cmd/rpc/internal/svc"
+	"github.com/me2seeks/echo-hub/app/search/cmd/consumer/internal/svc"
+	"github.com/me2seeks/echo-hub/common/es"
 	"github.com/me2seeks/echo-hub/common/kqueue"
 	"github.com/me2seeks/echo-hub/common/tool"
 	"github.com/me2seeks/echo-hub/common/xerr"
+
 	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -37,7 +39,7 @@ func (l *EsEvent) Consume(ctx context.Context, key, val string) error {
 
 	switch event.Type {
 	case kqueue.Register:
-		userJSON, err := json.Marshal(User{
+		userJSON, err := json.Marshal(es.User{
 			ID:       event.ID,
 			Nickname: event.Nickname,
 			Handle:   event.Content,
@@ -64,7 +66,7 @@ func (l *EsEvent) Consume(ctx context.Context, key, val string) error {
 		if err != nil {
 			return errors.Wrapf(xerr.NewErrCode(xerr.Str2Int64Error), "invalid event err:%v", err)
 		}
-		feedJSON, err := json.Marshal(Feed{
+		feedJSON, err := json.Marshal(es.Feed{
 			ID:      event.ID,
 			UserID:  userID,
 			Content: event.Content,

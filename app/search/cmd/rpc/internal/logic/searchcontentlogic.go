@@ -7,10 +7,12 @@ import (
 
 	"github.com/elastic/go-elasticsearch/esapi"
 	"github.com/me2seeks/echo-hub/app/search/cmd/rpc/internal/svc"
-	"github.com/me2seeks/echo-hub/app/search/cmd/rpc/mqs"
+
 	"github.com/me2seeks/echo-hub/app/search/cmd/rpc/pb"
 	"github.com/me2seeks/echo-hub/common/xerr"
 	"github.com/pkg/errors"
+
+	"github.com/me2seeks/echo-hub/common/es"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -60,7 +62,7 @@ func (l *SearchContentLogic) SearchContent(in *pb.SearchReq) (*pb.SearchContentR
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.EsError), "es response err:%v", res.String())
 	}
 
-	var searchResponse mqs.SearchFeedsResponse
+	var searchResponse es.SearchFeedsResponse
 	if err := json.NewDecoder(res.Body).Decode(&searchResponse); err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.UnmarshalError), "unmarshal searchResponse err:%v", err)
 	}

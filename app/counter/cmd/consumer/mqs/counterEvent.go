@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/me2seeks/echo-hub/app/counter/cmd/rpc/internal/svc"
+	"github.com/me2seeks/echo-hub/app/counter/cmd/consumer/internal/svc"
 	"github.com/me2seeks/echo-hub/common/kqueue"
 	"github.com/me2seeks/echo-hub/common/tool"
 	"github.com/me2seeks/echo-hub/common/xerr"

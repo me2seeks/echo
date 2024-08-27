@@ -7,8 +7,8 @@ import (
 
 	"github.com/elastic/go-elasticsearch/esapi"
 	"github.com/me2seeks/echo-hub/app/search/cmd/rpc/internal/svc"
-	"github.com/me2seeks/echo-hub/app/search/cmd/rpc/mqs"
 	"github.com/me2seeks/echo-hub/app/search/cmd/rpc/pb"
+	"github.com/me2seeks/echo-hub/common/es"
 	"github.com/me2seeks/echo-hub/common/xerr"
 	"github.com/pkg/errors"
 
@@ -65,7 +65,7 @@ func (l *SearchUsersLogic) SearchUsers(in *pb.SearchReq) (*pb.SearchUsersResp, e
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.EsError), "SearchUsers res.IsError err:%v", err)
 	}
 
-	var searchResponse mqs.SearchUsersResponse
+	var searchResponse es.SearchUsersResponse
 	if err := json.NewDecoder(res.Body).Decode(&searchResponse); err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.UnmarshalError), "SearchUsers json.Decode err:%v", err)
 	}

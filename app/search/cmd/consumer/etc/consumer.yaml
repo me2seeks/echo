@@ -1,0 +1,37 @@
+Name: search.consumer
+
+# Prometheus:
+#   Host: 0.0.0.0
+#   Port: 4011
+#   Path: /metrics
+
+
+KqConsumerConf:
+  Name: es
+  Brokers:
+    - 10.2.12.14:30092
+  Group: es
+  Topic: es-event
+  Offset: first
+  Consumers: 8
+  Processors: 8
+
+EsConf:
+  Address: 
+  - https://10.2.12.14:30200
+  Username: elastic
+  Password: Kmin*YUxdE4nN0hizzKp
+  certFile: 
+  keyFile: 
+  InsecureSkipVerify: true
+
+Redis:
+  Host: 10.2.12.14:31000
+  Type: node
+  Pass: 
+  Key: search-rpc
+Mysql:
+  DataSource: root:bf17tk6d7t56@tcp(10.2.12.14:32000)/echo-hub?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+Cache:
+  - Host: 10.2.12.14:31000
+    Pass: 

@@ -1,21 +1,10 @@
-Name: counter.rpc
-ListenOn: 0.0.0.0:2007
-# Etcd:
-#   Hosts:
-#   - 127.0.0.1:2379
-#   Key: counter.rpc
+Name: counter.consumer
 
 
 # Prometheus:
 #   Host: 0.0.0.0
-#   Port: 4007
+#   Port: 4010
 #   Path: /metrics
-
-# Telemetry:
-#   Name: usercenter-rpc
-#   Endpoint: http://jaeger:14268/api/traces
-#   Sampler: 1.0
-#   Batcher: jaeger
 
 KqConsumerConf:
   Name: counter
@@ -26,10 +15,6 @@ KqConsumerConf:
   Offset: first
   Consumers: 8
   Processors: 8
-
-Log:
-  ServiceName: counter-rpc
-  Level: error
 
 
 Redis:

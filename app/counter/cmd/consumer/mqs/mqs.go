@@ -3,8 +3,8 @@ package mqs
 import (
 	"context"
 
-	"github.com/me2seeks/echo-hub/app/counter/cmd/rpc/internal/config"
-	"github.com/me2seeks/echo-hub/app/counter/cmd/rpc/internal/svc"
+	"github.com/me2seeks/echo-hub/app/counter/cmd/consumer/internal/config"
+	"github.com/me2seeks/echo-hub/app/counter/cmd/consumer/internal/svc"
 
 	"github.com/zeromicro/go-queue/kq"
 	"github.com/zeromicro/go-zero/core/service"

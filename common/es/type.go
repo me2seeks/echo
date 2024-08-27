@@ -1,4 +1,4 @@
-package mqs
+package es
 
 type User struct {
 	ID       int64
