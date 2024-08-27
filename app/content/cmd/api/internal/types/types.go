@@ -110,12 +110,12 @@ type GetFeedsByPageResp struct {
 	Total int64  `json:"total"`
 }
 
-type GetFollowingFeedListByPageReq struct {
-	Page     int64 `json:"page"`
-	PageSize int64 `json:"page_size"`
+type GetFollowingFeedsByPageReq struct {
+	Page     int64 `form:"page"`
+	PageSize int64 `form:"page_size"`
 }
 
-type GetFollowingFeedListByPageResp struct {
+type GetFollowingFeedsByPageResp struct {
 	Feeds []Feed `json:"feed"`
 	Total int64  `json:"total"`
 }

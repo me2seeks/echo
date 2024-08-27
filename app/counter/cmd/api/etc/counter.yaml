@@ -20,7 +20,7 @@ JwtAuth:
 
 Log:
   ServiceName: counter-api
-  Level: error
+  Level: info
 
 
 #rpc service

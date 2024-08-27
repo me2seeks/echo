@@ -36,11 +36,11 @@ type (
 )
 
 type (
-	GetFollowingFeedListByPageReq {
-		Page     int64 `json:"page"`
-		PageSize int64 `json:"page_size"`
+	GetFollowingFeedsByPageReq {
+		Page     int64 `form:"page"`
+		PageSize int64 `form:"page_size"`
 	}
-	GetFollowingFeedListByPageResp {
+	GetFollowingFeedsByPageResp {
 		Feeds []Feed `json:"feed"`
 		Total int64  `json:"total"`
 	}

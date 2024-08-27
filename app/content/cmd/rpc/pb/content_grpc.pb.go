@@ -19,7 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Content_GetFeedsByIDByPage_FullMethodName         = "/pb.Content/getFeedsByIDByPage"
+	Content_GetFeedsByIDsByPage_FullMethodName        = "/pb.Content/getFeedsByIDsByPage"
 	Content_GetFollowingFeedListByPage_FullMethodName = "/pb.Content/getFollowingFeedListByPage"
 	Content_GetFeedListByPage_FullMethodName          = "/pb.Content/getFeedListByPage"
 	Content_CreateFeed_FullMethodName                 = "/pb.Content/createFeed"
@@ -36,7 +36,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ContentClient interface {
-	GetFeedsByIDByPage(ctx context.Context, in *GetFeedsByIDByPageReq, opts ...grpc.CallOption) (*GetFeedsByIDByPageResp, error)
+	GetFeedsByIDsByPage(ctx context.Context, in *GetFeedsByIDsByPageReq, opts ...grpc.CallOption) (*GetFeedsByIDsByPageResp, error)
 	GetFollowingFeedListByPage(ctx context.Context, in *GetFollowingFeedListByPageReq, opts ...grpc.CallOption) (*GetFollowingFeedListByPageResp, error)
 	GetFeedListByPage(ctx context.Context, in *GetFeedListByPageReq, opts ...grpc.CallOption) (*GetFeedListByPageResp, error)
 	CreateFeed(ctx context.Context, in *CreateFeedReq, opts ...grpc.CallOption) (*CreateFeedResp, error)
@@ -58,10 +58,10 @@ func NewContentClient(cc grpc.ClientConnInterface) ContentClient {
 	return &contentClient{cc}
 }
 
-func (c *contentClient) GetFeedsByIDByPage(ctx context.Context, in *GetFeedsByIDByPageReq, opts ...grpc.CallOption) (*GetFeedsByIDByPageResp, error) {
+func (c *contentClient) GetFeedsByIDsByPage(ctx context.Context, in *GetFeedsByIDsByPageReq, opts ...grpc.CallOption) (*GetFeedsByIDsByPageResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetFeedsByIDByPageResp)
-	err := c.cc.Invoke(ctx, Content_GetFeedsByIDByPage_FullMethodName, in, out, cOpts...)
+	out := new(GetFeedsByIDsByPageResp)
+	err := c.cc.Invoke(ctx, Content_GetFeedsByIDsByPage_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -172,7 +172,7 @@ func (c *contentClient) DeleteComment(ctx context.Context, in *DeleteCommentReq,
 // All implementations must embed UnimplementedContentServer
 // for forward compatibility.
 type ContentServer interface {
-	GetFeedsByIDByPage(context.Context, *GetFeedsByIDByPageReq) (*GetFeedsByIDByPageResp, error)
+	GetFeedsByIDsByPage(context.Context, *GetFeedsByIDsByPageReq) (*GetFeedsByIDsByPageResp, error)
 	GetFollowingFeedListByPage(context.Context, *GetFollowingFeedListByPageReq) (*GetFollowingFeedListByPageResp, error)
 	GetFeedListByPage(context.Context, *GetFeedListByPageReq) (*GetFeedListByPageResp, error)
 	CreateFeed(context.Context, *CreateFeedReq) (*CreateFeedResp, error)
@@ -194,8 +194,8 @@ type ContentServer interface {
 // pointer dereference when methods are called.
 type UnimplementedContentServer struct{}
 
-func (UnimplementedContentServer) GetFeedsByIDByPage(context.Context, *GetFeedsByIDByPageReq) (*GetFeedsByIDByPageResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetFeedsByIDByPage not implemented")
+func (UnimplementedContentServer) GetFeedsByIDsByPage(context.Context, *GetFeedsByIDsByPageReq) (*GetFeedsByIDsByPageResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFeedsByIDsByPage not implemented")
 }
 func (UnimplementedContentServer) GetFollowingFeedListByPage(context.Context, *GetFollowingFeedListByPageReq) (*GetFollowingFeedListByPageResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFollowingFeedListByPage not implemented")
@@ -248,20 +248,20 @@ func RegisterContentServer(s grpc.ServiceRegistrar, srv ContentServer) {
 	s.RegisterService(&Content_ServiceDesc, srv)
 }
 
-func _Content_GetFeedsByIDByPage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetFeedsByIDByPageReq)
+func _Content_GetFeedsByIDsByPage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFeedsByIDsByPageReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ContentServer).GetFeedsByIDByPage(ctx, in)
+		return srv.(ContentServer).GetFeedsByIDsByPage(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Content_GetFeedsByIDByPage_FullMethodName,
+		FullMethod: Content_GetFeedsByIDsByPage_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ContentServer).GetFeedsByIDByPage(ctx, req.(*GetFeedsByIDByPageReq))
+		return srv.(ContentServer).GetFeedsByIDsByPage(ctx, req.(*GetFeedsByIDsByPageReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -454,8 +454,8 @@ var Content_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ContentServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "getFeedsByIDByPage",
-			Handler:    _Content_GetFeedsByIDByPage_Handler,
+			MethodName: "getFeedsByIDsByPage",
+			Handler:    _Content_GetFeedsByIDsByPage_Handler,
 		},
 		{
 			MethodName: "getFollowingFeedListByPage",

@@ -17,11 +17,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				// search feeds
 				Method:  http.MethodPost,
-				Path:    "/:keyword",
+				Path:    "/feeds",
 				Handler: feed.SearchHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/search/feeds"),
+		rest.WithPrefix("/search"),
 	)
 
 	server.AddRoutes(
@@ -29,10 +29,10 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				// search users
 				Method:  http.MethodPost,
-				Path:    "/:keyword",
+				Path:    "/users",
 				Handler: user.SearchHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/search/users"),
+		rest.WithPrefix("/search"),
 	)
 }

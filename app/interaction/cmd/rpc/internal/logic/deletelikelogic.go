@@ -44,7 +44,7 @@ func (l *DeleteLikeLogic) DeleteLike(in *pb.DeleteLikeReq) (*pb.DeleteLikeResp, 
 
 	msg := kqueue.CountEvent{
 		Type:      kqueue.UnLike,
-		ID:        in.Id,
+		TargetID:  in.Id,
 		IsComment: false,
 	}
 	if in.IsComment {

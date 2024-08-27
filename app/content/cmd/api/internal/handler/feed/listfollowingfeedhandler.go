@@ -12,16 +12,16 @@ import (
 )
 
 // get following feed list by page
-func FollowingHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func ListFollowingFeedHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.GetFollowingFeedListByPageReq
+		var req types.GetFollowingFeedsByPageReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
-		l := feed.NewFollowingLogic(r.Context(), svcCtx)
-		resp, err := l.Following(&req)
+		l := feed.NewListFollowingFeedLogic(r.Context(), svcCtx)
+		resp, err := l.ListFollowingFeed(&req)
 		result.HTTPResult(r, w, resp, err)
 	}
 }

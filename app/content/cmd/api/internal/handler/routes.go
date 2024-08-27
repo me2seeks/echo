@@ -81,6 +81,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/:feedID/comment",
 				Handler: feed.CreateCommentHandler(serverCtx),
 			},
+			{
+				// get following feed list by page
+				Method:  http.MethodGet,
+				Path:    "/following",
+				Handler: feed.ListFollowingFeedHandler(serverCtx),
+			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
 		rest.WithPrefix("/feed"),

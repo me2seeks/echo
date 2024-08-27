@@ -32,12 +32,16 @@ func (l *GetCommentListByPageLogic) GetCommentListByPage(in *pb.GetCommentListBy
 	var total int64
 	var err error
 	if !in.IsComment {
-		commentList, total, err = l.svcCtx.CommentsModel.FindPageListByPageWithTotal(l.ctx, l.svcCtx.CommentsModel.SelectBuilder().Columns("id, user_id, content, media0, media1, media2, media3, create_at").Where("feed_id = ?", in.Id), in.Page, in.PageSize, "")
+		commentList, total, err = l.svcCtx.CommentsModel.FindPageListByPageWithTotal(l.ctx, l.svcCtx.CommentsModel.SelectBuilder().
+			// Columns("id, user_id, content, media0, media1, media2, media3, create_at").
+			Where("feed_id = ?", in.Id), in.Page, in.PageSize, "id DESC")
 		if err != nil {
 			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetCommentListByPage FindPageListByPageWithTotal feedID%d err:%v", in.Id, err)
 		}
 	} else {
-		commentList, total, err = l.svcCtx.CommentsModel.FindPageListByPageWithTotal(l.ctx, l.svcCtx.CommentsModel.SelectBuilder().Columns("id, user_id, content, media0, media1, media2, media3, create_at").Where("parent_id = ?", in.Id), in.Page, in.PageSize, "")
+		commentList, total, err = l.svcCtx.CommentsModel.FindPageListByPageWithTotal(l.ctx, l.svcCtx.CommentsModel.SelectBuilder().
+			// Columns("id, user_id, content, media0, media1, media2, media3, create_at").
+			Where("parent_id = ?", in.Id), in.Page, in.PageSize, "id DESC")
 		if err != nil {
 			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetCommentListByPage FindPageListByPageWithTotal commentID%d err:%v", in.Id, err)
 		}

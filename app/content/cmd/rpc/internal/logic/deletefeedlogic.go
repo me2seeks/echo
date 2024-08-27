@@ -57,7 +57,7 @@ func (l *DeleteFeedLogic) DeleteFeed(in *pb.DeleteFeedReq) (*pb.DeleteFeedResp, 
 
 	msg := kqueue.CountEvent{
 		Type:      kqueue.DeleteFeed,
-		ID:        in.UserID,
+		SourceID:  in.UserID,
 		IsComment: false,
 	}
 	msgBytes, err := json.Marshal(msg)

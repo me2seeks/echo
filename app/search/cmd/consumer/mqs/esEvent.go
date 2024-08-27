@@ -30,7 +30,7 @@ func NewEsEvent(ctx context.Context, svcCtx *svc.ServiceContext) *EsEvent {
 }
 
 func (l *EsEvent) Consume(ctx context.Context, key, val string) error {
-	logx.Infof("EsEvent key :%s , val :%s", key, val)
+	logx.Debugf("EsEvent key :%s , val :%s", key, val)
 	var event kqueue.EsEvent
 	err := json.Unmarshal(tool.StringToBytes(val), &event)
 	if err != nil {

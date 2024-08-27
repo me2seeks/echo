@@ -13,8 +13,8 @@ message User{
 
 message SearchReq {
     string keyword = 1;
-    int32 page = 2;
-    int32 pageSize = 3;
+    int64 page = 2;
+    int64 pageSize = 3;
 }
 message SearchUsersResp {
     repeated User users = 1;

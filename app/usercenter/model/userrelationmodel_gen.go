@@ -132,7 +132,6 @@ func (m *defaultUserRelationModel) FindOneByFollowerIdFolloweeId(ctx context.Con
 	}
 }
 
-
 func (m *defaultUserRelationModel) FindOneByFollowerIdFolloweeIdWithOutDelState(ctx context.Context, followerId int64, followeeId int64) (*UserRelation, error) {
 	userRelationFollowerIdFolloweeIdKey := fmt.Sprintf("%s%v:%v", cacheUserRelationFollowerIdFolloweeIdPrefix, followerId, followeeId)
 	var resp UserRelation

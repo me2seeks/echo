@@ -21,12 +21,17 @@ JwtAuth:
 
 Log:
   ServiceName: content-api
-  Level: error
+  Level: info
 
 
 #rpc service
 ContentRPCConf:
   Endpoints:
     - 127.0.0.1:2003
+  NonBlock: true
+
+UsercenterRPCConf:
+  Endpoints:
+    - 127.0.0.1:2001
   NonBlock: true
 

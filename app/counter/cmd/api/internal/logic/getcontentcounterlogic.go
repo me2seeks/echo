@@ -35,7 +35,7 @@ func (l *GetContentCounterLogic) GetContentCounter(req *types.GetContentCounterR
 		return nil, err
 	}
 	var resp types.GetContentCounterResp
-	_ = copier.Copy(resp, counterResp)
+	_ = copier.Copy(&resp, counterResp)
 
 	return &resp, nil
 }

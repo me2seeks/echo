@@ -29,7 +29,7 @@ KqPusherEsEventConf:
 
 Log:
   ServiceName: content-rpc
-  Level: error
+  Level: info
 
 JwtAuth:
   AccessSecret: ae0536f9-6450-4606-8e13-5a19ed505da0

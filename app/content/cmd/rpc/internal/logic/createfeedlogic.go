@@ -66,7 +66,7 @@ func (l *CreateFeedLogic) CreateFeed(in *pb.CreateFeedReq) (*pb.CreateFeedResp, 
 
 	msg := kqueue.CountEvent{
 		Type:      kqueue.Feed,
-		ID:        in.UserID,
+		SourceID:  in.UserID,
 		IsComment: false,
 	}
 	msgBytes, err := json.Marshal(msg)

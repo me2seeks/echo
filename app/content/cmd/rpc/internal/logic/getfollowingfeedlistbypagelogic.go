@@ -5,6 +5,8 @@ import (
 
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/internal/svc"
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/pb"
+	"github.com/me2seeks/echo-hub/app/content/model"
+	"github.com/me2seeks/echo-hub/common/tool"
 	"github.com/me2seeks/echo-hub/common/xerr"
 	"github.com/pkg/errors"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -29,11 +31,19 @@ func NewGetFollowingFeedListByPageLogic(ctx context.Context, svcCtx *svc.Service
 func (l *GetFollowingFeedListByPageLogic) GetFollowingFeedListByPage(in *pb.GetFollowingFeedListByPageReq) (*pb.GetFollowingFeedListByPageResp, error) {
 	userLastRequest, err := l.svcCtx.UserLastRequestModel.FindOne(l.ctx, in.UserID)
 	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetfeedListByPage FindOne UserID%d err:%v", in.UserID, err)
+		if err != model.ErrNotFound {
+			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetFollowingFeedListByPage UserLastRequestModel FindOne UserID%d err:%v", in.UserID, err)
+		}
+		// TODO 创建记录
+		userLastRequest = &model.UserLastRequest{}
 	}
-	feeds, total, err := l.svcCtx.FeedsModel.FindPageListByPageWithTotal(l.ctx, l.svcCtx.FeedsModel.SelectBuilder().Columns("id, user_id, content, media0, media1, media2, media3, create_at").Where("user_id IN (?,?,...)", in.UserID).Where("create_at > ?", userLastRequest.LastRequestTime), in.Page, in.PageSize, "")
+	// TODO fix
+	feeds, total, err := l.svcCtx.FeedsModel.FindPageListByPageWithTotal(l.ctx, l.svcCtx.FeedsModel.SelectBuilder().
+		// Columns("id, user_id, content, media0, media1, media2, media3, create_at").
+		Where("user_id IN "+tool.BuildQuery(in.TargetID)).
+		Where("create_at > ?", userLastRequest.LastRequestTime), in.Page, in.PageSize, "id DESC")
 	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetfeedListByPage FindPageListByPageWithTotal UserID%d err:%v", in.UserID, err)
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetFollowingFeedListByPage FindPageListByPageWithTotal UserID%d err:%v", in.UserID, err)
 	}
 	var feedList []*pb.Feed
 	for _, feed := range feeds {

@@ -22,9 +22,9 @@ func NewContentServer(svcCtx *svc.ServiceContext) *ContentServer {
 	}
 }
 
-func (s *ContentServer) GetFeedsByIDByPage(ctx context.Context, in *pb.GetFeedsByIDByPageReq) (*pb.GetFeedsByIDByPageResp, error) {
-	l := logic.NewGetFeedsByIDByPageLogic(ctx, s.svcCtx)
-	return l.GetFeedsByIDByPage(in)
+func (s *ContentServer) GetFeedsByIDsByPage(ctx context.Context, in *pb.GetFeedsByIDsByPageReq) (*pb.GetFeedsByIDsByPageResp, error) {
+	l := logic.NewGetFeedsByIDsByPageLogic(ctx, s.svcCtx)
+	return l.GetFeedsByIDsByPage(in)
 }
 
 func (s *ContentServer) GetFollowingFeedListByPage(ctx context.Context, in *pb.GetFollowingFeedListByPageReq) (*pb.GetFollowingFeedListByPageResp, error) {

@@ -36,14 +36,19 @@ func (l *SearchLogic) Search(req *types.SearchReq) (*types.SearchFeedsResp, erro
 	if err != nil {
 		return nil, err
 	}
-	contentResp, err := l.svcCtx.ContentRPC.GetFeedsByIDByPage(l.ctx, &content.GetFeedsByIDByPageReq{
-		FeedID: searchContentResp.ContentID,
-	})
-	if err != nil {
-		return nil, err
-	}
 	var resp types.SearchFeedsResp
-	_ = copier.Copy(&resp, contentResp.Feeds)
+
+	if len(searchContentResp.ContentID) != 0 {
+		contentResp, err := l.svcCtx.ContentRPC.GetFeedsByIDsByPage(l.ctx, &content.GetFeedsByIDsByPageReq{
+			FeedID:   searchContentResp.ContentID,
+			Page:     req.Page,
+			PageSize: req.PageSize,
+		})
+		if err != nil {
+			return nil, err
+		}
+		_ = copier.Copy(&resp.Feeds, contentResp.Feeds)
+	}
 
 	return &resp, nil
 }

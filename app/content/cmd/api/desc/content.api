@@ -35,6 +35,10 @@ service content {
 	jwt:    JwtAuth
 )
 service content {
+	@doc "get following feed list by page"
+	@handler listFollowingFeed
+	get /following (GetFollowingFeedsByPageReq) returns (GetFollowingFeedsByPageResp)
+
 	@doc "create feed"
 	@handler create
 	post / (CreateFeedReq) returns (CreateFeedResp)

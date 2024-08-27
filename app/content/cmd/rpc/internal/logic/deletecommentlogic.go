@@ -40,12 +40,12 @@ func (l *DeleteCommentLogic) DeleteComment(in *pb.DeleteCommentReq) (*pb.DeleteC
 
 	msg := kqueue.CountEvent{
 		Type:      kqueue.UnComment,
-		ID:        in.Id,
+		TargetID:  in.Id,
 		IsComment: false,
 	}
 
 	if in.IsComment {
-		msg.ID = in.ParentID
+		msg.TargetID = in.ParentID
 		msg.IsComment = true
 	}
 

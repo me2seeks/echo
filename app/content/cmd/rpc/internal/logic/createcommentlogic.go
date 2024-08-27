@@ -56,12 +56,12 @@ func (l *CreateCommentLogic) CreateComment(in *pb.CreateCommentReq) (*pb.CreateC
 
 	msg := kqueue.CountEvent{
 		Type:      kqueue.Comment,
-		ID:        in.FeedID,
+		TargetID:  in.FeedID,
 		IsComment: false,
 	}
 
 	if in.IsComment {
-		msg.ID = in.CommentID
+		msg.TargetID = in.CommentID
 		msg.IsComment = true
 	}
 

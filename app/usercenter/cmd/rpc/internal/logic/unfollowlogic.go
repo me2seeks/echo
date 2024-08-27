@@ -46,7 +46,8 @@ func (l *UnfollowLogic) Unfollow(in *pb.UnfollowReq) (*pb.UnfollowResp, error) {
 
 	msg := kqueue.CountEvent{
 		Type:      kqueue.UnFollow,
-		ID:        in.FolloweeId,
+		SourceID:  in.UserId,
+		TargetID:  in.FolloweeId,
 		IsComment: false,
 	}
 	msgBytes, err := json.Marshal(msg)

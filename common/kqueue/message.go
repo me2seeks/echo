@@ -25,7 +25,8 @@ const (
 
 type CountEvent struct {
 	Type      EventType
-	ID        int64
+	SourceID  int64
+	TargetID  int64
 	IsComment bool
 }
 

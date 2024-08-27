@@ -56,7 +56,8 @@ func (l *FollowLogic) Follow(in *pb.FollowReq) (*pb.FollowResp, error) {
 
 	msg := kqueue.CountEvent{
 		Type:      kqueue.Follow,
-		ID:        in.FolloweeId,
+		SourceID:  in.UserId,
+		TargetID:  in.FolloweeId,
 		IsComment: false,
 	}
 	msgBytes, err := json.Marshal(msg)

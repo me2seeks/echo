@@ -5,6 +5,7 @@ import (
 
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/internal/svc"
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/pb"
+	"github.com/me2seeks/echo-hub/common/tool"
 	"github.com/me2seeks/echo-hub/common/xerr"
 	"github.com/pkg/errors"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -12,26 +13,28 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type GetFeedsByIDByPageLogic struct {
+type GetFeedsByIDsByPageLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewGetFeedsByIDByPageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetFeedsByIDByPageLogic {
-	return &GetFeedsByIDByPageLogic{
+func NewGetFeedsByIDsByPageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetFeedsByIDsByPageLogic {
+	return &GetFeedsByIDsByPageLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-func (l *GetFeedsByIDByPageLogic) GetFeedsByIDByPage(in *pb.GetFeedsByIDByPageReq) (*pb.GetFeedsByIDByPageResp, error) {
-	feeds, total, err := l.svcCtx.FeedsModel.FindPageListByPageWithTotal(l.ctx, l.svcCtx.FeedsModel.SelectBuilder().Columns("id, user_id, content, media0, media1, media2, media3, create_at").Where("id in (?,?,...) ", in.FeedID), in.Page, in.PageSize, "id DESC")
+func (l *GetFeedsByIDsByPageLogic) GetFeedsByIDsByPage(in *pb.GetFeedsByIDsByPageReq) (*pb.GetFeedsByIDsByPageResp, error) {
+	feeds, total, err := l.svcCtx.FeedsModel.FindPageListByPageWithTotal(l.ctx, l.svcCtx.FeedsModel.SelectBuilder().
+		// Columns("id, user_id, content, media0, media1, media2, media3, create_at").
+		Where("id in "+tool.BuildQuery(in.FeedID)), in.Page, in.PageSize, "id DESC")
 	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetFeedsByIDByPage FindPageListByPageWithTotal err:%v", err)
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetFeedsByIDsByPage FindPageListByPageWithTotal err:%v", err)
 	}
-	var resp pb.GetFeedsByIDByPageResp
+	resp := &pb.GetFeedsByIDsByPageResp{}
 	for _, feed := range feeds {
 		resp.Feeds = append(resp.Feeds, &pb.Feed{
 			Id:         feed.Id,
@@ -46,5 +49,5 @@ func (l *GetFeedsByIDByPageLogic) GetFeedsByIDByPage(in *pb.GetFeedsByIDByPageRe
 	}
 	resp.Total = total
 
-	return &resp, nil
+	return resp, nil
 }

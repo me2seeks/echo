@@ -36,10 +36,6 @@ func (l *SearchLogic) Search(req *types.SearchReq) (*types.SearchUsersResp, erro
 		return nil, err
 	}
 
-	for _, user := range searchUsersResp.Users {
-		logx.Info(user)
-	}
-
 	var resp types.SearchUsersResp
 	_ = copier.Copy(&resp, searchUsersResp)
 

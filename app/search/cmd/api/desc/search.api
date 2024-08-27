@@ -7,29 +7,29 @@ import (
 
 type (
 	SearchReq {
-		keyword  string `path:"keyword"`
-		page     int32  `form:"page"`
-		pageSize int32  `form:"pageSize"`
+		Keyword  string `form:"keyword"`
+		Page     int64  `form:"page"`
+		PageSize int64  `form:"pageSize"`
 	}
 )
 
 @server (
-	prefix: search/users
+	prefix: search
 	group:  user
 )
 service search {
 	@doc "search users"
 	@handler search
-	post /:keyword (SearchReq) returns (SearchUsersResp)
+	post /users (SearchReq) returns (SearchUsersResp)
 }
 
 @server (
-	prefix: search/feeds
+	prefix: search
 	group:  feed
 )
 service search {
 	@doc "search feeds"
 	@handler search
-	post /:keyword (SearchReq) returns (SearchFeedsResp)
+	post /feeds (SearchReq) returns (SearchFeedsResp)
 }
 
