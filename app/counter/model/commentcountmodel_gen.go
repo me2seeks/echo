@@ -430,11 +430,10 @@ func (m *defaultCommentCountModel) IncreaseViewCount(ctx context.Context, sessio
 	commentCount, err := m.FindOne(ctx, commentID)
 	if err != nil {
 		if err == ErrNotFound {
-			commentCount = &CommentCount{
+			_, err = m.Insert(ctx, session, &CommentCount{
 				CommentId: commentID,
 				ViewCount: 1,
-			}
-			_, err = m.Insert(ctx, session, commentCount)
+			})
 			if err != nil {
 				return err
 			}

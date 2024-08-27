@@ -380,12 +380,11 @@ func (m *defaultUserStateModel) IncreaseFollowerCount(ctx context.Context, sessi
 	userState, err := m.FindOne(ctx, userId)
 	if err != nil {
 		if err == ErrNotFound {
-			userState = &UserState{
+			_, err = m.Insert(ctx, session, &UserState{
 				UserId:         userId,
 				FollowerCount:  1,
 				FollowingCount: 0,
-			}
-			_, err = m.Insert(ctx, session, userState)
+			})
 			if err != nil {
 				return err
 			}
@@ -458,11 +457,10 @@ func (m *defaultUserStateModel) IncreaseFeedCount(ctx context.Context, session s
 	userState, err := m.FindOne(ctx, userId)
 	if err != nil {
 		if err == ErrNotFound {
-			userState = &UserState{
+			_, err = m.Insert(ctx, session, &UserState{
 				UserId:    userId,
 				FeedCount: 1,
-			}
-			_, err = m.Insert(ctx, session, userState)
+			})
 			if err != nil {
 				return err
 			}

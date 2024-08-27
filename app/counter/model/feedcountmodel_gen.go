@@ -421,11 +421,10 @@ func (m *defaultFeedCountModel) IncreaseViewCount(ctx context.Context, session s
 	feedCount, err := m.FindOne(ctx, feedID)
 	if err != nil {
 		if err == ErrNotFound {
-			feedCount = &FeedCount{
+			_, err = m.Insert(ctx, session, &FeedCount{
 				FeedId:    feedID,
 				ViewCount: 1,
-			}
-			_, err = m.Insert(ctx, session, feedCount)
+			})
 			if err != nil {
 				return err
 			}
