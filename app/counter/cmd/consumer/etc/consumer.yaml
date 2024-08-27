@@ -6,6 +6,10 @@ Name: counter.consumer
 #   Port: 4010
 #   Path: /metrics
 
+Log:
+  ServiceName: counter-consumer
+  Level: error
+
 KqConsumerConf:
   Name: counter
   Brokers:

@@ -38,4 +38,4 @@ KqConsumerConf:
 
 Log:
   ServiceName: search-rpc
-  Level: error
+  Level: info

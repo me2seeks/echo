@@ -5,6 +5,10 @@ Name: search.consumer
 #   Port: 4011
 #   Path: /metrics
 
+Log:
+  ServiceName: search-consumer
+  Level: error
+
 
 KqConsumerConf:
   Name: es

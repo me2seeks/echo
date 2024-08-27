@@ -21,7 +21,7 @@ JwtAuth:
 
 Log:
   ServiceName: search-api
-  Level: error
+  Level: info
 
 
 #rpc service

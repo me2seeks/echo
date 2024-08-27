@@ -3,9 +3,8 @@ package logic
 import (
 	"context"
 	"encoding/json"
-	"strings"
+	"io"
 
-	"github.com/elastic/go-elasticsearch/esapi"
 	"github.com/me2seeks/echo-hub/app/search/cmd/rpc/internal/svc"
 
 	"github.com/me2seeks/echo-hub/app/search/cmd/rpc/pb"
@@ -32,46 +31,30 @@ func NewSearchContentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Sea
 }
 
 func (l *SearchContentLogic) SearchContent(in *pb.SearchReq) (*pb.SearchContentResp, error) {
-	query := map[string]interface{}{
-		"query": map[string]interface{}{
-			"bool": map[string]interface{}{
-				"should": []map[string]interface{}{
-					{
-						"match": map[string]interface{}{
-							"content": in.Keyword,
-						},
-					},
-				},
-			},
-		},
-	}
-	queryJSON, err := json.Marshal(query)
-	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.MarshalError), "SearchContent json.Marshal err:%v", err)
-	}
-	req := esapi.SearchRequest{
-		Index: []string{"feeds"},
-		Body:  strings.NewReader(string(queryJSON)),
-	}
-	res, err := req.Do(l.ctx, l.svcCtx.EsClient)
-	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.EsError), "es request err:%v", err)
-	}
-	defer res.Body.Close()
-	if res.IsError() {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.EsError), "es response err:%v", res.String())
+	searchResp, err := l.svcCtx.EsClient.Search(
+		l.svcCtx.EsClient.Search.WithContext(l.ctx),
+		l.svcCtx.EsClient.Search.WithIndex("feeds"),
+		l.svcCtx.EsClient.Search.WithQuery(in.Keyword),
+		l.svcCtx.EsClient.Search.WithTrackTotalHits(true),
+		l.svcCtx.EsClient.Search.WithPretty(),
+		// l.svcCtx.EsClient.Search.WithSize(10),
+	)
+	if err != nil || searchResp.StatusCode != 200 {
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.EsError), "SearchContent err:%v", err)
 	}
 
-	var searchResponse es.SearchFeedsResponse
-	if err := json.NewDecoder(res.Body).Decode(&searchResponse); err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.UnmarshalError), "unmarshal searchResponse err:%v", err)
+	body, err := io.ReadAll(searchResp.Body)
+	if err != nil {
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.ReadBodyError), "SearchContent io.ReadAll err:%v", err)
 	}
-	for _, hit := range searchResponse.Hits.Hits {
-		logx.Infof("Feed: %v", hit.Source)
+	var response es.SearchFeedsResponse
+	err = json.Unmarshal(body, &response)
+	if err != nil {
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.UnmarshalError), "SearchContent json.Unmarshal err:%v", err)
 	}
 
 	var contentID []int64
-	for _, hit := range searchResponse.Hits.Hits {
+	for _, hit := range response.Hits.Hits {
 		contentID = append(contentID, hit.Source.ID)
 	}
 

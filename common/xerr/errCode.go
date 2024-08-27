@@ -21,6 +21,7 @@ const (
 	InvalidEvent
 	EsError
 	Str2Int64Error
+	ReadBodyError
 )
 
 // 用户模块
