@@ -18,7 +18,7 @@ ListenOn: 0.0.0.0:2009
 
 EsConf:
   Address: 
-  - https://10.2.12.14:30200
+  - https://10.2.12.14:32704
   Username: elastic
   Password: Kmin*YUxdE4nN0hizzKp
   certFile: 

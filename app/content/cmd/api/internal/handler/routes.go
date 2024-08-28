@@ -6,6 +6,7 @@ import (
 
 	comment "github.com/me2seeks/echo-hub/app/content/cmd/api/internal/handler/comment"
 	feed "github.com/me2seeks/echo-hub/app/content/cmd/api/internal/handler/feed"
+	upload "github.com/me2seeks/echo-hub/app/content/cmd/api/internal/handler/upload"
 	"github.com/me2seeks/echo-hub/app/content/cmd/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -90,5 +91,17 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
 		rest.WithPrefix("/feed"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				//
+				Method:  http.MethodPost,
+				Path:    "/presigned",
+				Handler: upload.PresignedHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/upload"),
 	)
 }

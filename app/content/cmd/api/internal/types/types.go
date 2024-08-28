@@ -119,3 +119,12 @@ type GetFollowingFeedsByPageResp struct {
 	Feeds []Feed `json:"feed"`
 	Total int64  `json:"total"`
 }
+
+type PresignedReq struct {
+	FileName string `json:"fileName"`
+	FileType string `json:"fileType"`
+}
+
+type PresignedResp struct {
+	Url string `json:"url"`
+}

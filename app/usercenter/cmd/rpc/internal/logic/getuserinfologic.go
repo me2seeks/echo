@@ -37,7 +37,7 @@ func (l *GetUserInfoLogic) GetUserInfo(in *pb.GetUserInfoReq) (*pb.GetUserInfoRe
 	if user == nil {
 		return nil, errors.Wrapf(ErrUserNoExistsError, "GetUserInfo  not exit UserID:%d", in.UserID)
 	}
-	resp:=&pb.GetUserInfoResp{}
+	resp := &pb.GetUserInfoResp{}
 	_ = copier.Copy(resp.User, user)
 
 	return resp, nil

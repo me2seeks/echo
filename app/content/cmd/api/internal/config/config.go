@@ -13,4 +13,11 @@ type Config struct {
 	}
 	ContentRPCConf    zrpc.RpcClientConf
 	UsercenterRPCConf zrpc.RpcClientConf
+	MiniConf          struct {
+		EndPoint   string
+		AccessKey  string
+		SecretKey  string
+		BucketName string
+		Expires    int64
+	}
 }

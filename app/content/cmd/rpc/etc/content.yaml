@@ -19,12 +19,12 @@ ListenOn: 0.0.0.0:2003
 
 KqPusherCounterEventConf:
   Brokers:
-    - 10.2.12.14:30092
+    - 10.2.12.14:32703
   Topic: counter-event
 
 KqPusherEsEventConf:
   Brokers:
-    - 10.2.12.14:30092
+    - 10.2.12.14:32703
   Topic: es-event
 
 Log:
@@ -36,12 +36,12 @@ JwtAuth:
   AccessExpire: 31536000
 
 Redis:
-  Host: 10.2.12.14:31000
+  Host: 10.2.12.14:32699
   Type: node
   Pass: 
   Key: content-rpc
 Mysql:
-  DataSource: root:bf17tk6d7t56@tcp(10.2.12.14:32000)/echo-hub?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+  DataSource: root:bf17tk6d7t56@tcp(10.2.12.14:32702)/echo-hub?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
 Cache:
-  - Host: 10.2.12.14:31000
+  - Host: 10.2.12.14:32699
     Pass: 

@@ -6,6 +6,16 @@ import (
 )
 
 @server (
+	prefix: upload
+	group:  upload
+)
+service content {
+
+	@handler presigned
+	post /presigned (PresignedReq) returns (PresignedResp)
+}
+
+@server (
 	prefix: feed
 	group:  feed
 )
@@ -82,6 +92,16 @@ type (
 	GetFeedCommentsByPageResp {
 		Comments []Comment `json:"comment"`
 		Total    int64     `json:"total"`
+	}
+)
+
+type (
+	PresignedReq {
+		FileName string `json:"fileName"`
+		FileType string `json:"fileType"`
+	}
+	PresignedResp {
+		Url string `json:"url"`
 	}
 )
 
