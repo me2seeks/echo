@@ -27,7 +27,7 @@ func (s *SearchServer) SearchUsers(ctx context.Context, in *pb.SearchReq) (*pb.S
 	return l.SearchUsers(in)
 }
 
-func (s *SearchServer) SearchContent(ctx context.Context, in *pb.SearchReq) (*pb.SearchContentResp, error) {
-	l := logic.NewSearchContentLogic(ctx, s.svcCtx)
-	return l.SearchContent(in)
+func (s *SearchServer) SearchFeeds(ctx context.Context, in *pb.SearchReq) (*pb.SearchFeedsResp, error) {
+	l := logic.NewSearchFeedsLogic(ctx, s.svcCtx)
+	return l.SearchFeeds(in)
 }

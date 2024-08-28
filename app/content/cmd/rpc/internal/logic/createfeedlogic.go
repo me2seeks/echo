@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"strconv"
+	"time"
 
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/internal/svc"
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/pb"
@@ -49,10 +50,11 @@ func (l *CreateFeedLogic) CreateFeed(in *pb.CreateFeedReq) (*pb.CreateFeedResp, 
 
 	go func() {
 		msg := kqueue.EsEvent{
-			Type:     kqueue.Feed,
-			ID:       id,
-			Nickname: strconv.FormatInt(in.UserID, 10),
-			Content:  in.Content,
+			Type:      kqueue.Feed,
+			ID:        id,
+			UserID:    in.UserID,
+			Content:   in.Content,
+			CreatedAt: time.Now(),
 		}
 		msgBytes, err := json.Marshal(msg)
 		if err != nil {

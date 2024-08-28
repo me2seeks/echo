@@ -41,9 +41,9 @@ func (l *DeleteFeedLogic) DeleteFeed(in *pb.DeleteFeedReq) (*pb.DeleteFeedResp, 
 
 	go func() {
 		msg := kqueue.EsEvent{
-			Type:     kqueue.DeleteFeed,
-			ID:       in.Id,
-			Nickname: strconv.FormatInt(in.UserID, 10),
+			Type:   kqueue.DeleteFeed,
+			ID:     in.Id,
+			UserID: in.UserID,
 		}
 		msgBytes, err := json.Marshal(msg)
 		if err != nil {

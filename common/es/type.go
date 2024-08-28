@@ -1,15 +1,19 @@
 package es
 
+import "time"
+
 type User struct {
-	ID       int64
-	Nickname string
-	Handle   string
+	ID        int64
+	Handle    string
+	Nickname  string
+	CreatedAt time.Time
 }
 
 type Feed struct {
-	ID      int64
-	UserID  int64
-	Content string
+	ID        int64
+	UserID    int64
+	Content   string
+	CreatedAt time.Time
 }
 
 type Shards struct {
@@ -54,7 +58,7 @@ type FeedsHit struct {
 type FeedsHits struct {
 	Total    Total      `json:"total"`
 	MaxScore float64    `json:"max_score"`
-	Hits     []UsersHit `json:"hits"`
+	Hits     []FeedsHit `json:"hits"`
 }
 
 type SearchFeedsResponse struct {

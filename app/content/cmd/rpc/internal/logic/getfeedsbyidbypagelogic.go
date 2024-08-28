@@ -13,30 +13,32 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type GetFeedsByIDsByPageLogic struct {
+type GetFeedsByIDByPageLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewGetFeedsByIDsByPageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetFeedsByIDsByPageLogic {
-	return &GetFeedsByIDsByPageLogic{
+func NewGetFeedsByIDByPageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetFeedsByIDByPageLogic {
+	return &GetFeedsByIDByPageLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-func (l *GetFeedsByIDsByPageLogic) GetFeedsByIDsByPage(in *pb.GetFeedsByIDsByPageReq) (*pb.GetFeedsByIDsByPageResp, error) {
-	feeds, total, err := l.svcCtx.FeedsModel.FindPageListByPageWithTotal(l.ctx, l.svcCtx.FeedsModel.SelectBuilder().
+func (l *GetFeedsByIDByPageLogic) GetFeedsByIDByPage(in *pb.GetFeedsByIDByPageReq) (*pb.GetFeedsByIDByPageResp, error) {
+	findPageListByPageWithTotalResp, total, err := l.svcCtx.FeedsModel.FindPageListByPageWithTotal(l.ctx, l.svcCtx.FeedsModel.
+		SelectBuilder().
 		// Columns("id, user_id, content, media0, media1, media2, media3, create_at").
-		Where("id in "+tool.BuildQuery(in.FeedID)), in.Page, in.PageSize, "id DESC")
+		Where("id in "+tool.BuildQuery(in.IDs)), in.Page, in.PageSize, "id DESC")
 	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetFeedsByIDsByPage FindPageListByPageWithTotal err:%v", err)
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetFeedsByIDByPage FindPageListByPageWithTotal err:%v", err)
 	}
-	resp := &pb.GetFeedsByIDsByPageResp{}
-	for _, feed := range feeds {
-		resp.Feeds = append(resp.Feeds, &pb.Feed{
+
+	var feeds []*pb.Feed
+	for _, feed := range findPageListByPageWithTotalResp {
+		feeds = append(feeds, &pb.Feed{
 			Id:         feed.Id,
 			UserID:     feed.UserId,
 			Content:    feed.Content,
@@ -47,7 +49,9 @@ func (l *GetFeedsByIDsByPageLogic) GetFeedsByIDsByPage(in *pb.GetFeedsByIDsByPag
 			CreateTime: timestamppb.New(feed.CreateAt),
 		})
 	}
-	resp.Total = total
 
-	return resp, nil
+	return &pb.GetFeedsByIDByPageResp{
+		Feeds: feeds,
+		Total: total,
+	}, nil
 }

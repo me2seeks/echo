@@ -9,6 +9,7 @@ import (
 	"github.com/me2seeks/echo-hub/app/search/cmd/rpc/pb"
 	"github.com/me2seeks/echo-hub/common/es"
 	"github.com/me2seeks/echo-hub/common/xerr"
+	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"github.com/pkg/errors"
 
@@ -58,6 +59,7 @@ func (l *SearchUsersLogic) SearchUsers(in *pb.SearchReq) (*pb.SearchUsersResp, e
 			Id:       hit.Source.ID,
 			Nickname: hit.Source.Nickname,
 			Handle:   hit.Source.Handle,
+			CreateAt: timestamppb.New(hit.Source.CreatedAt),
 		})
 	}
 	return &pb.SearchUsersResp{

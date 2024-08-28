@@ -29,9 +29,12 @@ func NewUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UpdateLogi
 func (l *UpdateLogic) Update(req *types.UpdateUserInfoReq) (*types.UpdateUserInfoResp, error) {
 	userID := ctxdata.GetUIDFromCtx(l.ctx)
 
-	// TODO UpdateUserInfo
 	_, err := l.svcCtx.UsercenterRPC.UpdateUserInfo(l.ctx, &usercenter.UpdateUserInfoReq{
-		UserId: userID,
+		UserId:   userID,
+		Nickname: req.Nickname,
+		Sex:      req.Sex,
+		Avatar:   req.Avatar,
+		Bio:      req.Bio,
 	})
 	if err != nil {
 		return nil, err

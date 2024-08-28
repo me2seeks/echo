@@ -13,14 +13,14 @@ import (
 )
 
 type (
-	SearchContentResp = pb.SearchContentResp
-	SearchReq         = pb.SearchReq
-	SearchUsersResp   = pb.SearchUsersResp
-	User              = pb.User
+	SearchFeedsResp = pb.SearchFeedsResp
+	SearchReq       = pb.SearchReq
+	SearchUsersResp = pb.SearchUsersResp
+	User            = pb.User
 
 	Search interface {
 		SearchUsers(ctx context.Context, in *SearchReq, opts ...grpc.CallOption) (*SearchUsersResp, error)
-		SearchContent(ctx context.Context, in *SearchReq, opts ...grpc.CallOption) (*SearchContentResp, error)
+		SearchFeeds(ctx context.Context, in *SearchReq, opts ...grpc.CallOption) (*SearchFeedsResp, error)
 	}
 
 	defaultSearch struct {
@@ -39,7 +39,7 @@ func (m *defaultSearch) SearchUsers(ctx context.Context, in *SearchReq, opts ...
 	return client.SearchUsers(ctx, in, opts...)
 }
 
-func (m *defaultSearch) SearchContent(ctx context.Context, in *SearchReq, opts ...grpc.CallOption) (*SearchContentResp, error) {
+func (m *defaultSearch) SearchFeeds(ctx context.Context, in *SearchReq, opts ...grpc.CallOption) (*SearchFeedsResp, error) {
 	client := pb.NewSearchClient(m.cli.Conn())
-	return client.SearchContent(ctx, in, opts...)
+	return client.SearchFeeds(ctx, in, opts...)
 }

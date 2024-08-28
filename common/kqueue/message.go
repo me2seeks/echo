@@ -1,6 +1,8 @@
 // KqMessage
 package kqueue
 
+import "time"
+
 type EventType int
 
 const (
@@ -31,9 +33,10 @@ type CountEvent struct {
 }
 
 type EsEvent struct {
-	Type EventType
-	// TODO 添加commentID
-	ID       int64 // userID  feedID
-	Nickname string
-	Content  string
+	Type      EventType
+	ID        int64
+	UserID    int64
+	Handle    string
+	Content   string
+	CreatedAt time.Time
 }

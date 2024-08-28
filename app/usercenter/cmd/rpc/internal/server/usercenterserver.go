@@ -86,3 +86,8 @@ func (s *UsercenterServer) GetFollowerCount(ctx context.Context, in *pb.GetFollo
 	l := logic.NewGetFollowerCountLogic(ctx, s.svcCtx)
 	return l.GetFollowerCount(in)
 }
+
+func (s *UsercenterServer) LastRequestTime(ctx context.Context, in *pb.LastRequestTimeReq) (*pb.LastRequestTimeResp, error) {
+	l := logic.NewLastRequestTimeLogic(ctx, s.svcCtx)
+	return l.LastRequestTime(in)
+}

@@ -4,6 +4,33 @@ option go_package = "./pb";
 
 package pb;
 
+import "google/protobuf/timestamp.proto";
+
+//service
+service usercenter {
+    //user
+
+    rpc login(LoginReq) returns(LoginResp);
+    rpc register(RegisterReq) returns(RegisterResp);
+    rpc getUserInfo(GetUserInfoReq) returns(GetUserInfoResp);
+    rpc getUserAuthByAuthKey(GetUserAuthByAuthKeyReq) returns(GetUserAuthByAuthKeyResp);
+    rpc getUserAuthByUserID(GetUserAuthByUserIDReq) returns(GetUserAuthyUserIDResp);
+    rpc generateToken(GenerateTokenReq) returns(GenerateTokenResp);
+    rpc updateUserInfo(UpdateUserInfoReq) returns(UpdateUserInfoResp);
+
+    //relation
+
+    rpc follow(FollowReq) returns(FollowResp);
+    rpc unfollow(UnfollowReq) returns(UnfollowResp);
+    rpc followers(FollowersReq) returns(FollowersResp);
+    rpc following(FollowingReq) returns(FollowingResp);
+    rpc getFollowingeCount(GetFollowingeCountReq) returns(GetFollowingeCountResp);
+    rpc getFollowerCount(GetFollowerCountReq) returns(GetFollowerCountResp);
+
+    //user last request
+
+    rpc lastRequestTime(LastRequestTimeReq) returns(LastRequestTimeResp);
+}
 
 //model
 message User {
@@ -134,26 +161,9 @@ message GetFollowerCountResp {
     int64 count = 1;
 }
 
-//service
-service usercenter {
-    //user
-
-    rpc login(LoginReq) returns(LoginResp);
-    rpc register(RegisterReq) returns(RegisterResp);
-    rpc getUserInfo(GetUserInfoReq) returns(GetUserInfoResp);
-    rpc getUserAuthByAuthKey(GetUserAuthByAuthKeyReq) returns(GetUserAuthByAuthKeyResp);
-    rpc getUserAuthByUserID(GetUserAuthByUserIDReq) returns(GetUserAuthyUserIDResp);
-    rpc generateToken(GenerateTokenReq) returns(GenerateTokenResp);
-    rpc updateUserInfo(UpdateUserInfoReq) returns(UpdateUserInfoResp);
-
-    //relation
-
-    rpc follow(FollowReq) returns(FollowResp);
-    rpc unfollow(UnfollowReq) returns(UnfollowResp);
-    rpc followers(FollowersReq) returns(FollowersResp);
-    rpc following(FollowingReq) returns(FollowingResp);
-
-    rpc getFollowingeCount(GetFollowingeCountReq) returns(GetFollowingeCountResp);
-    rpc getFollowerCount(GetFollowerCountReq) returns(GetFollowerCountResp);
-
+message LastRequestTimeReq {
+    int64 userId = 1;
+}
+message LastRequestTimeResp {
+    google.protobuf.Timestamp lastRequestTime = 1;
 }

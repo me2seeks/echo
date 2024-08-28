@@ -6,31 +6,29 @@ import (
 	"io"
 
 	"github.com/me2seeks/echo-hub/app/search/cmd/rpc/internal/svc"
-
 	"github.com/me2seeks/echo-hub/app/search/cmd/rpc/pb"
+	"github.com/me2seeks/echo-hub/common/es"
 	"github.com/me2seeks/echo-hub/common/xerr"
 	"github.com/pkg/errors"
-
-	"github.com/me2seeks/echo-hub/common/es"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type SearchContentLogic struct {
+type SearchFeedsLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewSearchContentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SearchContentLogic {
-	return &SearchContentLogic{
+func NewSearchFeedsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SearchFeedsLogic {
+	return &SearchFeedsLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-func (l *SearchContentLogic) SearchContent(in *pb.SearchReq) (*pb.SearchContentResp, error) {
+func (l *SearchFeedsLogic) SearchFeeds(in *pb.SearchReq) (*pb.SearchFeedsResp, error) {
 	searchResp, err := l.svcCtx.EsClient.Search(
 		l.svcCtx.EsClient.Search.WithContext(l.ctx),
 		l.svcCtx.EsClient.Search.WithIndex("feeds"),
@@ -58,7 +56,7 @@ func (l *SearchContentLogic) SearchContent(in *pb.SearchReq) (*pb.SearchContentR
 		contentID = append(contentID, hit.Source.ID)
 	}
 
-	return &pb.SearchContentResp{
+	return &pb.SearchFeedsResp{
 		ContentID: contentID,
 	}, nil
 }

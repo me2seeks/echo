@@ -28,7 +28,7 @@ func NewSearchLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SearchLogi
 }
 
 func (l *SearchLogic) Search(req *types.SearchReq) (*types.SearchFeedsResp, error) {
-	searchContentResp, err := l.svcCtx.SearchRPC.SearchContent(l.ctx, &search.SearchReq{
+	searchContentResp, err := l.svcCtx.SearchRPC.SearchFeeds(l.ctx, &search.SearchReq{
 		Keyword:  req.Keyword,
 		Page:     req.Page,
 		PageSize: req.PageSize,
@@ -39,8 +39,8 @@ func (l *SearchLogic) Search(req *types.SearchReq) (*types.SearchFeedsResp, erro
 	var resp types.SearchFeedsResp
 
 	if len(searchContentResp.ContentID) != 0 {
-		contentResp, err := l.svcCtx.ContentRPC.GetFeedsByIDsByPage(l.ctx, &content.GetFeedsByIDsByPageReq{
-			FeedID:   searchContentResp.ContentID,
+		contentResp, err := l.svcCtx.ContentRPC.GetFeedsByIDByPage(l.ctx, &content.GetFeedsByIDByPageReq{
+			IDs:      searchContentResp.ContentID,
 			Page:     req.Page,
 			PageSize: req.PageSize,
 		})

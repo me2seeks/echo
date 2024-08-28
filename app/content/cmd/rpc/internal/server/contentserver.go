@@ -22,21 +22,6 @@ func NewContentServer(svcCtx *svc.ServiceContext) *ContentServer {
 	}
 }
 
-func (s *ContentServer) GetFeedsByIDsByPage(ctx context.Context, in *pb.GetFeedsByIDsByPageReq) (*pb.GetFeedsByIDsByPageResp, error) {
-	l := logic.NewGetFeedsByIDsByPageLogic(ctx, s.svcCtx)
-	return l.GetFeedsByIDsByPage(in)
-}
-
-func (s *ContentServer) GetFollowingFeedListByPage(ctx context.Context, in *pb.GetFollowingFeedListByPageReq) (*pb.GetFollowingFeedListByPageResp, error) {
-	l := logic.NewGetFollowingFeedListByPageLogic(ctx, s.svcCtx)
-	return l.GetFollowingFeedListByPage(in)
-}
-
-func (s *ContentServer) GetFeedListByPage(ctx context.Context, in *pb.GetFeedListByPageReq) (*pb.GetFeedListByPageResp, error) {
-	l := logic.NewGetFeedListByPageLogic(ctx, s.svcCtx)
-	return l.GetFeedListByPage(in)
-}
-
 func (s *ContentServer) CreateFeed(ctx context.Context, in *pb.CreateFeedReq) (*pb.CreateFeedResp, error) {
 	l := logic.NewCreateFeedLogic(ctx, s.svcCtx)
 	return l.CreateFeed(in)
@@ -52,15 +37,14 @@ func (s *ContentServer) DeleteFeed(ctx context.Context, in *pb.DeleteFeedReq) (*
 	return l.DeleteFeed(in)
 }
 
-// comment
-func (s *ContentServer) GetCommentList(ctx context.Context, in *pb.GetCommentListReq) (*pb.GetCommentListResp, error) {
-	l := logic.NewGetCommentListLogic(ctx, s.svcCtx)
-	return l.GetCommentList(in)
+func (s *ContentServer) GetFeedsByIDByPage(ctx context.Context, in *pb.GetFeedsByIDByPageReq) (*pb.GetFeedsByIDByPageResp, error) {
+	l := logic.NewGetFeedsByIDByPageLogic(ctx, s.svcCtx)
+	return l.GetFeedsByIDByPage(in)
 }
 
-func (s *ContentServer) GetCommentListByPage(ctx context.Context, in *pb.GetCommentListByPageReq) (*pb.GetCommentListByPageResp, error) {
-	l := logic.NewGetCommentListByPageLogic(ctx, s.svcCtx)
-	return l.GetCommentListByPage(in)
+func (s *ContentServer) GetFeedsByUserIDByPage(ctx context.Context, in *pb.GetFeedsByUserIDByPageReq) (*pb.GetFeedsByUserIDByPageResp, error) {
+	l := logic.NewGetFeedsByUserIDByPageLogic(ctx, s.svcCtx)
+	return l.GetFeedsByUserIDByPage(in)
 }
 
 func (s *ContentServer) CreateComment(ctx context.Context, in *pb.CreateCommentReq) (*pb.CreateCommentResp, error) {
@@ -76,4 +60,14 @@ func (s *ContentServer) UpdateComment(ctx context.Context, in *pb.UpdateCommentR
 func (s *ContentServer) DeleteComment(ctx context.Context, in *pb.DeleteCommentReq) (*pb.DeleteCommentResp, error) {
 	l := logic.NewDeleteCommentLogic(ctx, s.svcCtx)
 	return l.DeleteComment(in)
+}
+
+func (s *ContentServer) GetCommentList(ctx context.Context, in *pb.GetCommentListReq) (*pb.GetCommentListResp, error) {
+	l := logic.NewGetCommentListLogic(ctx, s.svcCtx)
+	return l.GetCommentList(in)
+}
+
+func (s *ContentServer) GetCommentListByPage(ctx context.Context, in *pb.GetCommentListByPageReq) (*pb.GetCommentListByPageResp, error) {
+	l := logic.NewGetCommentListByPageLogic(ctx, s.svcCtx)
+	return l.GetCommentListByPage(in)
 }

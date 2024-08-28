@@ -32,6 +32,7 @@ const (
 	Usercenter_Following_FullMethodName            = "/pb.usercenter/following"
 	Usercenter_GetFollowingeCount_FullMethodName   = "/pb.usercenter/getFollowingeCount"
 	Usercenter_GetFollowerCount_FullMethodName     = "/pb.usercenter/getFollowerCount"
+	Usercenter_LastRequestTime_FullMethodName      = "/pb.usercenter/lastRequestTime"
 )
 
 // UsercenterClient is the client API for Usercenter service.
@@ -53,6 +54,7 @@ type UsercenterClient interface {
 	Following(ctx context.Context, in *FollowingReq, opts ...grpc.CallOption) (*FollowingResp, error)
 	GetFollowingeCount(ctx context.Context, in *GetFollowingeCountReq, opts ...grpc.CallOption) (*GetFollowingeCountResp, error)
 	GetFollowerCount(ctx context.Context, in *GetFollowerCountReq, opts ...grpc.CallOption) (*GetFollowerCountResp, error)
+	LastRequestTime(ctx context.Context, in *LastRequestTimeReq, opts ...grpc.CallOption) (*LastRequestTimeResp, error)
 }
 
 type usercenterClient struct {
@@ -193,6 +195,16 @@ func (c *usercenterClient) GetFollowerCount(ctx context.Context, in *GetFollower
 	return out, nil
 }
 
+func (c *usercenterClient) LastRequestTime(ctx context.Context, in *LastRequestTimeReq, opts ...grpc.CallOption) (*LastRequestTimeResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(LastRequestTimeResp)
+	err := c.cc.Invoke(ctx, Usercenter_LastRequestTime_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UsercenterServer is the server API for Usercenter service.
 // All implementations must embed UnimplementedUsercenterServer
 // for forward compatibility.
@@ -212,6 +224,7 @@ type UsercenterServer interface {
 	Following(context.Context, *FollowingReq) (*FollowingResp, error)
 	GetFollowingeCount(context.Context, *GetFollowingeCountReq) (*GetFollowingeCountResp, error)
 	GetFollowerCount(context.Context, *GetFollowerCountReq) (*GetFollowerCountResp, error)
+	LastRequestTime(context.Context, *LastRequestTimeReq) (*LastRequestTimeResp, error)
 	mustEmbedUnimplementedUsercenterServer()
 }
 
@@ -260,6 +273,9 @@ func (UnimplementedUsercenterServer) GetFollowingeCount(context.Context, *GetFol
 }
 func (UnimplementedUsercenterServer) GetFollowerCount(context.Context, *GetFollowerCountReq) (*GetFollowerCountResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFollowerCount not implemented")
+}
+func (UnimplementedUsercenterServer) LastRequestTime(context.Context, *LastRequestTimeReq) (*LastRequestTimeResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LastRequestTime not implemented")
 }
 func (UnimplementedUsercenterServer) mustEmbedUnimplementedUsercenterServer() {}
 func (UnimplementedUsercenterServer) testEmbeddedByValue()                    {}
@@ -516,6 +532,24 @@ func _Usercenter_GetFollowerCount_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Usercenter_LastRequestTime_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LastRequestTimeReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsercenterServer).LastRequestTime(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Usercenter_LastRequestTime_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsercenterServer).LastRequestTime(ctx, req.(*LastRequestTimeReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Usercenter_ServiceDesc is the grpc.ServiceDesc for Usercenter service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -574,6 +608,10 @@ var Usercenter_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "getFollowerCount",
 			Handler:    _Usercenter_GetFollowerCount_Handler,
+		},
+		{
+			MethodName: "lastRequestTime",
+			Handler:    _Usercenter_LastRequestTime_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

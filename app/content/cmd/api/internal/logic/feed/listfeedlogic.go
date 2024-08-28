@@ -26,8 +26,8 @@ func NewListFeedLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListFeed
 }
 
 func (l *ListFeedLogic) ListFeed(req *types.GetFeedsByPageReq) (*types.GetFeedsByPageResp, error) {
-	resp, err := l.svcCtx.ContentRPC.GetFeedListByPage(l.ctx, &content.GetFeedListByPageReq{
-		UserID:   req.UserID,
+	resp, err := l.svcCtx.ContentRPC.GetFeedsByUserIDByPage(l.ctx, &content.GetFeedsByUserIDByPageReq{
+		UserIDs:  []int64{req.UserID},
 		Page:     req.Page,
 		PageSize: req.PageSize,
 	})

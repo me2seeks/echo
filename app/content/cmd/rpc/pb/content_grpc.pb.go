@@ -19,35 +19,32 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Content_GetFeedsByIDsByPage_FullMethodName        = "/pb.Content/getFeedsByIDsByPage"
-	Content_GetFollowingFeedListByPage_FullMethodName = "/pb.Content/getFollowingFeedListByPage"
-	Content_GetFeedListByPage_FullMethodName          = "/pb.Content/getFeedListByPage"
-	Content_CreateFeed_FullMethodName                 = "/pb.Content/createFeed"
-	Content_UpdateFeed_FullMethodName                 = "/pb.Content/updateFeed"
-	Content_DeleteFeed_FullMethodName                 = "/pb.Content/deleteFeed"
-	Content_GetCommentList_FullMethodName             = "/pb.Content/getCommentList"
-	Content_GetCommentListByPage_FullMethodName       = "/pb.Content/getCommentListByPage"
-	Content_CreateComment_FullMethodName              = "/pb.Content/createComment"
-	Content_UpdateComment_FullMethodName              = "/pb.Content/updateComment"
-	Content_DeleteComment_FullMethodName              = "/pb.Content/deleteComment"
+	Content_CreateFeed_FullMethodName             = "/pb.Content/createFeed"
+	Content_UpdateFeed_FullMethodName             = "/pb.Content/updateFeed"
+	Content_DeleteFeed_FullMethodName             = "/pb.Content/deleteFeed"
+	Content_GetFeedsByIDByPage_FullMethodName     = "/pb.Content/getFeedsByIDByPage"
+	Content_GetFeedsByUserIDByPage_FullMethodName = "/pb.Content/getFeedsByUserIDByPage"
+	Content_CreateComment_FullMethodName          = "/pb.Content/createComment"
+	Content_UpdateComment_FullMethodName          = "/pb.Content/updateComment"
+	Content_DeleteComment_FullMethodName          = "/pb.Content/deleteComment"
+	Content_GetCommentList_FullMethodName         = "/pb.Content/getCommentList"
+	Content_GetCommentListByPage_FullMethodName   = "/pb.Content/getCommentListByPage"
 )
 
 // ContentClient is the client API for Content service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ContentClient interface {
-	GetFeedsByIDsByPage(ctx context.Context, in *GetFeedsByIDsByPageReq, opts ...grpc.CallOption) (*GetFeedsByIDsByPageResp, error)
-	GetFollowingFeedListByPage(ctx context.Context, in *GetFollowingFeedListByPageReq, opts ...grpc.CallOption) (*GetFollowingFeedListByPageResp, error)
-	GetFeedListByPage(ctx context.Context, in *GetFeedListByPageReq, opts ...grpc.CallOption) (*GetFeedListByPageResp, error)
 	CreateFeed(ctx context.Context, in *CreateFeedReq, opts ...grpc.CallOption) (*CreateFeedResp, error)
 	UpdateFeed(ctx context.Context, in *UpdateFeedReq, opts ...grpc.CallOption) (*UpdateFeedResp, error)
 	DeleteFeed(ctx context.Context, in *DeleteFeedReq, opts ...grpc.CallOption) (*DeleteFeedResp, error)
-	// comment
-	GetCommentList(ctx context.Context, in *GetCommentListReq, opts ...grpc.CallOption) (*GetCommentListResp, error)
-	GetCommentListByPage(ctx context.Context, in *GetCommentListByPageReq, opts ...grpc.CallOption) (*GetCommentListByPageResp, error)
+	GetFeedsByIDByPage(ctx context.Context, in *GetFeedsByIDByPageReq, opts ...grpc.CallOption) (*GetFeedsByIDByPageResp, error)
+	GetFeedsByUserIDByPage(ctx context.Context, in *GetFeedsByUserIDByPageReq, opts ...grpc.CallOption) (*GetFeedsByUserIDByPageResp, error)
 	CreateComment(ctx context.Context, in *CreateCommentReq, opts ...grpc.CallOption) (*CreateCommentResp, error)
 	UpdateComment(ctx context.Context, in *UpdateCommentReq, opts ...grpc.CallOption) (*UpdateCommentResp, error)
 	DeleteComment(ctx context.Context, in *DeleteCommentReq, opts ...grpc.CallOption) (*DeleteCommentResp, error)
+	GetCommentList(ctx context.Context, in *GetCommentListReq, opts ...grpc.CallOption) (*GetCommentListResp, error)
+	GetCommentListByPage(ctx context.Context, in *GetCommentListByPageReq, opts ...grpc.CallOption) (*GetCommentListByPageResp, error)
 }
 
 type contentClient struct {
@@ -56,36 +53,6 @@ type contentClient struct {
 
 func NewContentClient(cc grpc.ClientConnInterface) ContentClient {
 	return &contentClient{cc}
-}
-
-func (c *contentClient) GetFeedsByIDsByPage(ctx context.Context, in *GetFeedsByIDsByPageReq, opts ...grpc.CallOption) (*GetFeedsByIDsByPageResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetFeedsByIDsByPageResp)
-	err := c.cc.Invoke(ctx, Content_GetFeedsByIDsByPage_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *contentClient) GetFollowingFeedListByPage(ctx context.Context, in *GetFollowingFeedListByPageReq, opts ...grpc.CallOption) (*GetFollowingFeedListByPageResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetFollowingFeedListByPageResp)
-	err := c.cc.Invoke(ctx, Content_GetFollowingFeedListByPage_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *contentClient) GetFeedListByPage(ctx context.Context, in *GetFeedListByPageReq, opts ...grpc.CallOption) (*GetFeedListByPageResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetFeedListByPageResp)
-	err := c.cc.Invoke(ctx, Content_GetFeedListByPage_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *contentClient) CreateFeed(ctx context.Context, in *CreateFeedReq, opts ...grpc.CallOption) (*CreateFeedResp, error) {
@@ -118,20 +85,20 @@ func (c *contentClient) DeleteFeed(ctx context.Context, in *DeleteFeedReq, opts 
 	return out, nil
 }
 
-func (c *contentClient) GetCommentList(ctx context.Context, in *GetCommentListReq, opts ...grpc.CallOption) (*GetCommentListResp, error) {
+func (c *contentClient) GetFeedsByIDByPage(ctx context.Context, in *GetFeedsByIDByPageReq, opts ...grpc.CallOption) (*GetFeedsByIDByPageResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetCommentListResp)
-	err := c.cc.Invoke(ctx, Content_GetCommentList_FullMethodName, in, out, cOpts...)
+	out := new(GetFeedsByIDByPageResp)
+	err := c.cc.Invoke(ctx, Content_GetFeedsByIDByPage_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *contentClient) GetCommentListByPage(ctx context.Context, in *GetCommentListByPageReq, opts ...grpc.CallOption) (*GetCommentListByPageResp, error) {
+func (c *contentClient) GetFeedsByUserIDByPage(ctx context.Context, in *GetFeedsByUserIDByPageReq, opts ...grpc.CallOption) (*GetFeedsByUserIDByPageResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetCommentListByPageResp)
-	err := c.cc.Invoke(ctx, Content_GetCommentListByPage_FullMethodName, in, out, cOpts...)
+	out := new(GetFeedsByUserIDByPageResp)
+	err := c.cc.Invoke(ctx, Content_GetFeedsByUserIDByPage_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -168,22 +135,40 @@ func (c *contentClient) DeleteComment(ctx context.Context, in *DeleteCommentReq,
 	return out, nil
 }
 
+func (c *contentClient) GetCommentList(ctx context.Context, in *GetCommentListReq, opts ...grpc.CallOption) (*GetCommentListResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetCommentListResp)
+	err := c.cc.Invoke(ctx, Content_GetCommentList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *contentClient) GetCommentListByPage(ctx context.Context, in *GetCommentListByPageReq, opts ...grpc.CallOption) (*GetCommentListByPageResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetCommentListByPageResp)
+	err := c.cc.Invoke(ctx, Content_GetCommentListByPage_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ContentServer is the server API for Content service.
 // All implementations must embed UnimplementedContentServer
 // for forward compatibility.
 type ContentServer interface {
-	GetFeedsByIDsByPage(context.Context, *GetFeedsByIDsByPageReq) (*GetFeedsByIDsByPageResp, error)
-	GetFollowingFeedListByPage(context.Context, *GetFollowingFeedListByPageReq) (*GetFollowingFeedListByPageResp, error)
-	GetFeedListByPage(context.Context, *GetFeedListByPageReq) (*GetFeedListByPageResp, error)
 	CreateFeed(context.Context, *CreateFeedReq) (*CreateFeedResp, error)
 	UpdateFeed(context.Context, *UpdateFeedReq) (*UpdateFeedResp, error)
 	DeleteFeed(context.Context, *DeleteFeedReq) (*DeleteFeedResp, error)
-	// comment
-	GetCommentList(context.Context, *GetCommentListReq) (*GetCommentListResp, error)
-	GetCommentListByPage(context.Context, *GetCommentListByPageReq) (*GetCommentListByPageResp, error)
+	GetFeedsByIDByPage(context.Context, *GetFeedsByIDByPageReq) (*GetFeedsByIDByPageResp, error)
+	GetFeedsByUserIDByPage(context.Context, *GetFeedsByUserIDByPageReq) (*GetFeedsByUserIDByPageResp, error)
 	CreateComment(context.Context, *CreateCommentReq) (*CreateCommentResp, error)
 	UpdateComment(context.Context, *UpdateCommentReq) (*UpdateCommentResp, error)
 	DeleteComment(context.Context, *DeleteCommentReq) (*DeleteCommentResp, error)
+	GetCommentList(context.Context, *GetCommentListReq) (*GetCommentListResp, error)
+	GetCommentListByPage(context.Context, *GetCommentListByPageReq) (*GetCommentListByPageResp, error)
 	mustEmbedUnimplementedContentServer()
 }
 
@@ -194,15 +179,6 @@ type ContentServer interface {
 // pointer dereference when methods are called.
 type UnimplementedContentServer struct{}
 
-func (UnimplementedContentServer) GetFeedsByIDsByPage(context.Context, *GetFeedsByIDsByPageReq) (*GetFeedsByIDsByPageResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetFeedsByIDsByPage not implemented")
-}
-func (UnimplementedContentServer) GetFollowingFeedListByPage(context.Context, *GetFollowingFeedListByPageReq) (*GetFollowingFeedListByPageResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetFollowingFeedListByPage not implemented")
-}
-func (UnimplementedContentServer) GetFeedListByPage(context.Context, *GetFeedListByPageReq) (*GetFeedListByPageResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetFeedListByPage not implemented")
-}
 func (UnimplementedContentServer) CreateFeed(context.Context, *CreateFeedReq) (*CreateFeedResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateFeed not implemented")
 }
@@ -212,11 +188,11 @@ func (UnimplementedContentServer) UpdateFeed(context.Context, *UpdateFeedReq) (*
 func (UnimplementedContentServer) DeleteFeed(context.Context, *DeleteFeedReq) (*DeleteFeedResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteFeed not implemented")
 }
-func (UnimplementedContentServer) GetCommentList(context.Context, *GetCommentListReq) (*GetCommentListResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetCommentList not implemented")
+func (UnimplementedContentServer) GetFeedsByIDByPage(context.Context, *GetFeedsByIDByPageReq) (*GetFeedsByIDByPageResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFeedsByIDByPage not implemented")
 }
-func (UnimplementedContentServer) GetCommentListByPage(context.Context, *GetCommentListByPageReq) (*GetCommentListByPageResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetCommentListByPage not implemented")
+func (UnimplementedContentServer) GetFeedsByUserIDByPage(context.Context, *GetFeedsByUserIDByPageReq) (*GetFeedsByUserIDByPageResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFeedsByUserIDByPage not implemented")
 }
 func (UnimplementedContentServer) CreateComment(context.Context, *CreateCommentReq) (*CreateCommentResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateComment not implemented")
@@ -226,6 +202,12 @@ func (UnimplementedContentServer) UpdateComment(context.Context, *UpdateCommentR
 }
 func (UnimplementedContentServer) DeleteComment(context.Context, *DeleteCommentReq) (*DeleteCommentResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteComment not implemented")
+}
+func (UnimplementedContentServer) GetCommentList(context.Context, *GetCommentListReq) (*GetCommentListResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCommentList not implemented")
+}
+func (UnimplementedContentServer) GetCommentListByPage(context.Context, *GetCommentListByPageReq) (*GetCommentListByPageResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCommentListByPage not implemented")
 }
 func (UnimplementedContentServer) mustEmbedUnimplementedContentServer() {}
 func (UnimplementedContentServer) testEmbeddedByValue()                 {}
@@ -246,60 +228,6 @@ func RegisterContentServer(s grpc.ServiceRegistrar, srv ContentServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&Content_ServiceDesc, srv)
-}
-
-func _Content_GetFeedsByIDsByPage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetFeedsByIDsByPageReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ContentServer).GetFeedsByIDsByPage(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Content_GetFeedsByIDsByPage_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ContentServer).GetFeedsByIDsByPage(ctx, req.(*GetFeedsByIDsByPageReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Content_GetFollowingFeedListByPage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetFollowingFeedListByPageReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ContentServer).GetFollowingFeedListByPage(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Content_GetFollowingFeedListByPage_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ContentServer).GetFollowingFeedListByPage(ctx, req.(*GetFollowingFeedListByPageReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Content_GetFeedListByPage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetFeedListByPageReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ContentServer).GetFeedListByPage(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Content_GetFeedListByPage_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ContentServer).GetFeedListByPage(ctx, req.(*GetFeedListByPageReq))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _Content_CreateFeed_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -356,38 +284,38 @@ func _Content_DeleteFeed_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Content_GetCommentList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetCommentListReq)
+func _Content_GetFeedsByIDByPage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFeedsByIDByPageReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ContentServer).GetCommentList(ctx, in)
+		return srv.(ContentServer).GetFeedsByIDByPage(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Content_GetCommentList_FullMethodName,
+		FullMethod: Content_GetFeedsByIDByPage_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ContentServer).GetCommentList(ctx, req.(*GetCommentListReq))
+		return srv.(ContentServer).GetFeedsByIDByPage(ctx, req.(*GetFeedsByIDByPageReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Content_GetCommentListByPage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetCommentListByPageReq)
+func _Content_GetFeedsByUserIDByPage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFeedsByUserIDByPageReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ContentServer).GetCommentListByPage(ctx, in)
+		return srv.(ContentServer).GetFeedsByUserIDByPage(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Content_GetCommentListByPage_FullMethodName,
+		FullMethod: Content_GetFeedsByUserIDByPage_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ContentServer).GetCommentListByPage(ctx, req.(*GetCommentListByPageReq))
+		return srv.(ContentServer).GetFeedsByUserIDByPage(ctx, req.(*GetFeedsByUserIDByPageReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -446,6 +374,42 @@ func _Content_DeleteComment_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Content_GetCommentList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCommentListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ContentServer).GetCommentList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Content_GetCommentList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ContentServer).GetCommentList(ctx, req.(*GetCommentListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Content_GetCommentListByPage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCommentListByPageReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ContentServer).GetCommentListByPage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Content_GetCommentListByPage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ContentServer).GetCommentListByPage(ctx, req.(*GetCommentListByPageReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Content_ServiceDesc is the grpc.ServiceDesc for Content service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -453,18 +417,6 @@ var Content_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "pb.Content",
 	HandlerType: (*ContentServer)(nil),
 	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "getFeedsByIDsByPage",
-			Handler:    _Content_GetFeedsByIDsByPage_Handler,
-		},
-		{
-			MethodName: "getFollowingFeedListByPage",
-			Handler:    _Content_GetFollowingFeedListByPage_Handler,
-		},
-		{
-			MethodName: "getFeedListByPage",
-			Handler:    _Content_GetFeedListByPage_Handler,
-		},
 		{
 			MethodName: "createFeed",
 			Handler:    _Content_CreateFeed_Handler,
@@ -478,12 +430,12 @@ var Content_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Content_DeleteFeed_Handler,
 		},
 		{
-			MethodName: "getCommentList",
-			Handler:    _Content_GetCommentList_Handler,
+			MethodName: "getFeedsByIDByPage",
+			Handler:    _Content_GetFeedsByIDByPage_Handler,
 		},
 		{
-			MethodName: "getCommentListByPage",
-			Handler:    _Content_GetCommentListByPage_Handler,
+			MethodName: "getFeedsByUserIDByPage",
+			Handler:    _Content_GetFeedsByUserIDByPage_Handler,
 		},
 		{
 			MethodName: "createComment",
@@ -496,6 +448,14 @@ var Content_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "deleteComment",
 			Handler:    _Content_DeleteComment_Handler,
+		},
+		{
+			MethodName: "getCommentList",
+			Handler:    _Content_GetCommentList_Handler,
+		},
+		{
+			MethodName: "getCommentListByPage",
+			Handler:    _Content_GetCommentListByPage_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

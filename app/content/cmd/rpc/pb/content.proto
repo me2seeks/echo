@@ -18,29 +18,6 @@ message Feed {
     google.protobuf.Timestamp  create_time = 8;
 }
 
-message GetFeedListByPageReq{
-    int64 userID = 1;
-    int64 page = 2;
-    int64 page_size = 3;
-}
-message GetFeedListByPageResp{
-    repeated Feed feeds = 1;
-    int64 total = 2;
-}
-
-message GetFollowingFeedListByPageReq{
-    int64 userID = 1;
-    repeated int64 targetID = 2;
-    int64 page = 3;
-    int64 page_size = 4;
-//   google.protobuf.Timestamp  start_time = 2;
-}
-message GetFollowingFeedListByPageResp{
-    repeated Feed Feeds = 1;
-    int64 total = 2;
-}
-
-
 message CreateFeedReq{
     int64 userID = 1;
     string content = 2;
@@ -68,6 +45,29 @@ message DeleteFeedReq{
     int64 userID = 2;
 }
 message DeleteFeedResp{}
+
+
+message GetFeedsByIDByPageReq{
+    repeated int64 IDs = 1;
+    int64 page = 2;
+    int64 page_size = 3;
+}
+message GetFeedsByIDByPageResp{
+    repeated Feed feeds = 1;
+    int64 total = 2;
+}
+
+message GetFeedsByUserIDByPageReq{
+    repeated int64 userIDs = 1;
+    int64 page = 2;
+    int64 page_size = 3;
+    google.protobuf.Timestamp before = 4;
+}
+message GetFeedsByUserIDByPageResp{
+    repeated Feed feeds = 1;
+    int64 total = 2;
+}
+
 
 //comment
 
@@ -134,32 +134,25 @@ message DeleteCommentReq{
 }
 message DeleteCommentResp{}
 
-message GetFeedsByIDsByPageReq{
-    repeated int64 feedID = 1;
-    int64 page = 2;
-    int64 page_size = 3;
-}
-message GetFeedsByIDsByPageResp{
-    repeated Feed feeds = 1;
-    int64 total = 2;
-}
 
 
 
 
 
 service Content {
-    rpc getFeedsByIDsByPage (GetFeedsByIDsByPageReq) returns (GetFeedsByIDsByPageResp) {}
-    rpc getFollowingFeedListByPage (GetFollowingFeedListByPageReq) returns (GetFollowingFeedListByPageResp) {}
-    rpc getFeedListByPage (GetFeedListByPageReq) returns (GetFeedListByPageResp) {}
     rpc createFeed (CreateFeedReq) returns (CreateFeedResp) {}
     rpc updateFeed (UpdateFeedReq) returns (UpdateFeedResp) {}
     rpc deleteFeed (DeleteFeedReq) returns (DeleteFeedResp) {}
 
+    rpc getFeedsByIDByPage (GetFeedsByIDByPageReq) returns (GetFeedsByIDByPageResp) {}
+    rpc getFeedsByUserIDByPage (GetFeedsByUserIDByPageReq) returns (GetFeedsByUserIDByPageResp) {}
     //comment
-    rpc getCommentList (GetCommentListReq) returns (GetCommentListResp) {}
-    rpc getCommentListByPage (GetCommentListByPageReq) returns (GetCommentListByPageResp) {}
+
+    
     rpc createComment (CreateCommentReq) returns (CreateCommentResp) {}
     rpc updateComment (UpdateCommentReq) returns (UpdateCommentResp) {}
     rpc deleteComment (DeleteCommentReq) returns (DeleteCommentResp) {}
+
+    rpc getCommentList (GetCommentListReq) returns (GetCommentListResp) {}
+    rpc getCommentListByPage (GetCommentListByPageReq) returns (GetCommentListByPageResp) {}
 }

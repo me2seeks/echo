@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"encoding/json"
+	"time"
 
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/rpc/internal/svc"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/rpc/pb"
@@ -78,10 +79,11 @@ func (l *RegisterLogic) Register(in *pb.RegisterReq) (*pb.RegisterResp, error) {
 
 	go func() {
 		msg := kqueue.EsEvent{
-			Type:     kqueue.Register,
-			ID:       user.Id,
-			Nickname: user.Nickname,
-			Content:  user.Handle,
+			Type:      kqueue.Register,
+			UserID:    user.Id,
+			Handle:    user.Handle,
+			Content:   user.Nickname,
+			CreatedAt: time.Now(),
 		}
 		msgBytes, err := json.Marshal(msg)
 		if err != nil {

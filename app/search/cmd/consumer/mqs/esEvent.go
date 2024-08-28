@@ -40,16 +40,17 @@ func (l *EsEvent) Consume(ctx context.Context, key, val string) error {
 	switch event.Type {
 	case kqueue.Register:
 		userJSON, err := json.Marshal(es.User{
-			ID:       event.ID,
-			Nickname: event.Nickname,
-			Handle:   event.Content,
+			ID:        event.UserID,
+			Handle:    event.Handle,
+			Nickname:  event.Content,
+			CreatedAt: event.CreatedAt,
 		})
 		if err != nil {
 			return errors.Wrapf(xerr.NewErrCode(xerr.MarshalError), "marshal user err:%v", err)
 		}
 		req := esapi.IndexRequest{
 			Index:      "users",
-			DocumentID: strconv.FormatInt(event.ID, 10),
+			DocumentID: strconv.FormatInt(event.UserID, 10),
 			Body:       strings.NewReader(string(userJSON)),
 			Refresh:    "true",
 		}
@@ -62,14 +63,11 @@ func (l *EsEvent) Consume(ctx context.Context, key, val string) error {
 			return errors.Wrapf(xerr.NewErrCode(xerr.EsError), "es response err:%v", res.String())
 		}
 	case kqueue.Feed:
-		userID, err := strconv.ParseInt(event.Nickname, 10, 64)
-		if err != nil {
-			return errors.Wrapf(xerr.NewErrCode(xerr.Str2Int64Error), "invalid event err:%v", err)
-		}
 		feedJSON, err := json.Marshal(es.Feed{
-			ID:      event.ID,
-			UserID:  userID,
-			Content: event.Content,
+			ID:        event.ID,
+			UserID:    event.UserID,
+			Content:   event.Content,
+			CreatedAt: event.CreatedAt,
 		})
 		if err != nil {
 			return errors.Wrapf(xerr.NewErrCode(xerr.MarshalError), "marshal feed err:%v", err)
@@ -88,6 +86,8 @@ func (l *EsEvent) Consume(ctx context.Context, key, val string) error {
 		if res.IsError() {
 			return errors.Wrapf(xerr.NewErrCode(xerr.EsError), "es response err:%v", res.String())
 		}
+	case kqueue.DeleteFeed:
+		// TODO: es delete feed index
 	default:
 		return errors.Wrapf(xerr.NewErrCode(xerr.InvalidEvent), "invalid event type:%d", event.Type)
 	}

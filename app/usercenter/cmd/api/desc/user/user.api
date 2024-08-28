@@ -5,7 +5,7 @@ type User {
 	Email    string `json:"email"`
 	Nickname string `json:"nickname"`
 	Handle   string `json:"Handle"`
-	Sex      int    `json:"sex"`
+	Sex      int32    `json:"sex"`
 	Avatar   string `json:"avatar"`
 	Bio      string `json:"bio"`
 }
@@ -47,7 +47,7 @@ type (
 type (
 	UpdateUserInfoReq {
 		Nickname string `json:"nickname"`
-		Sex      int    `json:"sex"`
+		Sex      int32    `json:"sex"`
 		Avatar   string `json:"avatar"`
 		Bio      string `json:"bio"`
 	}

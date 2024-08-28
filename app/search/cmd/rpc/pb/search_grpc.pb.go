@@ -19,8 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Search_SearchUsers_FullMethodName   = "/pb.search/SearchUsers"
-	Search_SearchContent_FullMethodName = "/pb.search/SearchContent"
+	Search_SearchUsers_FullMethodName = "/pb.search/SearchUsers"
+	Search_SearchFeeds_FullMethodName = "/pb.search/SearchFeeds"
 )
 
 // SearchClient is the client API for Search service.
@@ -28,7 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SearchClient interface {
 	SearchUsers(ctx context.Context, in *SearchReq, opts ...grpc.CallOption) (*SearchUsersResp, error)
-	SearchContent(ctx context.Context, in *SearchReq, opts ...grpc.CallOption) (*SearchContentResp, error)
+	SearchFeeds(ctx context.Context, in *SearchReq, opts ...grpc.CallOption) (*SearchFeedsResp, error)
 }
 
 type searchClient struct {
@@ -49,10 +49,10 @@ func (c *searchClient) SearchUsers(ctx context.Context, in *SearchReq, opts ...g
 	return out, nil
 }
 
-func (c *searchClient) SearchContent(ctx context.Context, in *SearchReq, opts ...grpc.CallOption) (*SearchContentResp, error) {
+func (c *searchClient) SearchFeeds(ctx context.Context, in *SearchReq, opts ...grpc.CallOption) (*SearchFeedsResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SearchContentResp)
-	err := c.cc.Invoke(ctx, Search_SearchContent_FullMethodName, in, out, cOpts...)
+	out := new(SearchFeedsResp)
+	err := c.cc.Invoke(ctx, Search_SearchFeeds_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +64,7 @@ func (c *searchClient) SearchContent(ctx context.Context, in *SearchReq, opts ..
 // for forward compatibility.
 type SearchServer interface {
 	SearchUsers(context.Context, *SearchReq) (*SearchUsersResp, error)
-	SearchContent(context.Context, *SearchReq) (*SearchContentResp, error)
+	SearchFeeds(context.Context, *SearchReq) (*SearchFeedsResp, error)
 	mustEmbedUnimplementedSearchServer()
 }
 
@@ -78,8 +78,8 @@ type UnimplementedSearchServer struct{}
 func (UnimplementedSearchServer) SearchUsers(context.Context, *SearchReq) (*SearchUsersResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SearchUsers not implemented")
 }
-func (UnimplementedSearchServer) SearchContent(context.Context, *SearchReq) (*SearchContentResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SearchContent not implemented")
+func (UnimplementedSearchServer) SearchFeeds(context.Context, *SearchReq) (*SearchFeedsResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SearchFeeds not implemented")
 }
 func (UnimplementedSearchServer) mustEmbedUnimplementedSearchServer() {}
 func (UnimplementedSearchServer) testEmbeddedByValue()                {}
@@ -120,20 +120,20 @@ func _Search_SearchUsers_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Search_SearchContent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Search_SearchFeeds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SearchReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(SearchServer).SearchContent(ctx, in)
+		return srv.(SearchServer).SearchFeeds(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Search_SearchContent_FullMethodName,
+		FullMethod: Search_SearchFeeds_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SearchServer).SearchContent(ctx, req.(*SearchReq))
+		return srv.(SearchServer).SearchFeeds(ctx, req.(*SearchReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -150,8 +150,8 @@ var Search_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Search_SearchUsers_Handler,
 		},
 		{
-			MethodName: "SearchContent",
-			Handler:    _Search_SearchContent_Handler,
+			MethodName: "SearchFeeds",
+			Handler:    _Search_SearchFeeds_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -31,6 +31,8 @@ type (
 	GetUserAuthyUserIDResp   = pb.GetUserAuthyUserIDResp
 	GetUserInfoReq           = pb.GetUserInfoReq
 	GetUserInfoResp          = pb.GetUserInfoResp
+	LastRequestTimeReq       = pb.LastRequestTimeReq
+	LastRequestTimeResp      = pb.LastRequestTimeResp
 	LoginReq                 = pb.LoginReq
 	LoginResp                = pb.LoginResp
 	RegisterReq              = pb.RegisterReq
@@ -56,6 +58,7 @@ type (
 		Following(ctx context.Context, in *FollowingReq, opts ...grpc.CallOption) (*FollowingResp, error)
 		GetFollowingeCount(ctx context.Context, in *GetFollowingeCountReq, opts ...grpc.CallOption) (*GetFollowingeCountResp, error)
 		GetFollowerCount(ctx context.Context, in *GetFollowerCountReq, opts ...grpc.CallOption) (*GetFollowerCountResp, error)
+		LastRequestTime(ctx context.Context, in *LastRequestTimeReq, opts ...grpc.CallOption) (*LastRequestTimeResp, error)
 	}
 
 	defaultUsercenter struct {
@@ -132,4 +135,9 @@ func (m *defaultUsercenter) GetFollowingeCount(ctx context.Context, in *GetFollo
 func (m *defaultUsercenter) GetFollowerCount(ctx context.Context, in *GetFollowerCountReq, opts ...grpc.CallOption) (*GetFollowerCountResp, error) {
 	client := pb.NewUsercenterClient(m.cli.Conn())
 	return client.GetFollowerCount(ctx, in, opts...)
+}
+
+func (m *defaultUsercenter) LastRequestTime(ctx context.Context, in *LastRequestTimeReq, opts ...grpc.CallOption) (*LastRequestTimeResp, error) {
+	client := pb.NewUsercenterClient(m.cli.Conn())
+	return client.LastRequestTime(ctx, in, opts...)
 }

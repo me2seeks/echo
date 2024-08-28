@@ -15,7 +15,7 @@ type (
 		Comments []Comment `json:"comment"`
 		Total    int64     `json:"total"`
 	}
-) 
+)
 
 @server (
 	prefix: feed
@@ -80,7 +80,8 @@ service content {
 	@doc "delete comment"
 	@handler delete
 	delete / (DeleteCommentReq) returns (DeleteCommentResp)
-	// @doc "update comment"
-	// @handler update
-	// put / (UpdateCommentReq) returns (UpdateCommentResp)
+// @doc "update comment"
+// @handler update
+// put / (UpdateCommentReq) returns (UpdateCommentResp)
 }
+

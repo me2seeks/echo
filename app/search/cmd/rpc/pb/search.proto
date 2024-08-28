@@ -4,29 +4,31 @@ option go_package = "./pb";
 
 package pb;
 
+import "google/protobuf/timestamp.proto";
+
 message User{
     int64 id =1;
     string nickname = 2;
     string handle = 3;
+    google.protobuf.Timestamp createAt = 4;
 }
-
 
 message SearchReq {
     string keyword = 1;
     int64 page = 2;
     int64 pageSize = 3;
 }
+
 message SearchUsersResp {
     repeated User users = 1;
 }
 
-
-message SearchContentResp {
+message SearchFeedsResp {
     repeated int64 contentID = 1;
 }   
 
-
 service search {
     rpc SearchUsers(SearchReq) returns (SearchUsersResp) {}
-    rpc SearchContent(SearchReq) returns (SearchContentResp) {}
+    rpc SearchFeeds(SearchReq) returns (SearchFeedsResp) {}
+
 }

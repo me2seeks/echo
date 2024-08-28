@@ -57,7 +57,7 @@ type UnfollowResp struct {
 
 type UpdateUserInfoReq struct {
 	Nickname string `json:"nickname"`
-	Sex      int    `json:"sex"`
+	Sex      int32  `json:"sex"`
 	Avatar   string `json:"avatar"`
 	Bio      string `json:"bio"`
 }
@@ -70,7 +70,7 @@ type User struct {
 	Email    string `json:"email"`
 	Nickname string `json:"nickname"`
 	Handle   string `json:"Handle"`
-	Sex      int    `json:"sex"`
+	Sex      int32  `json:"sex"`
 	Avatar   string `json:"avatar"`
 	Bio      string `json:"bio"`
 }
@@ -84,7 +84,7 @@ type UserInfoResp struct {
 		Email    string `json:"email"`
 		Nickname string `json:"nickname"`
 		Handle   string `json:"Handle"`
-		Sex      int    `json:"sex"`
+		Sex      int32  `json:"sex"`
 		Avatar   string `json:"avatar"`
 		Bio      string `json:"bio"`
 	} `json:"userInfo"`
