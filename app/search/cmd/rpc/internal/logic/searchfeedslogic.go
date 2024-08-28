@@ -29,13 +29,14 @@ func NewSearchFeedsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Searc
 }
 
 func (l *SearchFeedsLogic) SearchFeeds(in *pb.SearchReq) (*pb.SearchFeedsResp, error) {
+	// TODO search feeds page page_size
 	searchResp, err := l.svcCtx.EsClient.Search(
 		l.svcCtx.EsClient.Search.WithContext(l.ctx),
 		l.svcCtx.EsClient.Search.WithIndex("feeds"),
 		l.svcCtx.EsClient.Search.WithQuery(in.Keyword),
 		l.svcCtx.EsClient.Search.WithTrackTotalHits(true),
 		l.svcCtx.EsClient.Search.WithPretty(),
-		// l.svcCtx.EsClient.Search.WithSize(10),
+		l.svcCtx.EsClient.Search.WithSize(int(in.PageSize)),
 	)
 	if err != nil || searchResp.StatusCode != 200 {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.EsError), "SearchContent err:%v", err)
@@ -51,12 +52,10 @@ func (l *SearchFeedsLogic) SearchFeeds(in *pb.SearchReq) (*pb.SearchFeedsResp, e
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.UnmarshalError), "SearchContent json.Unmarshal err:%v", err)
 	}
 
-	var contentID []int64
+	resp := &pb.SearchFeedsResp{}
 	for _, hit := range response.Hits.Hits {
-		contentID = append(contentID, hit.Source.ID)
+		resp.ContentID = append(resp.ContentID, hit.Source.ID)
 	}
 
-	return &pb.SearchFeedsResp{
-		ContentID: contentID,
-	}, nil
+	return resp, nil
 }

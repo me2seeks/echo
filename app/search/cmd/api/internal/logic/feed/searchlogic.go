@@ -36,7 +36,7 @@ func (l *SearchLogic) Search(req *types.SearchReq) (*types.SearchFeedsResp, erro
 	if err != nil {
 		return nil, err
 	}
-	var resp types.SearchFeedsResp
+	resp := &types.SearchFeedsResp{}
 
 	if len(searchContentResp.ContentID) != 0 {
 		contentResp, err := l.svcCtx.ContentRPC.GetFeedsByIDByPage(l.ctx, &content.GetFeedsByIDByPageReq{
@@ -47,8 +47,8 @@ func (l *SearchLogic) Search(req *types.SearchReq) (*types.SearchFeedsResp, erro
 		if err != nil {
 			return nil, err
 		}
-		_ = copier.Copy(&resp.Feeds, contentResp.Feeds)
+		_ = copier.Copy(resp.Feeds, contentResp.Feeds)
 	}
 
-	return &resp, nil
+	return resp, nil
 }

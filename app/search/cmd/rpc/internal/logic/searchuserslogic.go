@@ -31,13 +31,14 @@ func NewSearchUsersLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Searc
 }
 
 func (l *SearchUsersLogic) SearchUsers(in *pb.SearchReq) (*pb.SearchUsersResp, error) {
+	// TODO search users page page_size
 	searchResp, err := l.svcCtx.EsClient.Search(
 		l.svcCtx.EsClient.Search.WithContext(l.ctx),
 		l.svcCtx.EsClient.Search.WithIndex("users"),
 		l.svcCtx.EsClient.Search.WithQuery(in.Keyword),
 		l.svcCtx.EsClient.Search.WithTrackTotalHits(true),
 		l.svcCtx.EsClient.Search.WithPretty(),
-		// l.svcCtx.EsClient.Search.WithSize(10),
+		l.svcCtx.EsClient.Search.WithSize(int(in.PageSize)),
 	)
 	if err != nil || searchResp.StatusCode != 200 {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.EsError), "SearchUsers err:%v", err)
@@ -53,16 +54,14 @@ func (l *SearchUsersLogic) SearchUsers(in *pb.SearchReq) (*pb.SearchUsersResp, e
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.UnmarshalError), "SearchUsers json.Unmarshal err:%v", err)
 	}
 
-	var users []*pb.User
+	resp := &pb.SearchUsersResp{}
 	for _, hit := range response.Hits.Hits {
-		users = append(users, &pb.User{
+		resp.Users = append(resp.Users, &pb.User{
 			Id:       hit.Source.ID,
 			Nickname: hit.Source.Nickname,
 			Handle:   hit.Source.Handle,
 			CreateAt: timestamppb.New(hit.Source.CreatedAt),
 		})
 	}
-	return &pb.SearchUsersResp{
-		Users: users,
-	}, nil
+	return resp, nil
 }

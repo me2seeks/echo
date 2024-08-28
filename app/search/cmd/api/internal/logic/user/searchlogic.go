@@ -36,8 +36,8 @@ func (l *SearchLogic) Search(req *types.SearchReq) (*types.SearchUsersResp, erro
 		return nil, err
 	}
 
-	var resp types.SearchUsersResp
-	_ = copier.Copy(&resp, searchUsersResp)
+	resp := &types.SearchUsersResp{}
+	_ = copier.Copy(resp, searchUsersResp)
 
-	return &resp, nil
+	return resp, nil
 }

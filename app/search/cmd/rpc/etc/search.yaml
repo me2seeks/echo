@@ -26,16 +26,6 @@ EsConf:
   InsecureSkipVerify: true
     
 
-KqConsumerConf:
-  Name: es
-  Brokers:
-    - 10.2.12.14:30092
-  Group: es
-  Topic: es-event
-  Offset: first
-  Consumers: 8
-  Processors: 8
-
 Log:
   ServiceName: search-rpc
-  Level: info
+  Level: error
