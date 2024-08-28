@@ -5,6 +5,12 @@ option go_package = "./pb";
 package pb;
 
 
+service interaction {
+    rpc createLike(CreateLikeReq) returns (CreateLikeResp) {}
+    rpc deleteLike(DeleteLikeReq) returns (DeleteLikeResp) {}   
+    rpc getLikeCount(GetLikeCountReq) returns (GetLikeCountResp) {}
+}
+
 message CreateLikeReq {
     int64 userID = 1;
     int64 id = 2;
@@ -27,17 +33,4 @@ message GetLikeCountReq {
 }
 message GetLikeCountResp {
     int64 count = 1;
-}
-
-
-
-
-
-
-
-
-service interaction {
-    rpc createLike(CreateLikeReq) returns (CreateLikeResp) {}
-    rpc deleteLike(DeleteLikeReq) returns (DeleteLikeResp) {}   
-    rpc getLikeCount(GetLikeCountReq) returns (GetLikeCountResp) {}
 }

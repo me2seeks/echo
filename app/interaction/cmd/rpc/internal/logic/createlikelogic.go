@@ -37,7 +37,7 @@ func (l *CreateLikeLogic) CreateLike(in *pb.CreateLikeReq) (*pb.CreateLikeResp, 
 			ContentId: in.Id,
 		})
 		if err != nil {
-			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "insert comment like err:%v", err)
+			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "CreateLike insert comment like err:%v", err)
 		}
 	} else {
 		_, err := l.svcCtx.FeedLikesModel.Insert(l.ctx, nil, &model.FeedLikes{
@@ -45,28 +45,32 @@ func (l *CreateLikeLogic) CreateLike(in *pb.CreateLikeReq) (*pb.CreateLikeResp, 
 			ContentId: in.Id,
 		})
 		if err != nil {
-			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "insert feed like err:%v", err)
+			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "CreateLike insert feed like err:%v", err)
 		}
 	}
 
-	msg := kqueue.CountEvent{
-		Type:      kqueue.Like,
-		TargetID:  in.Id,
-		IsComment: false,
-	}
-	if in.IsComment {
-		msg.IsComment = true
-	}
-	msgBytes, err := json.Marshal(msg)
-	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.MarshalError), "failed to marshal Like event ,err:%v", err)
-	}
-	contentIDStr := strconv.FormatInt(in.Id, 10)
+	go func() {
+		msg := kqueue.CountEvent{
+			Type:      kqueue.Like,
+			TargetID:  in.Id,
+			IsComment: false,
+		}
+		if in.IsComment {
+			msg.IsComment = true
+		}
+		msgBytes, err := json.Marshal(msg)
+		if err != nil {
+			l.Errorf("CreateLike Marshal CountEvent failed Type:%d,TargetID:%d,IsComment:%d,err:%v", kqueue.Like, in.Id, in.IsComment, err)
+			return
+		}
+		contentIDStr := strconv.FormatInt(in.Id, 10)
 
-	err = l.svcCtx.KqPusherClient.PushWithKey(l.ctx, contentIDStr, tool.BytesToString(msgBytes))
-	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.KqPusherError), "failed to push like event userID:%d,contentIDStr:%d,is_comment:%t,err:%v", in.UserID, in.Id, in.IsComment, err)
-	}
+		err = l.svcCtx.KqPusherClient.PushWithKey(l.ctx, contentIDStr, tool.BytesToString(msgBytes))
+		if err != nil {
+			l.Errorf("CreateLike PushWithKey failed Type:%d,TargetID:%d,IsComment:%d,err:%v", kqueue.Like, in.Id, in.IsComment, err)
+			return
+		}
+	}()
 
 	return &pb.CreateLikeResp{}, nil
 }

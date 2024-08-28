@@ -33,33 +33,37 @@ func (l *DeleteLikeLogic) DeleteLike(in *pb.DeleteLikeReq) (*pb.DeleteLikeResp, 
 	if in.IsComment {
 		err := l.svcCtx.CommentLikesModel.DeleteByUserIdContentId(l.ctx, nil, in.UserID, in.Id)
 		if err != nil {
-			return &pb.DeleteLikeResp{}, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "delete comment like err:%v", err)
+			return &pb.DeleteLikeResp{}, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "DeleteLike delete comment like err:%v", err)
 		}
 	} else {
 		err := l.svcCtx.FeedLikesModel.DeleteByUserIdContentId(l.ctx, nil, in.UserID, in.Id)
 		if err != nil {
-			return &pb.DeleteLikeResp{}, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "delete feed like err:%v", err)
+			return &pb.DeleteLikeResp{}, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "DeleteLike delete feed like err:%v", err)
 		}
 	}
 
-	msg := kqueue.CountEvent{
-		Type:      kqueue.UnLike,
-		TargetID:  in.Id,
-		IsComment: false,
-	}
-	if in.IsComment {
-		msg.IsComment = true
-	}
-	msgBytes, err := json.Marshal(msg)
-	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.MarshalError), "failed to marshal UnLike event ,err:%v", err)
-	}
-	contentIDStr := strconv.FormatInt(in.Id, 10)
+	go func() {
+		msg := kqueue.CountEvent{
+			Type:      kqueue.UnLike,
+			TargetID:  in.Id,
+			IsComment: false,
+		}
+		if in.IsComment {
+			msg.IsComment = true
+		}
+		msgBytes, err := json.Marshal(msg)
+		if err != nil {
+			l.Errorf("DeleteLike Marshal CountEvent failed Type:%d,TargetID:%d,IsComment:%d,err:%v", kqueue.Like, in.Id, in.IsComment, err)
+			return
+		}
+		contentIDStr := strconv.FormatInt(in.Id, 10)
 
-	err = l.svcCtx.KqPusherClient.PushWithKey(l.ctx, contentIDStr, tool.BytesToString(msgBytes))
-	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.KqPusherError), "failed to push UnLike event userID:%d,contentIDStr:%d,is_comment:%t,err:%v", in.UserID, in.Id, in.IsComment, err)
-	}
+		err = l.svcCtx.KqPusherClient.PushWithKey(l.ctx, contentIDStr, tool.BytesToString(msgBytes))
+		if err != nil {
+			l.Errorf("DeleteLike PushWithKey failed contentIDStr:%s, msg:%s, err:%v", contentIDStr, string(msgBytes), err)
+			return
+		}
+	}()
 
 	return &pb.DeleteLikeResp{}, nil
 }

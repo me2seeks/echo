@@ -29,7 +29,4 @@ InteractionRPCConf:
     - 127.0.0.1:2005
   NonBlock: true
 
-UsercenterRPCConf:
-  Endpoints:
-    - 127.0.0.1:2001
-  NonBlock: true
+
