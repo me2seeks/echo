@@ -36,9 +36,11 @@ func (l *GetFeedsByUserIDByPageLogic) GetFeedsByUserIDByPage(in *pb.GetFeedsByUs
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetFeedsByUserIDByPage FindPageListByPageWithTotal err:%v", err)
 	}
 
-	var feeds []*pb.Feed
+	resp := &pb.GetFeedsByUserIDByPageResp{}
+	resp.Total = total
+
 	for _, feed := range findPageListByPageWithTotalResp {
-		feeds = append(feeds, &pb.Feed{
+		resp.Feeds = append(resp.Feeds, &pb.Feed{
 			Id:         feed.Id,
 			UserID:     feed.UserId,
 			Content:    feed.Content,
@@ -50,8 +52,5 @@ func (l *GetFeedsByUserIDByPageLogic) GetFeedsByUserIDByPage(in *pb.GetFeedsByUs
 		})
 	}
 
-	return &pb.GetFeedsByUserIDByPageResp{
-		Feeds: feeds,
-		Total: total,
-	}, nil
+	return resp, nil
 }

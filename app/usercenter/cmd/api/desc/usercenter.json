@@ -131,15 +131,15 @@
         ]
       }
     },
-    "/user/following": {
+    "/user/followings": {
       "post": {
         "summary": "get following",
-        "operationId": "following",
+        "operationId": "followings",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/FollowingResp"
+              "$ref": "#/definitions/FollowingsResp"
             }
           }
         },
@@ -149,7 +149,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/FollowingReq"
+              "$ref": "#/definitions/FollowingsReq"
             }
           }
         ],
@@ -254,14 +254,14 @@
     "FollowReq": {
       "type": "object",
       "properties": {
-        "userId": {
+        "userID": {
           "type": "integer",
           "format": "int64"
         }
       },
       "title": "FollowReq",
       "required": [
-        "userId"
+        "userID"
       ]
     },
     "FollowResp": {
@@ -271,14 +271,14 @@
     "FollowersReq": {
       "type": "object",
       "properties": {
-        "userId": {
+        "userID": {
           "type": "integer",
           "format": "int64"
         }
       },
       "title": "FollowersReq",
       "required": [
-        "userId"
+        "userID"
       ]
     },
     "FollowersResp": {
@@ -297,23 +297,23 @@
         "followers"
       ]
     },
-    "FollowingReq": {
+    "FollowingsReq": {
       "type": "object",
       "properties": {
-        "userId": {
+        "userID": {
           "type": "integer",
           "format": "int64"
         }
       },
-      "title": "FollowingReq",
+      "title": "FollowingsReq",
       "required": [
-        "userId"
+        "userID"
       ]
     },
-    "FollowingResp": {
+    "FollowingsResp": {
       "type": "object",
       "properties": {
-        "following": {
+        "followings": {
           "type": "array",
           "items": {
             "type": "integer",
@@ -321,9 +321,9 @@
           }
         }
       },
-      "title": "FollowingResp",
+      "title": "FollowingsResp",
       "required": [
-        "following"
+        "followings"
       ]
     },
     "LoginReq": {
@@ -413,14 +413,14 @@
     "UnfollowReq": {
       "type": "object",
       "properties": {
-        "userId": {
+        "userID": {
           "type": "integer",
           "format": "int64"
         }
       },
       "title": "UnfollowReq",
       "required": [
-        "userId"
+        "userID"
       ]
     },
     "UnfollowResp": {

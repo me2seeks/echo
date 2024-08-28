@@ -13,33 +13,32 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type GetCommentListLogic struct {
+type GetCommentsLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewGetCommentListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetCommentListLogic {
-	return &GetCommentListLogic{
+func NewGetCommentsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetCommentsLogic {
+	return &GetCommentsLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-// comment
-func (l *GetCommentListLogic) GetCommentList(in *pb.GetCommentListReq) (*pb.GetCommentListResp, error) {
-	var commentList []*model.Comments
+func (l *GetCommentsLogic) GetComments(in *pb.GetCommentsReq) (*pb.GetCommentsResp, error) {
+	var comments []*model.Comments
 	var err error
 	if !in.IsComment {
-		commentList, err = l.svcCtx.CommentsModel.FindAll(l.ctx, l.svcCtx.CommentsModel.SelectBuilder().
+		comments, err = l.svcCtx.CommentsModel.FindAll(l.ctx, l.svcCtx.CommentsModel.SelectBuilder().
 			// Columns("id, user_id, content, media0, media1, media2, media3, create_at").
 			Where("feed_id = ?", in.Id), "id DESC")
 		if err != nil {
 			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetCommentListByPage FindAll feedID%d err:%v", in.Id, err)
 		}
 	} else {
-		commentList, err = l.svcCtx.CommentsModel.FindAll(l.ctx, l.svcCtx.CommentsModel.SelectBuilder().
+		comments, err = l.svcCtx.CommentsModel.FindAll(l.ctx, l.svcCtx.CommentsModel.SelectBuilder().
 			// Columns("id, user_id, content, media0, media1, media2, media3, create_at").
 			Where("parent_id = ?", in.Id), "")
 		if err != nil {
@@ -47,10 +46,10 @@ func (l *GetCommentListLogic) GetCommentList(in *pb.GetCommentListReq) (*pb.GetC
 		}
 	}
 
-	var comments []*pb.Comment
+	resp := &pb.GetCommentsResp{}
 
-	for _, comment := range commentList {
-		comments = append(comments, &pb.Comment{
+	for _, comment := range comments {
+		resp.Comments = append(resp.Comments, &pb.Comment{
 			Id:         comment.Id,
 			UserID:     comment.UserId,
 			Content:    comment.Content,
@@ -61,8 +60,5 @@ func (l *GetCommentListLogic) GetCommentList(in *pb.GetCommentListReq) (*pb.GetC
 			CreateTime: timestamppb.New(comment.CreateAt),
 		})
 	}
-
-	return &pb.GetCommentListResp{
-		Comments: comments,
-	}, nil
+	return resp, nil
 }

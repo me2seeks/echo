@@ -6,6 +6,27 @@ package pb;
 
 import "google/protobuf/timestamp.proto";
 
+service Content {
+    // feed
+
+    rpc createFeed (CreateFeedReq) returns (CreateFeedResp) {}
+    rpc updateFeed (UpdateFeedReq) returns (UpdateFeedResp) {}
+    rpc deleteFeed (DeleteFeedReq) returns (DeleteFeedResp) {}
+
+    rpc getFeedsByIDByPage (GetFeedsByIDByPageReq) returns (GetFeedsByIDByPageResp) {}
+    rpc getFeedsByUserIDByPage (GetFeedsByUserIDByPageReq) returns (GetFeedsByUserIDByPageResp) {}
+
+    //comment
+
+    
+    rpc createComment (CreateCommentReq) returns (CreateCommentResp) {}
+    rpc updateComment (UpdateCommentReq) returns (UpdateCommentResp) {}
+    rpc deleteComment (DeleteCommentReq) returns (DeleteCommentResp) {}
+
+    rpc getComments (GetCommentsReq) returns (GetCommentsResp) {}
+    rpc getCommentsByPage (GetCommentsByPageReq) returns (GetCommentsByPageResp) {}
+}
+
 
 message Feed {
     int64 id = 1;
@@ -83,21 +104,21 @@ message Comment {
     google.protobuf.Timestamp  create_time = 9;
 }
 
-message GetCommentListReq{
+message GetCommentsReq{
     int64 id = 1;
     bool isComment = 4;
 }
-message GetCommentListResp{
+message GetCommentsResp{
     repeated Comment comments = 1;
 }
 
-message GetCommentListByPageReq{
+message GetCommentsByPageReq{
     int64 id = 1;
     int64 page = 2;
     int64 page_size = 3;
     bool isComment = 4;
 }
-message GetCommentListByPageResp{
+message GetCommentsByPageResp{
     repeated Comment comments = 1;
     int64 total = 2;
 }
@@ -133,26 +154,3 @@ message DeleteCommentReq{
     bool isComment = 3;
 }
 message DeleteCommentResp{}
-
-
-
-
-
-
-service Content {
-    rpc createFeed (CreateFeedReq) returns (CreateFeedResp) {}
-    rpc updateFeed (UpdateFeedReq) returns (UpdateFeedResp) {}
-    rpc deleteFeed (DeleteFeedReq) returns (DeleteFeedResp) {}
-
-    rpc getFeedsByIDByPage (GetFeedsByIDByPageReq) returns (GetFeedsByIDByPageResp) {}
-    rpc getFeedsByUserIDByPage (GetFeedsByUserIDByPageReq) returns (GetFeedsByUserIDByPageResp) {}
-    //comment
-
-    
-    rpc createComment (CreateCommentReq) returns (CreateCommentResp) {}
-    rpc updateComment (UpdateCommentReq) returns (UpdateCommentResp) {}
-    rpc deleteComment (DeleteCommentReq) returns (DeleteCommentResp) {}
-
-    rpc getCommentList (GetCommentListReq) returns (GetCommentListResp) {}
-    rpc getCommentListByPage (GetCommentListByPageReq) returns (GetCommentListByPageResp) {}
-}

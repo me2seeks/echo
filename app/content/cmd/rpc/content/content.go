@@ -23,10 +23,10 @@ type (
 	DeleteFeedReq              = pb.DeleteFeedReq
 	DeleteFeedResp             = pb.DeleteFeedResp
 	Feed                       = pb.Feed
-	GetCommentListByPageReq    = pb.GetCommentListByPageReq
-	GetCommentListByPageResp   = pb.GetCommentListByPageResp
-	GetCommentListReq          = pb.GetCommentListReq
-	GetCommentListResp         = pb.GetCommentListResp
+	GetCommentsByPageReq       = pb.GetCommentsByPageReq
+	GetCommentsByPageResp      = pb.GetCommentsByPageResp
+	GetCommentsReq             = pb.GetCommentsReq
+	GetCommentsResp            = pb.GetCommentsResp
 	GetFeedsByIDByPageReq      = pb.GetFeedsByIDByPageReq
 	GetFeedsByIDByPageResp     = pb.GetFeedsByIDByPageResp
 	GetFeedsByUserIDByPageReq  = pb.GetFeedsByUserIDByPageReq
@@ -45,8 +45,8 @@ type (
 		CreateComment(ctx context.Context, in *CreateCommentReq, opts ...grpc.CallOption) (*CreateCommentResp, error)
 		UpdateComment(ctx context.Context, in *UpdateCommentReq, opts ...grpc.CallOption) (*UpdateCommentResp, error)
 		DeleteComment(ctx context.Context, in *DeleteCommentReq, opts ...grpc.CallOption) (*DeleteCommentResp, error)
-		GetCommentList(ctx context.Context, in *GetCommentListReq, opts ...grpc.CallOption) (*GetCommentListResp, error)
-		GetCommentListByPage(ctx context.Context, in *GetCommentListByPageReq, opts ...grpc.CallOption) (*GetCommentListByPageResp, error)
+		GetComments(ctx context.Context, in *GetCommentsReq, opts ...grpc.CallOption) (*GetCommentsResp, error)
+		GetCommentsByPage(ctx context.Context, in *GetCommentsByPageReq, opts ...grpc.CallOption) (*GetCommentsByPageResp, error)
 	}
 
 	defaultContent struct {
@@ -100,12 +100,12 @@ func (m *defaultContent) DeleteComment(ctx context.Context, in *DeleteCommentReq
 	return client.DeleteComment(ctx, in, opts...)
 }
 
-func (m *defaultContent) GetCommentList(ctx context.Context, in *GetCommentListReq, opts ...grpc.CallOption) (*GetCommentListResp, error) {
+func (m *defaultContent) GetComments(ctx context.Context, in *GetCommentsReq, opts ...grpc.CallOption) (*GetCommentsResp, error) {
 	client := pb.NewContentClient(m.cli.Conn())
-	return client.GetCommentList(ctx, in, opts...)
+	return client.GetComments(ctx, in, opts...)
 }
 
-func (m *defaultContent) GetCommentListByPage(ctx context.Context, in *GetCommentListByPageReq, opts ...grpc.CallOption) (*GetCommentListByPageResp, error) {
+func (m *defaultContent) GetCommentsByPage(ctx context.Context, in *GetCommentsByPageReq, opts ...grpc.CallOption) (*GetCommentsByPageResp, error) {
 	client := pb.NewContentClient(m.cli.Conn())
-	return client.GetCommentListByPage(ctx, in, opts...)
+	return client.GetCommentsByPage(ctx, in, opts...)
 }

@@ -51,9 +51,11 @@ func (l *ListFollowingFeedLogic) ListFollowingFeed(req *types.GetFollowingFeedsB
 		return nil, err
 	}
 
-	var feeds []types.Feed
+	resp := &types.GetFollowingFeedsByPageResp{}
+	resp.Total = getFeedsByUserIDByPageResp.Total
+
 	for _, feed := range getFeedsByUserIDByPageResp.Feeds {
-		feeds = append(feeds, types.Feed{
+		resp.Feeds = append(resp.Feeds, types.Feed{
 			ID:          feed.Id,
 			UserID:      feed.UserID,
 			Content:     feed.Content,
@@ -65,8 +67,5 @@ func (l *ListFollowingFeedLogic) ListFollowingFeed(req *types.GetFollowingFeedsB
 		})
 	}
 
-	return &types.GetFollowingFeedsByPageResp{
-		Feeds: feeds,
-		Total: getFeedsByUserIDByPageResp.Total,
-	}, nil
+	return resp, nil
 }

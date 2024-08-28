@@ -64,14 +64,14 @@ func (l *FollowLogic) Follow(in *pb.FollowReq) (*pb.FollowResp, error) {
 		}
 		msgBytes, err := json.Marshal(msg)
 		if err != nil {
-			logx.Errorf("Follow Marshal  SourceID:%d,TargetID:%d,err:%v", in.UserID, in.FolloweeID, err)
+			logx.Errorf("Follow Marshal CountEvent Type:%dSourceID:%d,TargetID:%d,err:%v", kqueue.Follow, in.UserID, in.FolloweeID, err)
 			return
 		}
 		followeeIDStr := strconv.FormatInt(in.FolloweeID, 10)
 
 		err = l.svcCtx.KqPusherCounterEventClient.PushWithKey(l.ctx, followeeIDStr, tool.BytesToString(msgBytes))
 		if err != nil {
-			logx.Errorf("Follow PushWithKey  SourceID:%d,TargetID:%d,err:%v", in.UserID, in.FolloweeID, err)
+			logx.Errorf("Follow PushWithKey CountEvent Type:%d,SourceID:%d,TargetID:%d,err:%v", kqueue.Follow, in.UserID, in.FolloweeID, err)
 			return
 		}
 	}()

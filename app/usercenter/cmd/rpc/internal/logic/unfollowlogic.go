@@ -53,14 +53,14 @@ func (l *UnfollowLogic) Unfollow(in *pb.UnfollowReq) (*pb.UnfollowResp, error) {
 		}
 		msgBytes, err := json.Marshal(msg)
 		if err != nil {
-			logx.Errorf("Unfollow Marshal  TargetID:%d,err:%v", in.FolloweeID, err)
+			logx.Errorf("Register Marshal CountEvent failed  Type:%d,SourceID:%d,TargetID:%d,err:%v", kqueue.UnFollow, in.UserID, in.FolloweeID, err)
 			return
 		}
 		followeeIDStr := strconv.FormatInt(in.FolloweeID, 10)
 
 		err = l.svcCtx.KqPusherCounterEventClient.PushWithKey(l.ctx, followeeIDStr, tool.BytesToString(msgBytes))
 		if err != nil {
-			logx.Errorf("Unfollow PushWithKey  TargetID:%d,err:%v", in.FolloweeID, err)
+			logx.Errorf("Unfollow PushWithKey CountEvent failed Type:%d,SourceID:%d,TargetID:%d,err:%v", kqueue.UnFollow, in.UserID, in.FolloweeID, err)
 			return
 		}
 	}()

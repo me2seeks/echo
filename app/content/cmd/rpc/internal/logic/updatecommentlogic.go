@@ -1,4 +1,3 @@
-//nolint:dupl
 package logic
 
 import (
@@ -8,6 +7,7 @@ import (
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/internal/svc"
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/pb"
 	"github.com/me2seeks/echo-hub/app/content/model"
+	"github.com/me2seeks/echo-hub/common/xerr"
 	"github.com/pkg/errors"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -37,7 +37,7 @@ func (l *UpdateCommentLogic) UpdateComment(in *pb.UpdateCommentReq) (*pb.UpdateC
 		Media3:  sql.NullString{String: in.Media3, Valid: in.Media3 != ""},
 	})
 	if err != nil {
-		return nil, errors.Wrapf(err, "update comment failed comment id: %d", in.Id)
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "UpdateComment failed comment id: %d", in.Id)
 	}
 
 	return &pb.UpdateCommentResp{}, nil

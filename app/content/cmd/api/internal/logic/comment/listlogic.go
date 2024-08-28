@@ -26,19 +26,18 @@ func NewListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListLogic {
 }
 
 func (l *ListLogic) List(req *types.GetCommentsByPageReq) (*types.GetCommentsByPageResp, error) {
-	resp, err := l.svcCtx.ContentRPC.GetCommentListByPage(l.ctx, &content.GetCommentListByPageReq{
+	getCommentsByPageResp, err := l.svcCtx.ContentRPC.GetCommentsByPage(l.ctx, &content.GetCommentsByPageReq{
 		Id:        req.CommentID,
-		Page:      req.Page,
-		PageSize:  req.PageSize,
 		IsComment: true,
 	})
 	if err != nil {
 		return nil, err
 	}
-	var comments []types.Comment
+	resp := &types.GetCommentsByPageResp{}
+	resp.Total = getCommentsByPageResp.Total
 
-	for _, comment := range resp.Comments {
-		comments = append(comments, types.Comment{
+	for _, comment := range getCommentsByPageResp.Comments {
+		resp.Comments = append(resp.Comments, types.Comment{
 			ID:          comment.Id,
 			UserID:      comment.UserID,
 			Content:     comment.Content,
@@ -49,8 +48,5 @@ func (l *ListLogic) List(req *types.GetCommentsByPageReq) (*types.GetCommentsByP
 			Create_time: comment.CreateTime.AsTime().Unix(),
 		})
 	}
-	return &types.GetCommentsByPageResp{
-		Comments: comments,
-		Total:    resp.Total,
-	}, nil
+	return resp, nil
 }

@@ -89,12 +89,12 @@ func (l *RegisterLogic) Register(in *pb.RegisterReq) (*pb.RegisterResp, error) {
 		}
 		msgBytes, err := json.Marshal(msg)
 		if err != nil {
-			logx.Errorf("Register Marshal  UserId:%d,Handle:%s,NickName:%s,CreatedAt:%v,err:%v", user.Id, user.Handle, user.Nickname, time.Now(), err)
+			logx.Errorf("Register Marshal EsEvent failed  Type:%d,UserId:%d,Handle:%s,NickName:%s,CreatedAt:%v,err:%v", kqueue.Register, user.Id, user.Handle, user.Nickname, time.Now(), err)
 			return
 		}
 		err = l.svcCtx.KqPusherEsEventClient.Push(l.ctx, tool.BytesToString(msgBytes))
 		if err != nil {
-			logx.Errorf("Register PushWithKey  UserId:%d,Handle:%s,NickName:%s,CreatedAt:%v,err:%v", user.Id, user.Handle, user.Nickname, time.Now(), err)
+			logx.Errorf("Register PushWithKey EsEvent failed Type:%d,UserId:%d,Handle:%s,NickName:%s,CreatedAt:%v,err:%v", kqueue.Register, user.Id, user.Handle, user.Nickname, time.Now(), err)
 			return
 		}
 	}()

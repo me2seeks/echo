@@ -1,4 +1,3 @@
-//nolint:dupl
 package logic
 
 import (
@@ -37,7 +36,7 @@ func (l *UpdateFeedLogic) UpdateFeed(in *pb.UpdateFeedReq) (*pb.UpdateFeedResp, 
 		Media3:  sql.NullString{String: in.Media3, Valid: in.Media3 != ""},
 	})
 	if err != nil {
-		return nil, errors.Wrapf(err, "update comment failed comment id: %d", in.Id)
+		return nil, errors.Wrapf(err, "UpdateFeed  failed feed id: %d", in.Id)
 	}
 
 	return &pb.UpdateFeedResp{}, nil

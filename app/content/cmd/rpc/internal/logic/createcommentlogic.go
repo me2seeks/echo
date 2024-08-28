@@ -51,30 +51,33 @@ func (l *CreateCommentLogic) CreateComment(in *pb.CreateCommentReq) (*pb.CreateC
 	}
 	_, err := l.svcCtx.CommentsModel.Insert(l.ctx, nil, comment)
 	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "insert comment failed: %v", err)
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "CreateComment insert comment failed: %v", err)
 	}
 
-	msg := kqueue.CountEvent{
-		Type:      kqueue.Comment,
-		TargetID:  in.FeedID,
-		IsComment: false,
-	}
+	go func() {
+		msg := kqueue.CountEvent{
+			Type:      kqueue.Comment,
+			TargetID:  in.FeedID,
+			IsComment: false,
+		}
 
-	if in.IsComment {
-		msg.TargetID = in.CommentID
-		msg.IsComment = true
-	}
+		if in.IsComment {
+			msg.TargetID = in.CommentID
+			msg.IsComment = true
+		}
 
-	msgBytes, err := json.Marshal(msg)
-	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.MarshalError), "failed to marshal comment event err:%v", err)
-	}
-	feedIDStr := strconv.FormatInt(in.FeedID, 10)
+		msgBytes, err := json.Marshal(msg)
+		if err != nil {
+			logx.Errorf("CreateComment Marshal failed  Type:%d,TargetID:%d,IsComment:%t,err:%v", kqueue.Comment, in.FeedID, in.IsComment, err)
+			return
+		}
+		feedIDStr := strconv.FormatInt(in.FeedID, 10)
 
-	err = l.svcCtx.KqPusherCounterEventClient.PushWithKey(l.ctx, feedIDStr, tool.BytesToString(msgBytes))
-	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.KqPusherError), "failed to push follow event feed:%d,comment:%d,err:%v", in.FeedID, in.CommentID, err)
-	}
+		err = l.svcCtx.KqPusherCounterEventClient.PushWithKey(l.ctx, feedIDStr, tool.BytesToString(msgBytes))
+		if err != nil {
+			logx.Errorf("CreateComment PushWithKey failed  Type:%d,TargetID:%d,IsComment:%t,err:%v", kqueue.Comment, in.FeedID, in.IsComment, err)
+		}
+	}()
 
 	return &pb.CreateCommentResp{
 		Id: id,

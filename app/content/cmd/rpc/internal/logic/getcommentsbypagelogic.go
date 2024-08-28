@@ -13,33 +13,33 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type GetCommentListByPageLogic struct {
+type GetCommentsByPageLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewGetCommentListByPageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetCommentListByPageLogic {
-	return &GetCommentListByPageLogic{
+func NewGetCommentsByPageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetCommentsByPageLogic {
+	return &GetCommentsByPageLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-func (l *GetCommentListByPageLogic) GetCommentListByPage(in *pb.GetCommentListByPageReq) (*pb.GetCommentListByPageResp, error) {
-	var commentList []*model.Comments
+func (l *GetCommentsByPageLogic) GetCommentsByPage(in *pb.GetCommentsByPageReq) (*pb.GetCommentsByPageResp, error) {
+	var comments []*model.Comments
 	var total int64
 	var err error
 	if !in.IsComment {
-		commentList, total, err = l.svcCtx.CommentsModel.FindPageListByPageWithTotal(l.ctx, l.svcCtx.CommentsModel.SelectBuilder().
+		comments, total, err = l.svcCtx.CommentsModel.FindPageListByPageWithTotal(l.ctx, l.svcCtx.CommentsModel.SelectBuilder().
 			// Columns("id, user_id, content, media0, media1, media2, media3, create_at").
 			Where("feed_id = ?", in.Id), in.Page, in.PageSize, "id DESC")
 		if err != nil {
 			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetCommentListByPage FindPageListByPageWithTotal feedID%d err:%v", in.Id, err)
 		}
 	} else {
-		commentList, total, err = l.svcCtx.CommentsModel.FindPageListByPageWithTotal(l.ctx, l.svcCtx.CommentsModel.SelectBuilder().
+		comments, total, err = l.svcCtx.CommentsModel.FindPageListByPageWithTotal(l.ctx, l.svcCtx.CommentsModel.SelectBuilder().
 			// Columns("id, user_id, content, media0, media1, media2, media3, create_at").
 			Where("parent_id = ?", in.Id), in.Page, in.PageSize, "id DESC")
 		if err != nil {
@@ -47,10 +47,11 @@ func (l *GetCommentListByPageLogic) GetCommentListByPage(in *pb.GetCommentListBy
 		}
 	}
 
-	var comments []*pb.Comment
+	resp := &pb.GetCommentsByPageResp{}
+	resp.Total = total
 
-	for _, comment := range commentList {
-		comments = append(comments, &pb.Comment{
+	for _, comment := range comments {
+		resp.Comments = append(resp.Comments, &pb.Comment{
 			Id:         comment.Id,
 			UserID:     comment.UserId,
 			Content:    comment.Content,
@@ -62,8 +63,5 @@ func (l *GetCommentListByPageLogic) GetCommentListByPage(in *pb.GetCommentListBy
 		})
 	}
 
-	return &pb.GetCommentListByPageResp{
-		Total:    total,
-		Comments: comments,
-	}, nil
+	return resp, nil
 }

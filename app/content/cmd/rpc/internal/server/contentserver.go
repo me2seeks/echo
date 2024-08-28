@@ -62,12 +62,12 @@ func (s *ContentServer) DeleteComment(ctx context.Context, in *pb.DeleteCommentR
 	return l.DeleteComment(in)
 }
 
-func (s *ContentServer) GetCommentList(ctx context.Context, in *pb.GetCommentListReq) (*pb.GetCommentListResp, error) {
-	l := logic.NewGetCommentListLogic(ctx, s.svcCtx)
-	return l.GetCommentList(in)
+func (s *ContentServer) GetComments(ctx context.Context, in *pb.GetCommentsReq) (*pb.GetCommentsResp, error) {
+	l := logic.NewGetCommentsLogic(ctx, s.svcCtx)
+	return l.GetComments(in)
 }
 
-func (s *ContentServer) GetCommentListByPage(ctx context.Context, in *pb.GetCommentListByPageReq) (*pb.GetCommentListByPageResp, error) {
-	l := logic.NewGetCommentListByPageLogic(ctx, s.svcCtx)
-	return l.GetCommentListByPage(in)
+func (s *ContentServer) GetCommentsByPage(ctx context.Context, in *pb.GetCommentsByPageReq) (*pb.GetCommentsByPageResp, error) {
+	l := logic.NewGetCommentsByPageLogic(ctx, s.svcCtx)
+	return l.GetCommentsByPage(in)
 }

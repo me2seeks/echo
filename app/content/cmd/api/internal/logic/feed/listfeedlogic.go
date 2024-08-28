@@ -26,7 +26,7 @@ func NewListFeedLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListFeed
 }
 
 func (l *ListFeedLogic) ListFeed(req *types.GetFeedsByPageReq) (*types.GetFeedsByPageResp, error) {
-	resp, err := l.svcCtx.ContentRPC.GetFeedsByUserIDByPage(l.ctx, &content.GetFeedsByUserIDByPageReq{
+	getFeedsByUserIDByPageResp, err := l.svcCtx.ContentRPC.GetFeedsByUserIDByPage(l.ctx, &content.GetFeedsByUserIDByPageReq{
 		UserIDs:  []int64{req.UserID},
 		Page:     req.Page,
 		PageSize: req.PageSize,
@@ -35,10 +35,11 @@ func (l *ListFeedLogic) ListFeed(req *types.GetFeedsByPageReq) (*types.GetFeedsB
 		return nil, err
 	}
 
-	var feeds []types.Feed
+	resp := &types.GetFeedsByPageResp{}
+	resp.Total = getFeedsByUserIDByPageResp.Total
 
-	for _, feed := range resp.Feeds {
-		feeds = append(feeds, types.Feed{
+	for _, feed := range getFeedsByUserIDByPageResp.Feeds {
+		resp.Feeds = append(resp.Feeds, types.Feed{
 			ID:          feed.Id,
 			UserID:      feed.UserID,
 			Content:     feed.Content,
@@ -50,8 +51,5 @@ func (l *ListFeedLogic) ListFeed(req *types.GetFeedsByPageReq) (*types.GetFeedsB
 		})
 	}
 
-	return &types.GetFeedsByPageResp{
-		Feeds: feeds,
-		Total: resp.Total,
-	}, nil
+	return resp, nil
 }

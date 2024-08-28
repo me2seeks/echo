@@ -45,7 +45,7 @@ func (l *CreateFeedLogic) CreateFeed(in *pb.CreateFeedReq) (*pb.CreateFeedResp, 
 		Media3:  sql.NullString{String: in.Media3, Valid: in.Media3 != ""},
 	})
 	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "insert feed failed: %v", err)
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "CreateFeed insert feed failed: %v", err)
 	}
 
 	go func() {
@@ -58,28 +58,35 @@ func (l *CreateFeedLogic) CreateFeed(in *pb.CreateFeedReq) (*pb.CreateFeedResp, 
 		}
 		msgBytes, err := json.Marshal(msg)
 		if err != nil {
-			logx.Errorf("failed to marshal feed event ,err:%v", err)
+			logx.Errorf("CreateFeed Marshal EsEvent failed  Type:%d,ID:%d,UserID:%d,Content:%s,CreateAt:%v,err:%v", kqueue.Feed, id, in.UserID, in.Content, time.Now(), err)
+			return
 		}
 		err = l.svcCtx.KqPusherEsEventClient.Push(l.ctx, tool.BytesToString(msgBytes))
 		if err != nil {
-			logx.Errorf("failed push feed event feedID:%d,err:%v", id, err)
+			logx.Errorf("CreateFeed Push EsEvent failed  Type:%d,ID:%d,UserID:%d,Content:%s,CreateAt:%v,err:%v", kqueue.Feed, id, in.UserID, in.Content, time.Now(), err)
+			return
 		}
 	}()
 
-	msg := kqueue.CountEvent{
-		Type:      kqueue.Feed,
-		SourceID:  in.UserID,
-		IsComment: false,
-	}
-	msgBytes, err := json.Marshal(msg)
-	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.MarshalError), "failed to marshal feed event, err: %v", err)
-	}
-	userIDStr := strconv.FormatInt(in.UserID, 10)
-	err = l.svcCtx.KqPusherCounterEventClient.PushWithKey(l.ctx, userIDStr, tool.BytesToString(msgBytes))
-	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.KqPusherError), "failed to push feed event userID:%d,err:%v", in.UserID, err)
-	}
+	go func() {
+		msg := kqueue.CountEvent{
+			Type:      kqueue.Feed,
+			SourceID:  in.UserID,
+			IsComment: false,
+		}
+		msgBytes, err := json.Marshal(msg)
+		if err != nil {
+			logx.Errorf("CreateFeed Marshal CountEvent failed  Type:%d,SourceID:%d,IsComment:%t,err:%v", kqueue.Feed, in.UserID, false, err)
+			return
+		}
+		userIDStr := strconv.FormatInt(in.UserID, 10)
+		err = l.svcCtx.KqPusherCounterEventClient.PushWithKey(l.ctx, userIDStr, tool.BytesToString(msgBytes))
+		if err != nil {
+			logx.Errorf("CreateFeed PushWithKey CountEvent failed  Type:%d,SourceID:%d,IsComment:%t,err:%v", kqueue.Feed, in.UserID, false, err)
+			return
+		}
+	}()
+
 	return &pb.CreateFeedResp{
 		Id: id,
 	}, nil

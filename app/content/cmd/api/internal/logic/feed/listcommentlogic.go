@@ -26,7 +26,7 @@ func NewListCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListC
 }
 
 func (l *ListCommentLogic) ListComment(req *types.GetFeedCommentsByPageReq) (*types.GetFeedCommentsByPageResp, error) {
-	resp, err := l.svcCtx.ContentRPC.GetCommentListByPage(l.ctx, &content.GetCommentListByPageReq{
+	getCommentsByPageResp, err := l.svcCtx.ContentRPC.GetCommentsByPage(l.ctx, &content.GetCommentsByPageReq{
 		Id:        req.FeedID,
 		Page:      req.Page,
 		PageSize:  req.PageSize,
@@ -36,10 +36,11 @@ func (l *ListCommentLogic) ListComment(req *types.GetFeedCommentsByPageReq) (*ty
 		return nil, err
 	}
 
-	var comments []types.Comment
+	resp := &types.GetFeedCommentsByPageResp{}
+	resp.Total = getCommentsByPageResp.Total
 
-	for _, comment := range resp.Comments {
-		comments = append(comments, types.Comment{
+	for _, comment := range getCommentsByPageResp.Comments {
+		resp.Comments = append(resp.Comments, types.Comment{
 			ID:          comment.Id,
 			UserID:      comment.UserID,
 			Content:     comment.Content,
@@ -51,7 +52,5 @@ func (l *ListCommentLogic) ListComment(req *types.GetFeedCommentsByPageReq) (*ty
 		})
 	}
 
-	return &types.GetFeedCommentsByPageResp{
-		Comments: comments,
-	}, nil
+	return resp, nil
 }

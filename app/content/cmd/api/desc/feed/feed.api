@@ -57,6 +57,7 @@ type (
 // }
 // UpdateFeedResp struct{}
 // )
+
 type (
 	DeleteFeedReq {
 		ID int64 `json:"id"`

@@ -35,30 +35,42 @@ func (l *DeleteCommentLogic) DeleteComment(in *pb.DeleteCommentReq) (*pb.DeleteC
 		Id: in.Id,
 	})
 	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "delete comment failed: %v", err)
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "DeleteComment delete comment failed: %v", err)
 	}
 
-	msg := kqueue.CountEvent{
-		Type:      kqueue.UnComment,
-		TargetID:  in.Id,
-		IsComment: false,
-	}
+	go func() {
+		msg := kqueue.CountEvent{
+			Type:      kqueue.UnComment,
+			TargetID:  in.Id,
+			IsComment: false,
+		}
 
-	if in.IsComment {
-		msg.TargetID = in.ParentID
-		msg.IsComment = true
-	}
+		if in.IsComment {
+			msg.TargetID = in.ParentID
+			msg.IsComment = true
+		}
 
-	msgBytes, err := json.Marshal(msg)
-	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.MarshalError), "failed to marshal delete comment event err:%v", err)
-	}
-	IDStr := strconv.FormatInt(in.Id, 10)
+		msgBytes, err := json.Marshal(msg)
+		if err != nil {
+			if !in.IsComment {
+				logx.Errorf("CreateFeed Marshal CountEvent failed  Type:%d,TargetID:%d,IsComment:%t,err:%v", kqueue.Comment, in.Id, true, err)
+			} else {
+				logx.Errorf("CreateFeed Marshal CountEvent failed  Type:%d,TargetID:%d,IsComment:%t,err:%v", kqueue.UnComment, in.ParentID, false, err)
+			}
+			return
+		}
+		IDStr := strconv.FormatInt(in.Id, 10)
 
-	err = l.svcCtx.KqPusherCounterEventClient.PushWithKey(l.ctx, IDStr, tool.BytesToString(msgBytes))
-	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.KqPusherError), "failed push delete comment event ParentID:%d,IsComment:%t,err:%v", in.ParentID, in.IsComment, err)
-	}
+		err = l.svcCtx.KqPusherCounterEventClient.PushWithKey(l.ctx, IDStr, tool.BytesToString(msgBytes))
+		if err != nil {
+			if !in.IsComment {
+				logx.Errorf("CreateFeed Push CountEvent failed  Type:%d,TargetID:%d,IsComment:%t,err:%v", kqueue.Comment, in.Id, true, err)
+			} else {
+				logx.Errorf("CreateFeed Push CountEvent failed  Type:%d,TargetID:%d,IsComment:%t,err:%v", kqueue.UnComment, in.ParentID, false, err)
+			}
+			return
+		}
+	}()
 
 	return &pb.DeleteCommentResp{}, nil
 }

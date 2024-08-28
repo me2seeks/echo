@@ -36,7 +36,7 @@ func (l *DeleteFeedLogic) DeleteFeed(in *pb.DeleteFeedReq) (*pb.DeleteFeedResp, 
 		UserId: in.UserID,
 	})
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "DeleteFeed delete feed failed: %v", err)
 	}
 
 	go func() {
@@ -47,28 +47,35 @@ func (l *DeleteFeedLogic) DeleteFeed(in *pb.DeleteFeedReq) (*pb.DeleteFeedResp, 
 		}
 		msgBytes, err := json.Marshal(msg)
 		if err != nil {
-			logx.Errorf("failed to marshal DeleteFeed event ,err:%v", err)
+			l.Errorf("DeleteFeed Marshal EsEvent failed  Type:%d,ID:%d,UserID:%d,err:%v", kqueue.DeleteFeed, in.Id, in.UserID, err)
+			return
 		}
 		err = l.svcCtx.KqPusherEsEventClient.Push(l.ctx, tool.BytesToString(msgBytes))
 		if err != nil {
-			logx.Errorf("failed push  DeleteFeed event feedID:%d,err:%v", in.Id, err)
+			l.Errorf("DeleteFeed push EsEvent failed Type:%d,ID:%d,UserID:%d,err:%v", kqueue.DeleteFeed, in.Id, in.UserID, err)
+			return
+
 		}
 	}()
 
-	msg := kqueue.CountEvent{
-		Type:      kqueue.DeleteFeed,
-		SourceID:  in.UserID,
-		IsComment: false,
-	}
-	msgBytes, err := json.Marshal(msg)
-	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.MarshalError), "failed to marshal DeleteFeed event, err: %v", err)
-	}
-	userIDStr := strconv.FormatInt(in.UserID, 10)
-	err = l.svcCtx.KqPusherCounterEventClient.PushWithKey(l.ctx, userIDStr, tool.BytesToString(msgBytes))
-	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.KqPusherError), "failed to push DeleteFeed event userID:%d,err:%v", in.UserID, err)
-	}
+	go func() {
+		msg := kqueue.CountEvent{
+			Type:      kqueue.DeleteFeed,
+			SourceID:  in.UserID,
+			IsComment: false,
+		}
+		msgBytes, err := json.Marshal(msg)
+		if err != nil {
+			l.Errorf("DeleteFeed Marshal CountEvent failed  Type:%d,SourceID:%d,IsComment:%t,err:%v", kqueue.DeleteFeed, in.UserID, false, err)
+			return
+		}
+		userIDStr := strconv.FormatInt(in.UserID, 10)
+		err = l.svcCtx.KqPusherCounterEventClient.PushWithKey(l.ctx, userIDStr, tool.BytesToString(msgBytes))
+		if err != nil {
+			l.Errorf("DeleteFeed Push CountEvent failed  Type:%d,SourceID:%d,IsComment:%t,err:%v", kqueue.DeleteFeed, in.UserID, false, err)
+			return
+		}
+	}()
 
 	return &pb.DeleteFeedResp{}, nil
 }
