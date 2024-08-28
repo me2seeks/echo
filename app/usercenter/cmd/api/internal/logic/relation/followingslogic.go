@@ -10,30 +10,30 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type FollowingLogic struct {
+type FollowingsLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
 // get following
-func NewFollowingLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FollowingLogic {
-	return &FollowingLogic{
+func NewFollowingsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FollowingsLogic {
+	return &FollowingsLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *FollowingLogic) Following(req *types.FollowingReq) (*types.FollowingResp, error) {
-	resp, err := l.svcCtx.UsercenterRPC.Following(l.ctx, &usercenter.FollowingReq{
-		UserId: req.UserId,
+func (l *FollowingsLogic) Followings(req *types.FollowingsReq) (*types.FollowingsResp, error) {
+	resp, err := l.svcCtx.UsercenterRPC.GetFollowings(l.ctx, &usercenter.GetFollowingsReq{
+		UserID: req.UserID,
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	return &types.FollowingResp{
-		Followings: resp.Following,
+	return &types.FollowingsResp{
+		Followings: resp.IDs,
 	}, nil
 }

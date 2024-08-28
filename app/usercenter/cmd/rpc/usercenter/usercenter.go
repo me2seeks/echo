@@ -15,16 +15,16 @@ import (
 type (
 	FollowReq                = pb.FollowReq
 	FollowResp               = pb.FollowResp
-	FollowersReq             = pb.FollowersReq
-	FollowersResp            = pb.FollowersResp
-	FollowingReq             = pb.FollowingReq
-	FollowingResp            = pb.FollowingResp
 	GenerateTokenReq         = pb.GenerateTokenReq
 	GenerateTokenResp        = pb.GenerateTokenResp
 	GetFollowerCountReq      = pb.GetFollowerCountReq
 	GetFollowerCountResp     = pb.GetFollowerCountResp
+	GetFollowersReq          = pb.GetFollowersReq
+	GetFollowersResp         = pb.GetFollowersResp
 	GetFollowingeCountReq    = pb.GetFollowingeCountReq
 	GetFollowingeCountResp   = pb.GetFollowingeCountResp
+	GetFollowingsReq         = pb.GetFollowingsReq
+	GetFollowingsResp        = pb.GetFollowingsResp
 	GetUserAuthByAuthKeyReq  = pb.GetUserAuthByAuthKeyReq
 	GetUserAuthByAuthKeyResp = pb.GetUserAuthByAuthKeyResp
 	GetUserAuthByUserIDReq   = pb.GetUserAuthByUserIDReq
@@ -54,8 +54,8 @@ type (
 		UpdateUserInfo(ctx context.Context, in *UpdateUserInfoReq, opts ...grpc.CallOption) (*UpdateUserInfoResp, error)
 		Follow(ctx context.Context, in *FollowReq, opts ...grpc.CallOption) (*FollowResp, error)
 		Unfollow(ctx context.Context, in *UnfollowReq, opts ...grpc.CallOption) (*UnfollowResp, error)
-		Followers(ctx context.Context, in *FollowersReq, opts ...grpc.CallOption) (*FollowersResp, error)
-		Following(ctx context.Context, in *FollowingReq, opts ...grpc.CallOption) (*FollowingResp, error)
+		GetFollowers(ctx context.Context, in *GetFollowersReq, opts ...grpc.CallOption) (*GetFollowersResp, error)
+		GetFollowings(ctx context.Context, in *GetFollowingsReq, opts ...grpc.CallOption) (*GetFollowingsResp, error)
 		GetFollowingeCount(ctx context.Context, in *GetFollowingeCountReq, opts ...grpc.CallOption) (*GetFollowingeCountResp, error)
 		GetFollowerCount(ctx context.Context, in *GetFollowerCountReq, opts ...grpc.CallOption) (*GetFollowerCountResp, error)
 		LastRequestTime(ctx context.Context, in *LastRequestTimeReq, opts ...grpc.CallOption) (*LastRequestTimeResp, error)
@@ -117,14 +117,14 @@ func (m *defaultUsercenter) Unfollow(ctx context.Context, in *UnfollowReq, opts 
 	return client.Unfollow(ctx, in, opts...)
 }
 
-func (m *defaultUsercenter) Followers(ctx context.Context, in *FollowersReq, opts ...grpc.CallOption) (*FollowersResp, error) {
+func (m *defaultUsercenter) GetFollowers(ctx context.Context, in *GetFollowersReq, opts ...grpc.CallOption) (*GetFollowersResp, error) {
 	client := pb.NewUsercenterClient(m.cli.Conn())
-	return client.Followers(ctx, in, opts...)
+	return client.GetFollowers(ctx, in, opts...)
 }
 
-func (m *defaultUsercenter) Following(ctx context.Context, in *FollowingReq, opts ...grpc.CallOption) (*FollowingResp, error) {
+func (m *defaultUsercenter) GetFollowings(ctx context.Context, in *GetFollowingsReq, opts ...grpc.CallOption) (*GetFollowingsResp, error) {
 	client := pb.NewUsercenterClient(m.cli.Conn())
-	return client.Following(ctx, in, opts...)
+	return client.GetFollowings(ctx, in, opts...)
 }
 
 func (m *defaultUsercenter) GetFollowingeCount(ctx context.Context, in *GetFollowingeCountReq, opts ...grpc.CallOption) (*GetFollowingeCountResp, error) {

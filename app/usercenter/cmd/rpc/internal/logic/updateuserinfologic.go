@@ -28,7 +28,7 @@ func NewUpdateUserInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Up
 
 func (l *UpdateUserInfoLogic) UpdateUserInfo(in *pb.UpdateUserInfoReq) (*pb.UpdateUserInfoResp, error) {
 	user := &model.User{
-		Id: in.UserId,
+		Id: in.UserID,
 	}
 	if in.Nickname != "" {
 		user.Nickname = in.Nickname

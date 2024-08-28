@@ -29,8 +29,8 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				// get following
 				Method:  http.MethodPost,
-				Path:    "/following",
-				Handler: relation.FollowingHandler(serverCtx),
+				Path:    "/followings",
+				Handler: relation.FollowingsHandler(serverCtx),
 			},
 			{
 				// unfollow

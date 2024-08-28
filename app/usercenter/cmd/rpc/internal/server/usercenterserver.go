@@ -67,14 +67,14 @@ func (s *UsercenterServer) Unfollow(ctx context.Context, in *pb.UnfollowReq) (*p
 	return l.Unfollow(in)
 }
 
-func (s *UsercenterServer) Followers(ctx context.Context, in *pb.FollowersReq) (*pb.FollowersResp, error) {
-	l := logic.NewFollowersLogic(ctx, s.svcCtx)
-	return l.Followers(in)
+func (s *UsercenterServer) GetFollowers(ctx context.Context, in *pb.GetFollowersReq) (*pb.GetFollowersResp, error) {
+	l := logic.NewGetFollowersLogic(ctx, s.svcCtx)
+	return l.GetFollowers(in)
 }
 
-func (s *UsercenterServer) Following(ctx context.Context, in *pb.FollowingReq) (*pb.FollowingResp, error) {
-	l := logic.NewFollowingLogic(ctx, s.svcCtx)
-	return l.Following(in)
+func (s *UsercenterServer) GetFollowings(ctx context.Context, in *pb.GetFollowingsReq) (*pb.GetFollowingsResp, error) {
+	l := logic.NewGetFollowingsLogic(ctx, s.svcCtx)
+	return l.GetFollowings(in)
 }
 
 func (s *UsercenterServer) GetFollowingeCount(ctx context.Context, in *pb.GetFollowingeCountReq) (*pb.GetFollowingeCountResp, error) {

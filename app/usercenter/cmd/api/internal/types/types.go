@@ -2,26 +2,26 @@
 package types
 
 type FollowReq struct {
-	UserId int64 `json:"userId"`
+	UserID int64 `json:"userID"`
 }
 
 type FollowResp struct {
 }
 
 type FollowersReq struct {
-	UserId int64 `json:"userId"`
+	UserID int64 `json:"userID"`
 }
 
 type FollowersResp struct {
 	Followers []int64 `json:"followers"`
 }
 
-type FollowingReq struct {
-	UserId int64 `json:"userId"`
+type FollowingsReq struct {
+	UserID int64 `json:"userID"`
 }
 
-type FollowingResp struct {
-	Followings []int64 `json:"following"`
+type FollowingsResp struct {
+	Followings []int64 `json:"followings"`
 }
 
 type LoginReq struct {
@@ -49,7 +49,7 @@ type RegisterResp struct {
 }
 
 type UnfollowReq struct {
-	UserId int64 `json:"userId"`
+	UserID int64 `json:"userID"`
 }
 
 type UnfollowResp struct {

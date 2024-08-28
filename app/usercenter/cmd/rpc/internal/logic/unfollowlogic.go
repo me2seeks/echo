@@ -31,34 +31,39 @@ func NewUnfollowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Unfollow
 }
 
 func (l *UnfollowLogic) Unfollow(in *pb.UnfollowReq) (*pb.UnfollowResp, error) {
-	userRelation, err := l.svcCtx.UserRelationModel.FindOneByFollowerIdFolloweeId(l.ctx, in.UserId, in.FolloweeId)
+	userRelation, err := l.svcCtx.UserRelationModel.FindOneByFollowerIdFolloweeId(l.ctx, in.UserID, in.FolloweeID)
 	if err != nil {
 		if err == model.ErrNotFound {
 			return &pb.UnfollowResp{}, nil
 		}
-		return &pb.UnfollowResp{}, errors.Wrapf(xerr.NewErrCode(xerr.UnFollowError), "not followed err:%v", err)
+		return &pb.UnfollowResp{}, errors.Wrapf(xerr.NewErrCode(xerr.UnFollowError), "Unfollow err:%v", err)
 	}
 
 	err = l.svcCtx.UserRelationModel.DeleteSoft(l.ctx, nil, userRelation)
 	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.UnFollowError), "unfollow err:%v", err)
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.UnFollowError), "Unfollow err:%v", err)
 	}
 
-	msg := kqueue.CountEvent{
-		Type:      kqueue.UnFollow,
-		SourceID:  in.UserId,
-		TargetID:  in.FolloweeId,
-		IsComment: false,
-	}
-	msgBytes, err := json.Marshal(msg)
-	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.MarshalError), "failed to marshal unfollow event ,err:%v", err)
-	}
-	followeeIDStr := strconv.FormatInt(in.FolloweeId, 10)
+	go func() {
+		msg := kqueue.CountEvent{
+			Type:      kqueue.UnFollow,
+			SourceID:  in.UserID,
+			TargetID:  in.FolloweeID,
+			IsComment: false,
+		}
+		msgBytes, err := json.Marshal(msg)
+		if err != nil {
+			logx.Errorf("Unfollow Marshal  TargetID:%d,err:%v", in.FolloweeID, err)
+			return
+		}
+		followeeIDStr := strconv.FormatInt(in.FolloweeID, 10)
 
-	err = l.svcCtx.KqPusherCounterEventClient.PushWithKey(l.ctx, followeeIDStr, tool.BytesToString(msgBytes))
-	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.KqPusherError), "failed push unfollow event followeeID:%d,err:%v", in.FolloweeId, err)
-	}
+		err = l.svcCtx.KqPusherCounterEventClient.PushWithKey(l.ctx, followeeIDStr, tool.BytesToString(msgBytes))
+		if err != nil {
+			logx.Errorf("Unfollow PushWithKey  TargetID:%d,err:%v", in.FolloweeID, err)
+			return
+		}
+	}()
+
 	return &pb.UnfollowResp{}, err
 }

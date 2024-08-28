@@ -22,8 +22,8 @@ service usercenter {
 
     rpc follow(FollowReq) returns(FollowResp);
     rpc unfollow(UnfollowReq) returns(UnfollowResp);
-    rpc followers(FollowersReq) returns(FollowersResp);
-    rpc following(FollowingReq) returns(FollowingResp);
+    rpc getFollowers(GetFollowersReq) returns(GetFollowersResp);
+    rpc getFollowings(GetFollowingsReq) returns(GetFollowingsResp);
     rpc getFollowingeCount(GetFollowingeCountReq) returns(GetFollowingeCountResp);
     rpc getFollowerCount(GetFollowerCountReq) returns(GetFollowerCountResp);
 
@@ -45,7 +45,7 @@ message User {
 
 message UserAuth {
     int64  id = 1;
-    int64  userId = 2;
+    int64  userID = 2;
     string authType = 3;
     string authKey = 4;
 }
@@ -101,7 +101,7 @@ message GetUserAuthyUserIDResp {
 }
 
 message GenerateTokenReq {
-    int64 userId = 1;
+    int64 userID = 1;
 }
 message GenerateTokenResp {
     string accessToken = 1;
@@ -110,7 +110,7 @@ message GenerateTokenResp {
 }
 
 message UpdateUserInfoReq {
-    int64 userId = 1;
+    int64 userID = 1;
     string nickname = 2;
     int32 sex = 3;
     string avatar = 4;
@@ -120,49 +120,49 @@ message UpdateUserInfoResp {
 }
 
 message FollowReq {
-    int64 userId = 1;
-    int64 FolloweeId = 2;
+    int64 userID = 1;
+    int64 FolloweeID = 2;
 }
 message FollowResp {
 }
 
 message UnfollowReq {
-    int64 userId = 1;
-    int64 FolloweeId = 2;
+    int64 userID = 1;
+    int64 FolloweeID = 2;
 }
 message UnfollowResp {
 }
 
-message FollowersReq {
-    int64 userId = 1;
+message GetFollowersReq {
+    int64 userID = 1;
 }
-message FollowersResp {
-    repeated int64 followers = 1;
+message GetFollowersResp {
+    repeated int64 IDs = 1;
 }
 
-message FollowingReq {
-    int64 userId = 1;
+message GetFollowingsReq {
+    int64 userID = 1;
 }
-message FollowingResp {
-    repeated int64 following = 1;
+message GetFollowingsResp {
+    repeated int64 IDs = 1;
 }
 
 message GetFollowingeCountReq {
-    int64 userId = 1;
+    int64 userID = 1;
 }
 message GetFollowingeCountResp {
     int64 count = 1;
 }
 
 message GetFollowerCountReq {
-    int64 userId = 1;
+    int64 userID = 1;
 }
 message GetFollowerCountResp {
     int64 count = 1;
 }
 
 message LastRequestTimeReq {
-    int64 userId = 1;
+    int64 userID = 1;
 }
 message LastRequestTimeResp {
     google.protobuf.Timestamp lastRequestTime = 1;

@@ -30,19 +30,19 @@ func NewListFollowingFeedLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 func (l *ListFollowingFeedLogic) ListFollowingFeed(req *types.GetFollowingFeedsByPageReq) (*types.GetFollowingFeedsByPageResp, error) {
 	userID := ctxdata.GetUIDFromCtx(l.ctx)
 	LastRequestTime, err := l.svcCtx.UsercenterRPC.LastRequestTime(l.ctx, &usercenter.LastRequestTimeReq{
-		UserId: userID,
+		UserID: userID,
 	})
 	if err != nil {
 		return nil, err
 	}
-	followingResp, err := l.svcCtx.UsercenterRPC.Following(l.ctx, &usercenter.FollowingReq{
-		UserId: userID,
+	followingResp, err := l.svcCtx.UsercenterRPC.GetFollowings(l.ctx, &usercenter.GetFollowingsReq{
+		UserID: userID,
 	})
 	if err != nil {
 		return nil, err
 	}
 	getFeedsByUserIDByPageResp, err := l.svcCtx.ContentRPC.GetFeedsByUserIDByPage(l.ctx, &content.GetFeedsByUserIDByPageReq{
-		UserIDs:  followingResp.Following,
+		UserIDs:  followingResp.IDs,
 		Before:   LastRequestTime.LastRequestTime,
 		Page:     req.Page,
 		PageSize: req.PageSize,

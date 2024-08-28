@@ -33,43 +33,48 @@ func NewFollowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FollowLogi
 }
 
 func (l *FollowLogic) Follow(in *pb.FollowReq) (*pb.FollowResp, error) {
-	relation, err := l.svcCtx.UserRelationModel.FindOneByFollowerIdFolloweeIdWithOutDelState(l.ctx, in.UserId, in.FolloweeId)
+	relation, err := l.svcCtx.UserRelationModel.
+		FindOneByFollowerIdFolloweeIdWithOutDelState(l.ctx, in.UserID, in.FolloweeID)
 	if err != nil {
 		if err == model.ErrNotFound {
 			_, err = l.svcCtx.UserRelationModel.Insert(l.ctx, nil, &model.UserRelation{
 				Id:         uniqueid.GenUserRelationID(),
-				FollowerId: in.UserId,
-				FolloweeId: in.FolloweeId,
+				FollowerId: in.UserID,
+				FolloweeId: in.FolloweeID,
 			})
 			if err != nil {
-				return &pb.FollowResp{}, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "insert user relation err:%v", err)
+				return &pb.FollowResp{}, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "Follow insert user relation err:%v", err)
 			}
 		} else {
-			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "find user relation error userID:%d, followeeID:%d, err:%v", in.UserId, in.FolloweeId, err)
+			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "Follow FindOneByFollowerIdFolloweeIdWithOutDelState failed, userID:%d, followeeID:%d, err:%v", in.UserID, in.FolloweeID, err)
 		}
 	} else if relation.DelState == globalkey.DelStateYes {
 		err = l.svcCtx.UserRelationModel.RestoreSoft(l.ctx, nil, relation.Id)
 		if err != nil {
-			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "restore user relation error userID:%d, followeeID:%d, err:%v", in.UserId, in.FolloweeId, err)
+			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "Follow restore user relation error userID:%d, followeeID:%d, err:%v", in.UserID, in.FolloweeID, err)
 		}
 	}
 
-	msg := kqueue.CountEvent{
-		Type:      kqueue.Follow,
-		SourceID:  in.UserId,
-		TargetID:  in.FolloweeId,
-		IsComment: false,
-	}
-	msgBytes, err := json.Marshal(msg)
-	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.MarshalError), "failed to marshal follow event ,err:%v", err)
-	}
-	followeeIDStr := strconv.FormatInt(in.FolloweeId, 10)
+	go func() {
+		msg := kqueue.CountEvent{
+			Type:      kqueue.Follow,
+			SourceID:  in.UserID,
+			TargetID:  in.FolloweeID,
+			IsComment: false,
+		}
+		msgBytes, err := json.Marshal(msg)
+		if err != nil {
+			logx.Errorf("Follow Marshal  SourceID:%d,TargetID:%d,err:%v", in.UserID, in.FolloweeID, err)
+			return
+		}
+		followeeIDStr := strconv.FormatInt(in.FolloweeID, 10)
 
-	err = l.svcCtx.KqPusherCounterEventClient.PushWithKey(l.ctx, followeeIDStr, tool.BytesToString(msgBytes))
-	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.KqPusherError), "failed to push follow event followeeID:%d,err:%v", in.FolloweeId, err)
-	}
+		err = l.svcCtx.KqPusherCounterEventClient.PushWithKey(l.ctx, followeeIDStr, tool.BytesToString(msgBytes))
+		if err != nil {
+			logx.Errorf("Follow PushWithKey  SourceID:%d,TargetID:%d,err:%v", in.UserID, in.FolloweeID, err)
+			return
+		}
+	}()
 
 	return &pb.FollowResp{}, err
 }

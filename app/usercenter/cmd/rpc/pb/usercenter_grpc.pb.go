@@ -28,8 +28,8 @@ const (
 	Usercenter_UpdateUserInfo_FullMethodName       = "/pb.usercenter/updateUserInfo"
 	Usercenter_Follow_FullMethodName               = "/pb.usercenter/follow"
 	Usercenter_Unfollow_FullMethodName             = "/pb.usercenter/unfollow"
-	Usercenter_Followers_FullMethodName            = "/pb.usercenter/followers"
-	Usercenter_Following_FullMethodName            = "/pb.usercenter/following"
+	Usercenter_GetFollowers_FullMethodName         = "/pb.usercenter/getFollowers"
+	Usercenter_GetFollowings_FullMethodName        = "/pb.usercenter/getFollowings"
 	Usercenter_GetFollowingeCount_FullMethodName   = "/pb.usercenter/getFollowingeCount"
 	Usercenter_GetFollowerCount_FullMethodName     = "/pb.usercenter/getFollowerCount"
 	Usercenter_LastRequestTime_FullMethodName      = "/pb.usercenter/lastRequestTime"
@@ -50,8 +50,8 @@ type UsercenterClient interface {
 	UpdateUserInfo(ctx context.Context, in *UpdateUserInfoReq, opts ...grpc.CallOption) (*UpdateUserInfoResp, error)
 	Follow(ctx context.Context, in *FollowReq, opts ...grpc.CallOption) (*FollowResp, error)
 	Unfollow(ctx context.Context, in *UnfollowReq, opts ...grpc.CallOption) (*UnfollowResp, error)
-	Followers(ctx context.Context, in *FollowersReq, opts ...grpc.CallOption) (*FollowersResp, error)
-	Following(ctx context.Context, in *FollowingReq, opts ...grpc.CallOption) (*FollowingResp, error)
+	GetFollowers(ctx context.Context, in *GetFollowersReq, opts ...grpc.CallOption) (*GetFollowersResp, error)
+	GetFollowings(ctx context.Context, in *GetFollowingsReq, opts ...grpc.CallOption) (*GetFollowingsResp, error)
 	GetFollowingeCount(ctx context.Context, in *GetFollowingeCountReq, opts ...grpc.CallOption) (*GetFollowingeCountResp, error)
 	GetFollowerCount(ctx context.Context, in *GetFollowerCountReq, opts ...grpc.CallOption) (*GetFollowerCountResp, error)
 	LastRequestTime(ctx context.Context, in *LastRequestTimeReq, opts ...grpc.CallOption) (*LastRequestTimeResp, error)
@@ -155,20 +155,20 @@ func (c *usercenterClient) Unfollow(ctx context.Context, in *UnfollowReq, opts .
 	return out, nil
 }
 
-func (c *usercenterClient) Followers(ctx context.Context, in *FollowersReq, opts ...grpc.CallOption) (*FollowersResp, error) {
+func (c *usercenterClient) GetFollowers(ctx context.Context, in *GetFollowersReq, opts ...grpc.CallOption) (*GetFollowersResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(FollowersResp)
-	err := c.cc.Invoke(ctx, Usercenter_Followers_FullMethodName, in, out, cOpts...)
+	out := new(GetFollowersResp)
+	err := c.cc.Invoke(ctx, Usercenter_GetFollowers_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *usercenterClient) Following(ctx context.Context, in *FollowingReq, opts ...grpc.CallOption) (*FollowingResp, error) {
+func (c *usercenterClient) GetFollowings(ctx context.Context, in *GetFollowingsReq, opts ...grpc.CallOption) (*GetFollowingsResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(FollowingResp)
-	err := c.cc.Invoke(ctx, Usercenter_Following_FullMethodName, in, out, cOpts...)
+	out := new(GetFollowingsResp)
+	err := c.cc.Invoke(ctx, Usercenter_GetFollowings_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -220,8 +220,8 @@ type UsercenterServer interface {
 	UpdateUserInfo(context.Context, *UpdateUserInfoReq) (*UpdateUserInfoResp, error)
 	Follow(context.Context, *FollowReq) (*FollowResp, error)
 	Unfollow(context.Context, *UnfollowReq) (*UnfollowResp, error)
-	Followers(context.Context, *FollowersReq) (*FollowersResp, error)
-	Following(context.Context, *FollowingReq) (*FollowingResp, error)
+	GetFollowers(context.Context, *GetFollowersReq) (*GetFollowersResp, error)
+	GetFollowings(context.Context, *GetFollowingsReq) (*GetFollowingsResp, error)
 	GetFollowingeCount(context.Context, *GetFollowingeCountReq) (*GetFollowingeCountResp, error)
 	GetFollowerCount(context.Context, *GetFollowerCountReq) (*GetFollowerCountResp, error)
 	LastRequestTime(context.Context, *LastRequestTimeReq) (*LastRequestTimeResp, error)
@@ -262,11 +262,11 @@ func (UnimplementedUsercenterServer) Follow(context.Context, *FollowReq) (*Follo
 func (UnimplementedUsercenterServer) Unfollow(context.Context, *UnfollowReq) (*UnfollowResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Unfollow not implemented")
 }
-func (UnimplementedUsercenterServer) Followers(context.Context, *FollowersReq) (*FollowersResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Followers not implemented")
+func (UnimplementedUsercenterServer) GetFollowers(context.Context, *GetFollowersReq) (*GetFollowersResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFollowers not implemented")
 }
-func (UnimplementedUsercenterServer) Following(context.Context, *FollowingReq) (*FollowingResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Following not implemented")
+func (UnimplementedUsercenterServer) GetFollowings(context.Context, *GetFollowingsReq) (*GetFollowingsResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFollowings not implemented")
 }
 func (UnimplementedUsercenterServer) GetFollowingeCount(context.Context, *GetFollowingeCountReq) (*GetFollowingeCountResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFollowingeCount not implemented")
@@ -460,38 +460,38 @@ func _Usercenter_Unfollow_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Usercenter_Followers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FollowersReq)
+func _Usercenter_GetFollowers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFollowersReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UsercenterServer).Followers(ctx, in)
+		return srv.(UsercenterServer).GetFollowers(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Usercenter_Followers_FullMethodName,
+		FullMethod: Usercenter_GetFollowers_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UsercenterServer).Followers(ctx, req.(*FollowersReq))
+		return srv.(UsercenterServer).GetFollowers(ctx, req.(*GetFollowersReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Usercenter_Following_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FollowingReq)
+func _Usercenter_GetFollowings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFollowingsReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UsercenterServer).Following(ctx, in)
+		return srv.(UsercenterServer).GetFollowings(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Usercenter_Following_FullMethodName,
+		FullMethod: Usercenter_GetFollowings_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UsercenterServer).Following(ctx, req.(*FollowingReq))
+		return srv.(UsercenterServer).GetFollowings(ctx, req.(*GetFollowingsReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -594,12 +594,12 @@ var Usercenter_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Usercenter_Unfollow_Handler,
 		},
 		{
-			MethodName: "followers",
-			Handler:    _Usercenter_Followers_Handler,
+			MethodName: "getFollowers",
+			Handler:    _Usercenter_GetFollowers_Handler,
 		},
 		{
-			MethodName: "following",
-			Handler:    _Usercenter_Following_Handler,
+			MethodName: "getFollowings",
+			Handler:    _Usercenter_GetFollowings_Handler,
 		},
 		{
 			MethodName: "getFollowingeCount",

@@ -23,7 +23,7 @@ JwtAuth:
 
 Log:
   ServiceName: usercenter-api
-  Level: info
+  Level: error
 
 
 #rpc service

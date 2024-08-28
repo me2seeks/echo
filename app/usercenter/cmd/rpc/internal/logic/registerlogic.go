@@ -38,10 +38,12 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 
 func (l *RegisterLogic) Register(in *pb.RegisterReq) (*pb.RegisterResp, error) {
 	user, err := l.svcCtx.UserModel.FindOneByEmail(l.ctx, in.Email)
-	if err != nil && err != model.ErrNotFound {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "email:%s,err:%v", in.Email, err)
+	if err != nil {
+		if err != model.ErrNotFound {
+			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "Register email:%s,err:%v", in.Email, err)
+		}
 	}
-	if err != model.ErrNotFound {
+	if user != nil {
 		return nil, errors.Wrapf(ErrUserAlreadyRegisterError, "Register user exists email:%s,err:%v", in.Email, err)
 	}
 
@@ -87,18 +89,20 @@ func (l *RegisterLogic) Register(in *pb.RegisterReq) (*pb.RegisterResp, error) {
 		}
 		msgBytes, err := json.Marshal(msg)
 		if err != nil {
-			logx.Errorf("failed to marshal register event ,err:%v", err)
+			logx.Errorf("Register Marshal  UserId:%d,Handle:%s,NickName:%s,CreatedAt:%v,err:%v", user.Id, user.Handle, user.Nickname, time.Now(), err)
+			return
 		}
 		err = l.svcCtx.KqPusherEsEventClient.Push(l.ctx, tool.BytesToString(msgBytes))
 		if err != nil {
-			logx.Errorf("failed push register event userID:%d,err:%v", user.Id, err)
+			logx.Errorf("Register PushWithKey  UserId:%d,Handle:%s,NickName:%s,CreatedAt:%v,err:%v", user.Id, user.Handle, user.Nickname, time.Now(), err)
+			return
 		}
 	}()
 
 	// 2、Generate the token, so that the service doesn't call rpc internally
 	generateTokenLogic := NewGenerateTokenLogic(l.ctx, l.svcCtx)
 	tokenResp, err := generateTokenLogic.GenerateToken(&usercenter.GenerateTokenReq{
-		UserId: user.Id,
+		UserID: user.Id,
 	})
 	if err != nil {
 		return nil, errors.Wrapf(ErrGenerateTokenError, "GenerateToken userId : %d", user.Id)

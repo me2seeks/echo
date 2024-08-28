@@ -12,16 +12,16 @@ import (
 )
 
 // get following
-func FollowingHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func FollowingsHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.FollowingReq
+		var req types.FollowingsReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
-		l := relation.NewFollowingLogic(r.Context(), svcCtx)
-		resp, err := l.Following(&req)
+		l := relation.NewFollowingsLogic(r.Context(), svcCtx)
+		resp, err := l.Followings(&req)
 		result.HTTPResult(r, w, resp, err)
 	}
 }

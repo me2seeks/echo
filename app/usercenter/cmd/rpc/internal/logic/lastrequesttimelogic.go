@@ -30,13 +30,13 @@ func NewLastRequestTimeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *L
 }
 
 func (l *LastRequestTimeLogic) LastRequestTime(in *pb.LastRequestTimeReq) (*pb.LastRequestTimeResp, error) {
-	userLastRequest, err := l.svcCtx.UserLastRequestModel.FindOne(l.ctx, in.UserId)
+	userLastRequest, err := l.svcCtx.UserLastRequestModel.FindOne(l.ctx, in.UserID)
 	if err != nil {
 		if err != model.ErrNotFound {
 			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "LastRequestTime FindOne failed: %v", err)
 		}
 		_, err = l.svcCtx.UserLastRequestModel.Insert(l.ctx, nil, &model.UserLastRequest{
-			UserId:          in.UserId,
+			UserId:          in.UserID,
 			LastRequestTime: time.Now(),
 		})
 		if err != nil {

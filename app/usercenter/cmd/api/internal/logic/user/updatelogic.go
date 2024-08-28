@@ -30,7 +30,7 @@ func (l *UpdateLogic) Update(req *types.UpdateUserInfoReq) (*types.UpdateUserInf
 	userID := ctxdata.GetUIDFromCtx(l.ctx)
 
 	_, err := l.svcCtx.UsercenterRPC.UpdateUserInfo(l.ctx, &usercenter.UpdateUserInfoReq{
-		UserId:   userID,
+		UserID:   userID,
 		Nickname: req.Nickname,
 		Sex:      req.Sex,
 		Avatar:   req.Avatar,

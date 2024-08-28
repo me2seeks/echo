@@ -2,7 +2,7 @@ syntax = "v1"
 
 type (
 	FollowReq {
-		UserId int64 `json:"userId"`
+		UserID int64 `json:"userID"`
 	}
 	FollowResp {
 	}
@@ -10,7 +10,7 @@ type (
 
 type (
 	UnfollowReq {
-		UserId int64 `json:"userId"`
+		UserID int64 `json:"userID"`
 	}
 	UnfollowResp {
 	}
@@ -18,7 +18,7 @@ type (
 
 type (
 	FollowersReq {
-		UserId int64 `json:"userId"`
+		UserID int64 `json:"userID"`
 	}
 	FollowersResp {
 		Followers []int64 `json:"followers"`
@@ -26,10 +26,10 @@ type (
 )
 
 type (
-	FollowingReq {
-		UserId int64 `json:"userId"`
+	FollowingsReq {
+		UserID int64 `json:"userID"`
 	}
-	FollowingResp {
-		Followings []int64 `json:"following"`
+	FollowingsResp {
+		Followings []int64 `json:"followings"`
 	}
 )

@@ -26,9 +26,10 @@ func NewGetFollowingeCountLogic(ctx context.Context, svcCtx *svc.ServiceContext)
 }
 
 func (l *GetFollowingeCountLogic) GetFollowingeCount(in *pb.GetFollowingeCountReq) (*pb.GetFollowingeCountResp, error) {
-	count, err := l.svcCtx.UserRelationModel.FindCount(l.ctx, l.svcCtx.UserAuthModel.SelectBuilder().Where("follower_id=?", in.UserId), "id")
+	count, err := l.svcCtx.UserRelationModel.FindCount(l.ctx, l.svcCtx.UserAuthModel.SelectBuilder().
+		Where("follower_id=?", in.UserID), "id")
 	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetFollowingeCount find user relation db err , follower_id:%d , err:%v", in.UserId, err)
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetFollowingeCount FindCount failed, follower_id:%d , err:%v", in.UserID, err)
 	}
 
 	return &pb.GetFollowingeCountResp{

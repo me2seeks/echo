@@ -26,14 +26,14 @@ func NewFollowersLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Followe
 }
 
 func (l *FollowersLogic) Followers(req *types.FollowersReq) (*types.FollowersResp, error) {
-	resp, err := l.svcCtx.UsercenterRPC.Followers(l.ctx, &usercenter.FollowersReq{
-		UserId: req.UserId,
+	resp, err := l.svcCtx.UsercenterRPC.GetFollowers(l.ctx, &usercenter.GetFollowersReq{
+		UserID: req.UserID,
 	})
 	if err != nil {
 		return nil, err
 	}
 
 	return &types.FollowersResp{
-		Followers: resp.Followers,
+		Followers: resp.IDs,
 	}, nil
 }

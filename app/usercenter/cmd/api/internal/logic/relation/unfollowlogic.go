@@ -30,8 +30,8 @@ func (l *UnfollowLogic) Unfollow(req *types.UnfollowReq) (*types.UnfollowResp, e
 	userID := ctxdata.GetUIDFromCtx(l.ctx)
 
 	_, err := l.svcCtx.UsercenterRPC.Unfollow(l.ctx, &usercenter.UnfollowReq{
-		UserId:     userID,
-		FolloweeId: req.UserId,
+		UserID:     userID,
+		FolloweeID: req.UserID,
 	})
 	if err != nil {
 		return nil, err
