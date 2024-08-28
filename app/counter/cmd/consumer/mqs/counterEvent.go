@@ -39,16 +39,16 @@ func (l *CounterEvent) Consume(ctx context.Context, key, val string) error {
 		err := l.svcCtx.UserStateModel.Trans(l.ctx, func(context context.Context, session sqlx.Session) error {
 			err := l.svcCtx.UserStateModel.IncreaseFollowerCount(l.ctx, session, event.TargetID)
 			if err != nil {
-				return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "increase follower count err:%v", err)
+				return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "increase follower count  SourceID:%d,TargetID:%d,err:%v", event.SourceID, event.TargetID, err)
 			}
 			err = l.svcCtx.UserStateModel.IncreaseFollowingCount(l.ctx, session, event.SourceID)
 			if err != nil {
-				return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "increase following count err:%v", err)
+				return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "increase following count SourceID:%d,TargetID:%d,err:%v", event.SourceID, event.TargetID, err)
 			}
 			return nil
 		})
 		if err != nil {
-			return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "follow event Trans err:%v,sourceID:%d,targetID:%d", err, event.SourceID, event.TargetID)
+			return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "follow event Trans SourceID:%d,TargetID:%d,err:%v", event.SourceID, event.TargetID, err)
 		}
 	case kqueue.UnFollow:
 		err := l.svcCtx.UserStateModel.Trans(l.ctx, func(context context.Context, session sqlx.Session) error {
@@ -63,77 +63,77 @@ func (l *CounterEvent) Consume(ctx context.Context, key, val string) error {
 			return nil
 		})
 		if err != nil {
-			return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "unfollow eventTrans err:%v,sourceID:%d,targetID:%d", err, event.SourceID, event.TargetID)
+			return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "unfollow eventTrans SourceID:%d,TargetID:%d,err:%v", event.SourceID, event.TargetID, err)
 		}
 	case kqueue.Like:
 		if !event.IsComment {
 			err := l.svcCtx.FeedCounterModel.IncreaseLikeCount(l.ctx, nil, event.TargetID)
 			if err != nil {
-				return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "increase like count err:%v", err)
+				return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "increase like count TargetID:%d,IsComment:%t,err:%v", event.TargetID, event.IsComment, err)
 			}
 			return nil
 		}
 		err := l.svcCtx.CommentCounterModel.IncreaseLikeCount(l.ctx, nil, event.TargetID)
 		if err != nil {
-			return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "increase like count err:%v", err)
+			return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "increase like count TargetID:%d,IsComment:%t,err:%v", event.TargetID, event.IsComment, err)
 		}
 	case kqueue.UnLike:
 		if !event.IsComment {
 			err := l.svcCtx.FeedCounterModel.DecreaseLikeCount(l.ctx, nil, event.TargetID)
 			if err != nil {
-				return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "decrease like count err:%v", err)
+				return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "decrease like count TargetID:%d,IsComment:%t,err:%v", event.TargetID, event.IsComment, err)
 			}
 			return nil
 		}
 		err := l.svcCtx.CommentCounterModel.DecreaseLikeCount(l.ctx, nil, event.TargetID)
 		if err != nil {
-			return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "decrease like count err:%v", err)
+			return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "decrease like count TargetID:%d,IsComment:%t,err:%v", event.TargetID, event.IsComment, err)
 		}
 	case kqueue.Comment:
 		if !event.IsComment {
 			err := l.svcCtx.FeedCounterModel.IncreaseCommentCount(l.ctx, nil, event.TargetID)
 			if err != nil {
-				return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "increase comment count err:%v", err)
+				return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "increase comment count TargetID:%d,IsComment:%t,err:%v", event.TargetID, event.IsComment, err)
 			}
 			return nil
 		}
 		err := l.svcCtx.CommentCounterModel.IncreaseCommentCount(l.ctx, nil, event.TargetID)
 		if err != nil {
-			return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "increase comment count err:%v", err)
+			return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "increase comment count TargetID:%d,IsComment:%t,err:%v", event.TargetID, event.IsComment, err)
 		}
 	case kqueue.UnComment:
 		if !event.IsComment {
 			err := l.svcCtx.FeedCounterModel.DecreaseCommentCount(l.ctx, nil, event.TargetID)
 			if err != nil {
-				return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "decrease comment count err:%v", err)
+				return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "decrease comment count TargetID:%d,IsComment:%t,err:%v", event.TargetID, event.IsComment, err)
 			}
 			return nil
 		}
 		err := l.svcCtx.CommentCounterModel.DecreaseCommentCount(l.ctx, nil, event.TargetID)
 		if err != nil {
-			return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "decrease comment count err:%v", err)
+			return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "decrease comment count TargetID:%d,IsComment:%t,err:%v", event.TargetID, event.IsComment, err)
 		}
 	case kqueue.View:
 		if !event.IsComment {
 			err := l.svcCtx.FeedCounterModel.IncreaseViewCount(l.ctx, nil, event.TargetID)
 			if err != nil {
-				return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "increase view count err:%v", err)
+				return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "increase view count TargetID:%d,IsComment:%t,err:%v", event.TargetID, event.IsComment, err)
 			}
 			return nil
 		}
 		err := l.svcCtx.CommentCounterModel.IncreaseViewCount(l.ctx, nil, event.TargetID)
 		if err != nil {
-			return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "increase view count err:%v", err)
+			return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "increase view count TargetID:%d,IsComment:%t,err:%v", event.TargetID, event.IsComment, err)
 		}
 	case kqueue.Feed:
 		err := l.svcCtx.UserStateModel.IncreaseFeedCount(l.ctx, nil, event.SourceID)
 		if err != nil {
-			return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "increase feed count err:%v", err)
+			return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "increase feed count SourceID:%d,err:%v", event.SourceID, err)
 		}
 	case kqueue.DeleteFeed:
 		err := l.svcCtx.UserStateModel.DecreaseFeedCount(l.ctx, nil, event.SourceID)
 		if err != nil {
-			return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "decrease feed count err:%v", err)
+			return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "decrease feed count SourceID:%d,err:%v", event.SourceID, err)
 		}
 	default:
 		return errors.Wrapf(xerr.NewErrCode(xerr.InvalidEvent), "invalid event type:%d", event.Type)

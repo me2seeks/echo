@@ -15,10 +15,10 @@
     "application/json"
   ],
   "paths": {
-    "/counter/content/{id}": {
+    "/counter/comment/{id}": {
       "get": {
-        "summary": "get content counter",
-        "operationId": "getContentCounter",
+        "summary": "get comment counter",
+        "operationId": "getCommentCounter",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -33,20 +33,35 @@
             "in": "path",
             "required": true,
             "type": "string"
-          },
-          {
-            "name": "is_comment",
-            "in": "query",
-            "required": true,
-            "type": "boolean",
-            "format": "boolean"
           }
         ],
         "tags": [
           "counter"
+        ]
+      }
+    },
+    "/counter/feed/{id}": {
+      "get": {
+        "summary": "get feed counter",
+        "operationId": "getFeedCounter",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetContentCounterResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
         ],
-        "consumes": [
-          "multipart/form-data"
+        "tags": [
+          "counter"
         ]
       }
     },
@@ -79,16 +94,7 @@
   "definitions": {
     "GetContentCounterReq": {
       "type": "object",
-      "properties": {
-        "is_comment": {
-          "type": "boolean",
-          "format": "boolean"
-        }
-      },
-      "title": "GetContentCounterReq",
-      "required": [
-        "is_comment"
-      ]
+      "title": "GetContentCounterReq"
     },
     "GetContentCounterResp": {
       "type": "object",

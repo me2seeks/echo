@@ -30,7 +30,7 @@ func (l *GetContentCounterLogic) GetContentCounter(in *pb.GetContentCounterReque
 	if !in.IsComment {
 		feedCount, err := l.svcCtx.FeedCounterModel.FindOne(l.ctx, in.ID)
 		if err != nil {
-			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "find feed counter error: %v", err)
+			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetContentCounter  error: %v", err)
 		}
 		return &pb.GetContentCounterResponse{
 			CommentCount: feedCount.CommentCount,
@@ -40,7 +40,7 @@ func (l *GetContentCounterLogic) GetContentCounter(in *pb.GetContentCounterReque
 	}
 	commentCount, err := l.svcCtx.CommentCounterModel.FindOne(l.ctx, in.ID)
 	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "find comment counter error: %v", err)
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetContentCounter error: %v", err)
 	}
 
 	return &pb.GetContentCounterResponse{

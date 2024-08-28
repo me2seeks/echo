@@ -1,9 +1,25 @@
 syntax = "v1"
 
+@server (
+	prefix: counter
+)
+service counter {
+	@doc "get feed counter"
+	@handler getFeedCounter
+	get /feed/:id (GetContentCounterReq) returns (GetContentCounterResp)
+
+	@doc "get comment counter"
+	@handler getCommentCounter
+	get /comment/:id (GetContentCounterReq) returns (GetContentCounterResp)
+
+	@doc "get user counter"
+	@handler getUserCounter
+	get /user/:id (GetUserCounterReq) returns (GetUserCounterResp)
+}
+
 type (
 	GetContentCounterReq {
-		ID        int64 `path:"id"`
-		IsComment bool  `form:"is_comment"`
+		ID int64 `path:"id"`
 	}
 	GetContentCounterResp {
 		CommentCount int64 `json:"comment_count"`
@@ -22,17 +38,4 @@ type (
 		FeedCount      int64 `json:"feed_count"`
 	}
 )
-
-@server (
-	prefix: counter
-)
-service counter {
-	@doc "get content counter"
-	@handler getContentCounter
-	get /content/:id (GetContentCounterReq) returns (GetContentCounterResp)
-
-	@doc "get user counter"
-	@handler getUserCounter
-	get /user/:id (GetUserCounterReq) returns (GetUserCounterResp)
-}
 

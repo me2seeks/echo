@@ -29,7 +29,7 @@ func (l *GetUserCounterLogic) GetUserCounter(in *pb.GetUserCounterRequest) (*pb.
 	// TODO use redis hash
 	userCount, err := l.svcCtx.UserStateModel.FindOne(l.ctx, in.UserId)
 	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "find user counter error: %v", err)
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetUserCounter error: %v", err)
 	}
 
 	return &pb.GetUserCounterResponse{

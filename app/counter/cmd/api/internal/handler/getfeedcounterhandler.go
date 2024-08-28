@@ -11,8 +11,8 @@ import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-// get content counter
-func getContentCounterHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+// get feed counter
+func getFeedCounterHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.GetContentCounterReq
 		if err := httpx.Parse(r, &req); err != nil {
@@ -20,8 +20,8 @@ func getContentCounterHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := logic.NewGetContentCounterLogic(r.Context(), svcCtx)
-		resp, err := l.GetContentCounter(&req)
+		l := logic.NewGetFeedCounterLogic(r.Context(), svcCtx)
+		resp, err := l.GetFeedCounter(&req)
 		result.HTTPResult(r, w, resp, err)
 	}
 }

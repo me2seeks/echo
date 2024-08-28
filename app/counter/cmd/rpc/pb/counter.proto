@@ -4,6 +4,11 @@ option go_package = "./pb";
 
 package pb;
 
+service counter {
+    rpc getContentCounter (GetContentCounterRequest) returns (GetContentCounterResponse) {}
+    rpc getUserCounter (GetUserCounterRequest) returns (GetUserCounterResponse) {}
+}
+
 message GetContentCounterRequest {
     int64 ID = 1;
     bool is_comment = 2;
@@ -21,11 +26,4 @@ message GetUserCounterResponse {
     int64 followingCount = 1;
     int64 followerCount = 2;
     int64 feedCount = 3;
-}
-
-
-service counter {
-    rpc getContentCounter (GetContentCounterRequest) returns (GetContentCounterResponse) {}
-    rpc getUserCounter (GetUserCounterRequest) returns (GetUserCounterResponse) {}
-
 }

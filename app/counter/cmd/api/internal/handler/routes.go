@@ -13,10 +13,16 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
-				// get content counter
+				// get comment counter
 				Method:  http.MethodGet,
-				Path:    "/content/:id",
-				Handler: getContentCounterHandler(serverCtx),
+				Path:    "/comment/:id",
+				Handler: getCommentCounterHandler(serverCtx),
+			},
+			{
+				// get feed counter
+				Method:  http.MethodGet,
+				Path:    "/feed/:id",
+				Handler: getFeedCounterHandler(serverCtx),
 			},
 			{
 				// get user counter

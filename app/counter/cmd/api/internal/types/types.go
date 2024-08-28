@@ -2,8 +2,7 @@
 package types
 
 type GetContentCounterReq struct {
-	ID        int64 `path:"id"`
-	IsComment bool  `form:"is_comment"`
+	ID int64 `path:"id"`
 }
 
 type GetContentCounterResp struct {
