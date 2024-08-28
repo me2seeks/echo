@@ -6,7 +6,6 @@ import (
 	"github.com/jinzhu/copier"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/rpc/internal/svc"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/rpc/pb"
-	"github.com/me2seeks/echo-hub/app/usercenter/cmd/rpc/usercenter"
 	"github.com/me2seeks/echo-hub/app/usercenter/model"
 	"github.com/me2seeks/echo-hub/common/xerr"
 	"github.com/pkg/errors"
@@ -38,10 +37,8 @@ func (l *GetUserInfoLogic) GetUserInfo(in *pb.GetUserInfoReq) (*pb.GetUserInfoRe
 	if user == nil {
 		return nil, errors.Wrapf(ErrUserNoExistsError, "GetUserInfo  not exit UserID:%d", in.UserID)
 	}
-	var respUser usercenter.User
-	_ = copier.Copy(&respUser, user)
+	resp:=&pb.GetUserInfoResp{}
+	_ = copier.Copy(resp.User, user)
 
-	return &usercenter.GetUserInfoResp{
-		User: &respUser,
-	}, nil
+	return resp, nil
 }

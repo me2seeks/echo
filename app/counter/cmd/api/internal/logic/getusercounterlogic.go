@@ -33,8 +33,8 @@ func (l *GetUserCounterLogic) GetUserCounter(req *types.GetUserCounterReq) (*typ
 	if err != nil {
 		return nil, err
 	}
-	var resp types.GetUserCounterResp
-	_ = copier.Copy(&resp, counterResp)
+	resp := &types.GetUserCounterResp{}
+	_ = copier.Copy(resp, counterResp)
 
-	return &resp, nil
+	return resp, nil
 }

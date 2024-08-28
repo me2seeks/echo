@@ -29,7 +29,7 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 }
 
 func (l *RegisterLogic) Register(req *types.RegisterReq) (*types.RegisterResp, error) {
-	resp, err := l.svcCtx.UsercenterRPC.Register(l.ctx, &usercenter.RegisterReq{
+	registerResp, err := l.svcCtx.UsercenterRPC.Register(l.ctx, &usercenter.RegisterReq{
 		Email:    req.Email,
 		Handle:   req.Handle,
 		Nickname: req.Nickname,
@@ -40,8 +40,8 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (*types.RegisterResp, e
 	if err != nil {
 		return nil, errors.Wrapf(err, "req: %+v", req)
 	}
-	var registerResp types.RegisterResp
-	_ = copier.Copy(&registerResp, resp)
+	resp := &types.RegisterResp{}
+	_ = copier.Copy(resp, registerResp)
 
-	return &registerResp, nil
+	return resp, nil
 }

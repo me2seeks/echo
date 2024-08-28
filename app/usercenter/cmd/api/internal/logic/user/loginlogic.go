@@ -28,7 +28,7 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 }
 
 func (l *LoginLogic) Login(req *types.LoginReq) (*types.LoginResp, error) {
-	resp, err := l.svcCtx.UsercenterRPC.Login(l.ctx, &usercenter.LoginReq{
+	loginResp, err := l.svcCtx.UsercenterRPC.Login(l.ctx, &usercenter.LoginReq{
 		AuthType: model.UserAuthTypeSystem,
 		AuthKey:  req.Email,
 		Password: req.Password,
@@ -36,8 +36,8 @@ func (l *LoginLogic) Login(req *types.LoginReq) (*types.LoginResp, error) {
 	if err != nil {
 		return nil, err
 	}
-	var loginResp types.LoginResp
-	_ = copier.Copy(&loginResp, resp)
+	resp := &types.LoginResp{}
+	_ = copier.Copy(resp, loginResp)
 
-	return &loginResp, nil
+	return resp, nil
 }

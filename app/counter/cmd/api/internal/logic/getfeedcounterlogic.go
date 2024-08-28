@@ -34,8 +34,8 @@ func (l *GetFeedCounterLogic) GetFeedCounter(req *types.GetContentCounterReq) (*
 	if err != nil {
 		return nil, err
 	}
-	var resp *types.GetContentCounterResp
-	_ = copier.Copy(&resp, getContentCounterResp)
+	resp := &types.GetContentCounterResp{}
+	_ = copier.Copy(resp, getContentCounterResp)
 
 	return resp, nil
 }

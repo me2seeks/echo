@@ -34,8 +34,8 @@ func (l *GetCommentCounterLogic) GetCommentCounter(req *types.GetContentCounterR
 	if err != nil {
 		return nil, err
 	}
-	var resp *types.GetContentCounterResp
-	_ = copier.Copy(&resp, getContentCounterResp)
+	resp := &types.GetContentCounterResp{}
+	_ = copier.Copy(resp, getContentCounterResp)
 
 	return resp, nil
 }

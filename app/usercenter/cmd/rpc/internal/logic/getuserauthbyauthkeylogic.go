@@ -7,7 +7,6 @@ import (
 	"github.com/jinzhu/copier"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/rpc/internal/svc"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/rpc/pb"
-	"github.com/me2seeks/echo-hub/app/usercenter/cmd/rpc/usercenter"
 	"github.com/me2seeks/echo-hub/app/usercenter/model"
 	"github.com/me2seeks/echo-hub/common/xerr"
 	"github.com/pkg/errors"
@@ -35,10 +34,8 @@ func (l *GetUserAuthByAuthKeyLogic) GetUserAuthByAuthKey(in *pb.GetUserAuthByAut
 		return nil, errors.Wrapf(xerr.NewErrMsg("get user auth failed"), "err : %v , in : %+v", err, in)
 	}
 
-	var respUserAuth usercenter.UserAuth
-	_ = copier.Copy(&respUserAuth, userAuth)
+	resp := &pb.GetUserAuthByAuthKeyResp{}
+	_ = copier.Copy(resp.UserAuth, userAuth)
 
-	return &pb.GetUserAuthByAuthKeyResp{
-		UserAuth: &respUserAuth,
-	}, nil
+	return resp, nil
 }
