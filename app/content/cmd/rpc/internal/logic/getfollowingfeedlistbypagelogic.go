@@ -2,10 +2,12 @@ package logic
 
 import (
 	"context"
+	"time"
 
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/internal/svc"
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/pb"
 	"github.com/me2seeks/echo-hub/app/content/model"
+
 	"github.com/me2seeks/echo-hub/common/tool"
 	"github.com/me2seeks/echo-hub/common/xerr"
 	"github.com/pkg/errors"
@@ -34,14 +36,18 @@ func (l *GetFollowingFeedListByPageLogic) GetFollowingFeedListByPage(in *pb.GetF
 		if err != model.ErrNotFound {
 			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetFollowingFeedListByPage UserLastRequestModel FindOne UserID%d err:%v", in.UserID, err)
 		}
-		// TODO 创建记录
-		userLastRequest = &model.UserLastRequest{}
+		_, err = l.svcCtx.UserLastRequestModel.Insert(l.ctx, nil, &model.UserLastRequest{
+			UserId:          in.UserID,
+			LastRequestTime: time.Now(),
+		})
+		if err != nil {
+			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetFollowingFeedListByPage UserLastRequestModel Insert UserID%d err:%v", in.UserID, err)
+		}
 	}
-	// TODO fix
 	feeds, total, err := l.svcCtx.FeedsModel.FindPageListByPageWithTotal(l.ctx, l.svcCtx.FeedsModel.SelectBuilder().
 		// Columns("id, user_id, content, media0, media1, media2, media3, create_at").
 		Where("user_id IN "+tool.BuildQuery(in.TargetID)).
-		Where("create_at > ?", userLastRequest.LastRequestTime), in.Page, in.PageSize, "id DESC")
+		Where("create_at > "+userLastRequest.LastRequestTime.UTC().String()), in.Page, in.PageSize, "id DESC")
 	if err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetFollowingFeedListByPage FindPageListByPageWithTotal UserID%d err:%v", in.UserID, err)
 	}

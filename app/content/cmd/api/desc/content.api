@@ -5,6 +5,18 @@ import (
 	"comment/comment.api"
 )
 
+type (
+	GetFeedCommentsByPageReq {
+		FeedID   int64 `path:"feedID"`
+		Page     int64 `form:"page"`
+		PageSize int64 `form:"page_size"`
+	}
+	GetFeedCommentsByPageResp {
+		Comments []Comment `json:"comment"`
+		Total    int64     `json:"total"`
+	}
+) 
+
 @server (
 	prefix: feed
 	group:  feed
@@ -35,10 +47,6 @@ service content {
 	jwt:    JwtAuth
 )
 service content {
-	@doc "get following feed list by page"
-	@handler listFollowingFeed
-	get /following (GetFollowingFeedsByPageReq) returns (GetFollowingFeedsByPageResp)
-
 	@doc "create feed"
 	@handler create
 	post / (CreateFeedReq) returns (CreateFeedResp)
@@ -53,6 +61,10 @@ service content {
 	@doc "create feed comment"
 	@handler createComment
 	post /:feedID/comment (CreateFeedCommentReq) returns (CreateFeedCommentResp)
+
+	@doc "get following feed list by page"
+	@handler listFollowingFeed
+	get /following (GetFollowingFeedsByPageReq) returns (GetFollowingFeedsByPageResp)
 }
 
 @server (
@@ -68,8 +80,7 @@ service content {
 	@doc "delete comment"
 	@handler delete
 	delete / (DeleteCommentReq) returns (DeleteCommentResp)
-// @doc "update comment"
-// @handler update
-// put / (UpdateCommentReq) returns (UpdateCommentResp)
+	// @doc "update comment"
+	// @handler update
+	// put / (UpdateCommentReq) returns (UpdateCommentResp)
 }
-

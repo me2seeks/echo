@@ -24,18 +24,6 @@ type (
 )
 
 type (
-	GetFeedCommentsByPageReq {
-		FeedID   int64  `path:"feedID"`
-		Page     int64  `form:"page"`
-		PageSize int64  `form:"page_size"`
-	}
-	GetFeedCommentsByPageResp {
-		Comments []Comment `json:"comment"`
-		Total    int64     `json:"total"`
-	}
-)
-
-type (
 	GetFollowingFeedsByPageReq {
 		Page     int64 `form:"page"`
 		PageSize int64 `form:"page_size"`
