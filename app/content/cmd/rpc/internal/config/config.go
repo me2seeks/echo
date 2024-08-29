@@ -11,7 +11,8 @@ type Config struct {
 		AccessSecret string
 		AccessExpire int64
 	}
-	Mysql struct {
+	BaseURL string
+	Mysql   struct {
 		DataSource string
 	}
 	Cache                    cache.CacheConf

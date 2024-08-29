@@ -19,7 +19,7 @@ ListenOn: 0.0.0.0:2003
 
 
 
-# BasicsURL: 
+BaseURL: http://10.2.12.14:32695/echo/
 
 KqPusherCounterEventConf:
   Brokers:

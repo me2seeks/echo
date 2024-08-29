@@ -44,10 +44,10 @@ func (l *GetFeedsByIDByPageLogic) GetFeedsByIDByPage(in *pb.GetFeedsByIDByPageRe
 			Id:         feed.Id,
 			UserID:     feed.UserId,
 			Content:    feed.Content,
-			Media0:     feed.Media0.String,
-			Media1:     feed.Media1.String,
-			Media2:     feed.Media2.String,
-			Media3:     feed.Media3.String,
+			Media0:     tool.GenMediaURL(feed.Media0, l.svcCtx.Config.BaseURL),
+			Media1:     tool.GenMediaURL(feed.Media1, l.svcCtx.Config.BaseURL),
+			Media2:     tool.GenMediaURL(feed.Media2, l.svcCtx.Config.BaseURL),
+			Media3:     tool.GenMediaURL(feed.Media3, l.svcCtx.Config.BaseURL),
 			CreateTime: timestamppb.New(feed.CreateAt),
 		})
 	}

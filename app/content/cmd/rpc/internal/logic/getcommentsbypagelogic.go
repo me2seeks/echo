@@ -6,6 +6,7 @@ import (
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/internal/svc"
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/pb"
 	"github.com/me2seeks/echo-hub/app/content/model"
+	"github.com/me2seeks/echo-hub/common/tool"
 	"github.com/me2seeks/echo-hub/common/xerr"
 	"github.com/pkg/errors"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -55,10 +56,10 @@ func (l *GetCommentsByPageLogic) GetCommentsByPage(in *pb.GetCommentsByPageReq) 
 			Id:         comment.Id,
 			UserID:     comment.UserId,
 			Content:    comment.Content,
-			Media0:     comment.Media0.String,
-			Media1:     comment.Media1.String,
-			Media2:     comment.Media2.String,
-			Media3:     comment.Media3.String,
+			Media0:     tool.GenMediaURL(comment.Media0, l.svcCtx.Config.BaseURL),
+			Media1:     tool.GenMediaURL(comment.Media1, l.svcCtx.Config.BaseURL),
+			Media2:     tool.GenMediaURL(comment.Media2, l.svcCtx.Config.BaseURL),
+			Media3:     tool.GenMediaURL(comment.Media3, l.svcCtx.Config.BaseURL),
 			CreateTime: timestamppb.New(comment.CreateAt),
 		})
 	}

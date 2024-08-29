@@ -2,6 +2,7 @@ package upload
 
 import (
 	"context"
+	"path/filepath"
 	"time"
 
 	"github.com/google/uuid"
@@ -31,13 +32,13 @@ func (l *PresignedLogic) Presign(req *types.PresignReq) (*types.PresignResp, err
 	for _, object := range req.Objects {
 		switch object.FileType {
 		case upload.Avatar:
-			object.FileName = "avatars/" + uuid.New().String()
-		case upload.Feed_img:
-			object.FileName = "feed_imgs/" + uuid.New().String()
-		case upload.Feed_video:
-			object.FileName = "feed_videos/" + uuid.New().String()
-		case upload.Feed_GIF:
-			object.FileName = "feed_gifs/" + uuid.New().String()
+			object.FileName = "avatars/" + uuid.New().String() + filepath.Ext(object.FileName)
+		case upload.FeedImg:
+			object.FileName = "feed_imgs/" + uuid.New().String() + filepath.Ext(object.FileName)
+		case upload.FeedVideo:
+			object.FileName = "feed_videos/" + uuid.New().String() + filepath.Ext(object.FileName)
+		case upload.FeedGIF:
+			object.FileName = "feed_gifs/" + uuid.New().String() + filepath.Ext(object.FileName)
 		default:
 			object.FileName = "unknown/" + uuid.New().String()
 		}

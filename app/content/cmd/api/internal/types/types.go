@@ -123,8 +123,8 @@ type GetFollowingFeedsByPageResp struct {
 }
 
 type Object struct {
-	FileName string `json:"fileName"`
-	FileType upload.ObjectType  `json:"fileType"`
+	FileName string            `json:"fileName"`
+	FileType upload.ObjectType `json:"fileType"`
 }
 
 type PresignReq struct {

@@ -1,6 +1,7 @@
 package tool
 
 import (
+	"database/sql"
 	"strconv"
 	"strings"
 )
@@ -19,4 +20,11 @@ func BuildQuery(ids []int64) string {
 	builder.WriteString(")")
 
 	return builder.String()
+}
+
+func GenMediaURL(Value sql.NullString, baseURL string) string {
+	if !Value.Valid {
+		return ""
+	}
+	return baseURL + Value.String
 }
