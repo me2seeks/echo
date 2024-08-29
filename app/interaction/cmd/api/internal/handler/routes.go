@@ -17,18 +17,18 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				// like
 				Method:  http.MethodPost,
-				Path:    "/like",
+				Path:    "/comment/like",
 				Handler: comment.LikeHandler(serverCtx),
 			},
 			{
 				// unlike
 				Method:  http.MethodDelete,
-				Path:    "/like",
+				Path:    "/comment/like",
 				Handler: comment.UnlikeHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
-		rest.WithPrefix("/comment"),
+		rest.WithPrefix("/interaction"),
 	)
 
 	server.AddRoutes(
@@ -36,17 +36,17 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				// like
 				Method:  http.MethodPost,
-				Path:    "/like",
+				Path:    "/feed/like",
 				Handler: feed.LikeHandler(serverCtx),
 			},
 			{
 				// unlike
 				Method:  http.MethodDelete,
-				Path:    "/like",
+				Path:    "/feed/like",
 				Handler: feed.UnlikeHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
-		rest.WithPrefix("/feed"),
+		rest.WithPrefix("/interaction"),
 	)
 }

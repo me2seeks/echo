@@ -6,32 +6,32 @@ import (
 )
 
 @server (
-	prefix: feed
+	prefix: interaction
 	group:  feed
 	jwt:    JwtAuth
 )
 service interaction {
 	@doc "like"
 	@handler like
-	post /like (CreateFeedLikeReq) returns (CreateFeedLikeResp)
+	post /feed/like (CreateFeedLikeReq) returns (CreateFeedLikeResp)
 
 	@doc "unlike"
 	@handler unlike
-	delete /like (DeleteFeedLikeReq) returns (DeleteFeedLikeResp)
+	delete /feed/like (DeleteFeedLikeReq) returns (DeleteFeedLikeResp)
 }
 
 @server (
-	prefix: comment
+	prefix: interaction
 	group:  comment
 	jwt:    JwtAuth
 )
 service interaction {
 	@doc "like"
 	@handler like
-	post /like (CreateCommentLikeReq) returns (CreateCommentLikeResp)
+	post /comment/like (CreateCommentLikeReq) returns (CreateCommentLikeResp)
 
 	@doc "unlike"
 	@handler unlike
-	delete /like (DeleteCommentLikeReq) returns (DeleteCommentLikeResp)
+	delete /comment/like (DeleteCommentLikeReq) returns (DeleteCommentLikeResp)
 }
 
