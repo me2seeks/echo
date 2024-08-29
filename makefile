@@ -34,10 +34,10 @@ copy_config:
 	mkdir -p target/interaction-rpc && cp app/interaction/cmd/rpc/etc/interaction.yaml target/interaction-rpc
 	mkdir -p target/interaction-api && cp app/interaction/cmd/api/etc/interaction.yaml target/interaction-api 
 	mkdir -p target/counter-rpc && cp app/counter/cmd/rpc/etc/counter.yaml target/counter-rpc
-	mkdir -p target/counter-consumer && cp app/counter/cmd/consumer/etc/counter.yaml target/counter-consumer
+	mkdir -p target/counter-consumer && cp app/counter/cmd/consumer/etc/consumer.yaml target/counter-consumer
 	mkdir -p target/counter-api && cp app/counter/cmd/api/etc/counter.yaml target/counter-api
 	mkdir -p target/search-rpc && cp app/search/cmd/rpc/etc/search.yaml target/search-rpc
-	mkdir -p target/search-consumer && cp app/search/cmd/consumer/etc/search.yaml target/search-consumer
+	mkdir -p target/search-consumer && cp app/search/cmd/consumer/etc/consumer.yaml target/search-consumer
 	mkdir -p target/search-api && cp app/search/cmd/api/etc/search.yaml target/search-api
 
 build: copy_config ## 构建目标
@@ -64,10 +64,10 @@ start: ## 运行目标
 	nohup ./target/interaction-rpc/interaction-rpc -f ./target/interaction-rpc/interaction.yaml  > /dev/null 2>&1 &
 	nohup ./target/interaction-api/interaction-api -f ./target/interaction-api/interaction.yaml  > /dev/null 2>&1 &
 	nohup ./target/counter-rpc/counter-rpc -f ./target/counter-rpc/counter.yaml  > /dev/null 2>&1 &
-	nohup ./target/counter-consumer/counter-consumer -f ./target/counter-consumer/counter.yaml  > /dev/null 2>&1 &
+	nohup ./target/counter-consumer/counter-consumer -f ./target/counter-consumer/consumer.yaml  > /dev/null 2>&1 &
 	nohup ./target/counter-api/counter-api -f ./target/counter-api/counter.yaml  > /dev/null 2>&1 &
 	nohup ./target/search-rpc/search-rpc -f ./target/search-rpc/search.yaml  > /dev/null 2>&1 &
-	nohup ./target/search-consumer/search-consumer -f ./target/search-consumer/search.yaml  > /dev/null 2>&1 &
+	nohup ./target/search-consumer/search-consumer -f ./target/search-consumer/consumer.yaml  > /dev/null 2>&1 &
 	nohup ./target/search-api/search-api -f ./target/search-api/search.yaml  > /dev/null 2>&1 &
 
 stop: ## 停止目标

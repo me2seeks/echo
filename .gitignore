@@ -5,6 +5,7 @@
 vendor/
 data/
 logs/
+target/
 # .vscode/
 
 # Files
@@ -13,8 +14,6 @@ logs/
 *.crt
 *.p12
 
-demo.md
-lua.go
 scripts.sh
 
 
