@@ -10,16 +10,85 @@ scrape_configs:
       - targets: ['127.0.0.1:9090']
   - job_name: 'usercenter-api'
     static_configs:
-      - targets: ['127.0.0.1:4000']
+      - targets: ['127.0.0.1:1000']
         labels:
           job: usercenter-api
           app: usercenter-api
           env: dev
   - job_name: 'usercenter-rpc'
     static_configs:
-      - targets: ['127.0.0.1:4001']
+      - targets: ['127.0.0.1:2001']
         labels:
           job: usercenter-rpc
           app: usercenter-rpc
           env: dev
-
+  - job_name: 'content-api'
+    static_configs:
+      - targets: ['127.0.0.1:1002']
+        labels:
+          job: content-api
+          app: content-api
+          env: dev
+  - job_name: 'content-rpc'
+    static_configs:
+      - targets: ['127.0.0.1:2003']
+        labels:
+          job: content-rpc
+          app: content-rpc
+          env: dev
+  - job_name: 'interaction-api'
+    static_configs:
+      - targets: ['127.0.0.1:1004']
+        labels:
+          job: interaction-api
+          app: interaction-api
+          env: dev
+  - job_name: 'interaction-rpc'
+    static_configs:
+      - targets: ['127.0.0.1:2005']
+        labels:
+          job: interaction-rpc
+          app: interaction-rpc
+          env: dev
+  - job_name: 'counter-api'
+    static_configs:
+      - targets: ['127.0.0.1:1006']
+        labels:
+          job: counter-api
+          app: counter-api
+          env: dev
+  - job_name: 'counter-rpc'
+    static_configs:
+      - targets: ['127.0.0.1:2007']
+        labels:
+          job: counter-rpc
+          app: counter-rpc
+          env: dev
+  - job_name: 'search-api'
+    static_configs:
+      - targets: ['127.0.0.1:1008']
+        labels:
+          job: search-api
+          app: search-api
+          env: dev     
+  - job_name: 'search-rpc'
+    static_configs:
+      - targets: ['127.0.0.1:2009']
+        labels:
+          job: search-rpc
+          app: search-rpc
+          env: dev  
+  - job_name: 'counter-consumer'
+    static_configs:
+      - targets: ['127.0.0.1:4010']
+        labels:
+          job: counter-consumer
+          app: counter-consumer
+          env: dev     
+  - job_name: 'search-consumer'
+    static_configs:
+      - targets: ['127.0.0.1:4011']
+        labels:
+          job: search-consumer
+          app: search-consumer
+          env: dev     
