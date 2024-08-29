@@ -19,11 +19,11 @@ type ServiceContext struct {
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
-	minioClient, err := minio.New(c.MiniConf.EndPoint, &minio.Options{
-		Creds:  credentials.NewStaticV4(c.MiniConf.AccessKey, c.MiniConf.SecretKey, ""),
-		Secure: true,
+	minioClient, err := minio.New(c.MinioConf.Endpoint, &minio.Options{
+		Creds:  credentials.NewStaticV4(c.MinioConf.AccessKey, c.MinioConf.SecretKey, ""),
+		Secure: c.MinioConf.UseSSL,
 	})
-	if err != nil {
+	if err != nil && minioClient == nil {
 		logx.Errorf("failed to create minio client: %s", err)
 	}
 	return &ServiceContext{

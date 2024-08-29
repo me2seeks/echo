@@ -1,0 +1,15 @@
+syntax = "v1"
+
+type (
+	PresignReq {
+		Objects []Object `json:"objects"`
+	}
+	PresignResp {
+		Urls []string `json:"urls"`
+	}
+)
+
+type Object {
+	FileName string `json:"fileName"`
+	FileType int32  `json:"fileType"`
+}

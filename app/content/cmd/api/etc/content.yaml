@@ -15,6 +15,15 @@ Port: 1002
 #   Sampler: 1.0
 #   Batcher: jaeger
 
+
+MinioConf:
+  Endpoint: 10.2.12.14:32695
+  AccessKey: OMJXvFrujwDe9seeLQKu
+  SecretKey: sEPBVJKoe5GBOx8vef6HRGWwPR3y7qU90wWmcgi4
+  BucketName: echo
+  Expires:  10
+  UseSSL: false
+
 JwtAuth:
   AccessSecret: ae0536f9-6450-4606-8e13-5a19ed505da0
   AccessExpire: 31536000

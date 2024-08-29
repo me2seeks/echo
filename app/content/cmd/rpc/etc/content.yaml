@@ -17,6 +17,10 @@ ListenOn: 0.0.0.0:2003
 #   Sampler: 1.0
 #   Batcher: jaeger
 
+
+
+# BasicsURL: 
+
 KqPusherCounterEventConf:
   Brokers:
     - 10.2.12.14:32703

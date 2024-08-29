@@ -3,16 +3,17 @@ syntax = "v1"
 import (
 	"feed/feed.api"
 	"comment/comment.api"
+	"upload/upload.api"
 )
 
 @server (
 	prefix: upload
 	group:  upload
+	jwt:    JwtAuth
 )
 service content {
-
-	@handler presigned
-	post /presigned (PresignedReq) returns (PresignedResp)
+	@handler presign
+	post /presign (PresignReq) returns (PresignResp)
 }
 
 @server (
@@ -78,9 +79,9 @@ service content {
 	@doc "delete comment"
 	@handler delete
 	delete / (DeleteCommentReq) returns (DeleteCommentResp)
-// @doc "update comment"
-// @handler update
-// put / (UpdateCommentReq) returns (UpdateCommentResp)
+	// @doc "update comment"
+	// @handler update
+	// put / (UpdateCommentReq) returns (UpdateCommentResp)
 }
 
 type (
@@ -94,14 +95,3 @@ type (
 		Total    int64     `json:"total"`
 	}
 )
-
-type (
-	PresignedReq {
-		FileName string `json:"fileName"`
-		FileType string `json:"fileType"`
-	}
-	PresignedResp {
-		Url string `json:"url"`
-	}
-)
-

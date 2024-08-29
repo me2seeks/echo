@@ -341,6 +341,32 @@
           "multipart/form-data"
         ]
       }
+    },
+    "/upload/presign": {
+      "post": {
+        "operationId": "presign",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/PresignResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PresignReq"
+            }
+          }
+        ],
+        "tags": [
+          "upload"
+        ]
+      }
     }
   },
   "definitions": {
@@ -752,6 +778,53 @@
       "required": [
         "feed",
         "total"
+      ]
+    },
+    "Object": {
+      "type": "object",
+      "properties": {
+        "fileName": {
+          "type": "string"
+        },
+        "fileType": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "Object",
+      "required": [
+        "fileName",
+        "fileType"
+      ]
+    },
+    "PresignReq": {
+      "type": "object",
+      "properties": {
+        "objects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Object"
+          }
+        }
+      },
+      "title": "PresignReq",
+      "required": [
+        "objects"
+      ]
+    },
+    "PresignResp": {
+      "type": "object",
+      "properties": {
+        "urls": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "title": "PresignResp",
+      "required": [
+        "urls"
       ]
     }
   },

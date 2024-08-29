@@ -11,16 +11,16 @@ import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-func PresignedHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func PresignHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.PresignedReq
+		var req types.PresignReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
-		l := upload.NewPresignedLogic(r.Context(), svcCtx)
-		resp, err := l.Presigned(&req)
+		l := upload.NewPresignLogic(r.Context(), svcCtx)
+		resp, err := l.Presign(&req)
 		result.HTTPResult(r, w, resp, err)
 	}
 }
