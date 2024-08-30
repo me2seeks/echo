@@ -47,7 +47,7 @@ func (l *SearchLogic) Search(req *types.SearchReq) (*types.SearchFeedsResp, erro
 		if err != nil {
 			return nil, err
 		}
-		_ = copier.Copy(resp.Feeds, contentResp.Feeds)
+		_ = copier.Copy(&resp.Feeds, contentResp.Feeds)
 	}
 
 	return resp, nil

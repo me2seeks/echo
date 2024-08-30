@@ -48,10 +48,10 @@ build: copy_config ## 构建目标
 	$(GOBUILD) -o target/interaction-rpc/interaction-rpc app/interaction/cmd/rpc/interaction.go
 	$(GOBUILD) -o target/interaction-api/interaction-api app/interaction/cmd/api/interaction.go
 	$(GOBUILD) -o target/counter-rpc/counter-rpc app/counter/cmd/rpc/counter.go
-	$(GOBUILD) -o target/counter-consumer/counter-consumer app/counter/cmd/consumer/counter.go
+	$(GOBUILD) -o target/counter-consumer/counter-consumer app/counter/cmd/consumer/consumer.go
 	$(GOBUILD) -o target/counter-api/counter-api app/counter/cmd/api/counter.go
 	$(GOBUILD) -o target/search-rpc/search-rpc app/search/cmd/rpc/search.go
-	$(GOBUILD) -o target/search-consumer/search-consumer app/search/cmd/consumer/search.go
+	$(GOBUILD) -o target/search-consumer/search-consumer app/search/cmd/consumer/consumer.go
 	$(GOBUILD) -o target/search-api/search-api app/search/cmd/api/search.go
 
 
@@ -71,19 +71,17 @@ start: ## 运行目标
 	nohup ./target/search-api/search-api -f ./target/search-api/search.yaml  > /dev/null 2>&1 &
 
 stop: ## 停止目标
-    -pkill -f usercenter-rpc
-    -pkill -f usercenter-api
-    -pkill -f content-rpc
-    -pkill -f content-api
-    -pkill -f interaction-rpc
-    -pkill -f interaction-api
-    -pkill -f counter-rpc
-    -pkill -f counter-consumer
-    -pkill -f counter-api
-    -pkill -f search-rpc
-    -pkill -f search-consumer
-    -pkill -f search-api
-    @for i in 5 4 3 2 1; do \
+        -pkill -f usercenter-rpc                                                                                                -pkill -f usercenter-api
+        -pkill -f content-rpc
+        -pkill -f content-api
+        -pkill -f interaction-rpc
+        -pkill -f interaction-api
+        -pkill -f counter-rpc
+        -pkill -f counter-consumer
+        -pkill -f counter-api
+        -pkill -f search-rpc                                                                                                    -pkill -f search-consumer
+        -pkill -f search-api
+        @for i in 5 4 3 2 1; do \
         echo -n "stop $$i"; \
         sleep 1; \
         echo " "; \
