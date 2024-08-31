@@ -28,6 +28,8 @@ func NewListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListLogic {
 func (l *ListLogic) List(req *types.GetCommentsByPageReq) (*types.GetCommentsByPageResp, error) {
 	getCommentsByPageResp, err := l.svcCtx.ContentRPC.GetCommentsByPage(l.ctx, &content.GetCommentsByPageReq{
 		Id:        req.CommentID,
+		Page:      req.Page,
+		PageSize:  req.PageSize,
 		IsComment: true,
 	})
 	if err != nil {

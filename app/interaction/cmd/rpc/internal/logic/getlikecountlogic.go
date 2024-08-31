@@ -5,6 +5,7 @@ import (
 
 	"github.com/me2seeks/echo-hub/app/interaction/cmd/rpc/internal/svc"
 	"github.com/me2seeks/echo-hub/app/interaction/cmd/rpc/pb"
+	"github.com/me2seeks/echo-hub/app/interaction/model"
 	"github.com/me2seeks/echo-hub/common/xerr"
 	"github.com/pkg/errors"
 
@@ -31,11 +32,17 @@ func (l *GetLikeCountLogic) GetLikeCount(in *pb.GetLikeCountReq) (*pb.GetLikeCou
 	if in.IsComment {
 		resp.Count, err = l.svcCtx.CommentLikesModel.FindCount(l.ctx, l.svcCtx.CommentLikesModel.SelectBuilder().Where("content_id = ?", in.Id), "id")
 		if err != nil {
+			if err == model.ErrNotFound {
+				return resp, nil
+			}
 			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetLikeCount find comment like count err:%v", err)
 		}
 	} else {
 		resp.Count, err = l.svcCtx.FeedLikesModel.FindCount(l.ctx, l.svcCtx.FeedLikesModel.SelectBuilder().Where("content_id = ?", in.Id), "id")
 		if err != nil {
+			if err == model.ErrNotFound {
+				return resp, nil
+			}
 			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetLikeCount find feed like count err:%v", err)
 		}
 	}

@@ -60,14 +60,14 @@ func (l *CreateLikeLogic) CreateLike(in *pb.CreateLikeReq) (*pb.CreateLikeResp, 
 		}
 		msgBytes, err := json.Marshal(msg)
 		if err != nil {
-			l.Errorf("CreateLike Marshal CountEvent failed Type:%d,TargetID:%d,IsComment:%d,err:%v", kqueue.Like, in.Id, in.IsComment, err)
+			logx.Errorf("CreateLike Marshal CountEvent failed Type:%d,TargetID:%d,IsComment:%v,err:%v", kqueue.Like, in.Id, in.IsComment, err)
 			return
 		}
 		contentIDStr := strconv.FormatInt(in.Id, 10)
 
 		err = l.svcCtx.KqPusherClient.PushWithKey(l.ctx, contentIDStr, tool.BytesToString(msgBytes))
 		if err != nil {
-			l.Errorf("CreateLike PushWithKey failed Type:%d,TargetID:%d,IsComment:%d,err:%v", kqueue.Like, in.Id, in.IsComment, err)
+			logx.Errorf("CreateLike PushWithKey failed Type:%d,TargetID:%d,IsComment:%v,err:%v", kqueue.Like, in.Id, in.IsComment, err)
 			return
 		}
 	}()

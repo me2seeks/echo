@@ -5,6 +5,7 @@ import (
 
 	"github.com/me2seeks/echo-hub/app/counter/cmd/rpc/internal/svc"
 	"github.com/me2seeks/echo-hub/app/counter/cmd/rpc/pb"
+	"github.com/me2seeks/echo-hub/app/counter/model"
 	"github.com/me2seeks/echo-hub/common/xerr"
 	"github.com/pkg/errors"
 
@@ -30,6 +31,13 @@ func (l *GetContentCounterLogic) GetContentCounter(in *pb.GetContentCounterReque
 	if !in.IsComment {
 		feedCount, err := l.svcCtx.FeedCounterModel.FindOne(l.ctx, in.ID)
 		if err != nil {
+			if err == model.ErrNotFound {
+				return &pb.GetContentCounterResponse{
+					CommentCount: 0,
+					LikeCount:    0,
+					ViewCount:    0,
+				}, nil
+			}
 			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetContentCounter  error: %v", err)
 		}
 		return &pb.GetContentCounterResponse{
@@ -40,6 +48,13 @@ func (l *GetContentCounterLogic) GetContentCounter(in *pb.GetContentCounterReque
 	}
 	commentCount, err := l.svcCtx.CommentCounterModel.FindOne(l.ctx, in.ID)
 	if err != nil {
+		if err == model.ErrNotFound {
+			return &pb.GetContentCounterResponse{
+				CommentCount: 0,
+				LikeCount:    0,
+				ViewCount:    0,
+			}, nil
+		}
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetContentCounter error: %v", err)
 	}
 

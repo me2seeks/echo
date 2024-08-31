@@ -2,9 +2,12 @@ package logic
 
 import (
 	"context"
+	"encoding/json"
+	"strconv"
 
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/internal/svc"
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/pb"
+	"github.com/me2seeks/echo-hub/common/kqueue"
 	"github.com/me2seeks/echo-hub/common/tool"
 	"github.com/me2seeks/echo-hub/common/xerr"
 	"github.com/pkg/errors"
@@ -31,10 +34,31 @@ func (l *GetFeedsByUserIDByPageLogic) GetFeedsByUserIDByPage(in *pb.GetFeedsByUs
 	findPageListByPageWithTotalResp, total, err := l.svcCtx.FeedsModel.FindPageListByPageWithTotal(l.ctx, l.svcCtx.FeedsModel.SelectBuilder().
 		// Columns("id, user_id, content, media0, media1, media2, media3, create_at").
 		Where("user_id in "+tool.BuildQuery(in.UserIDs)).
-		Where("create_at > "+in.Before.AsTime().UTC().String()), in.Page, in.PageSize, "id DESC")
+		Where("create_at > ? ", in.Before.AsTime().UTC().Format("2006-01-02 15:04:05")), in.Page, in.PageSize, "id DESC")
 	if err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetFeedsByUserIDByPage FindPageListByPageWithTotal err:%v", err)
 	}
+
+	go func() {
+		for _, feed := range findPageListByPageWithTotalResp {
+			msg := kqueue.CountEvent{
+				Type:      kqueue.View,
+				TargetID:  feed.Id,
+				IsComment: false,
+			}
+
+			msgBytes, err := json.Marshal(msg)
+			if err != nil {
+				logx.Errorf("IncreaseFeedView Marshal CountEvent failed Type:%d,TargetID:%d,IsComment:%v,err:%v", kqueue.Like, feed.Id, false, err)
+			}
+			contentIDStr := strconv.FormatInt(feed.Id, 10)
+
+			err = l.svcCtx.KqPusherCounterEventClient.PushWithKey(l.ctx, contentIDStr, tool.BytesToString(msgBytes))
+			if err != nil {
+				logx.Errorf("IncreaseFeedView PushWithKey failed Type:%d,TargetID:%d,IsComment:%v,err:%v", kqueue.Like, feed.Id, false, err)
+			}
+		}
+	}()
 
 	resp := &pb.GetFeedsByUserIDByPageResp{}
 	resp.Total = total

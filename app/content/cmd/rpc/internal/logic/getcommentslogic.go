@@ -2,10 +2,13 @@ package logic
 
 import (
 	"context"
+	"encoding/json"
+	"strconv"
 
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/internal/svc"
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/pb"
 	"github.com/me2seeks/echo-hub/app/content/model"
+	"github.com/me2seeks/echo-hub/common/kqueue"
 	"github.com/me2seeks/echo-hub/common/tool"
 	"github.com/me2seeks/echo-hub/common/xerr"
 	"github.com/pkg/errors"
@@ -46,6 +49,25 @@ func (l *GetCommentsLogic) GetComments(in *pb.GetCommentsReq) (*pb.GetCommentsRe
 			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetCommentListByPage FindAll commentID%d err:%v", in.Id, err)
 		}
 	}
+	go func() {
+		for _, comment := range comments {
+			msg := kqueue.CountEvent{
+				Type:      kqueue.View,
+				TargetID:  comment.Id,
+				IsComment: true,
+			}
+			msgBytes, err := json.Marshal(msg)
+			if err != nil {
+				logx.Errorf("IncreaseCommentView Marshal CountEvent failed Type:%d,TargetID:%d,IsComment:%v,err:%v", kqueue.Like, comment.Id, true, err)
+			}
+			contentIDStr := strconv.FormatInt(comment.Id, 10)
+
+			err = l.svcCtx.KqPusherCounterEventClient.PushWithKey(l.ctx, contentIDStr, tool.BytesToString(msgBytes))
+			if err != nil {
+				logx.Errorf("IncreaseCommentView PushWithKey failed Type:%d,TargetID:%d,IsComment:%v,err:%v", kqueue.Like, comment.Id, true, err)
+			}
+		}
+	}()
 
 	resp := &pb.GetCommentsResp{}
 

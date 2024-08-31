@@ -2,9 +2,12 @@ package logic
 
 import (
 	"context"
+	"encoding/json"
+	"strconv"
 
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/internal/svc"
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/pb"
+	"github.com/me2seeks/echo-hub/common/kqueue"
 	"github.com/me2seeks/echo-hub/common/tool"
 	"github.com/me2seeks/echo-hub/common/xerr"
 	"github.com/pkg/errors"
@@ -35,6 +38,25 @@ func (l *GetFeedsByIDByPageLogic) GetFeedsByIDByPage(in *pb.GetFeedsByIDByPageRe
 	if err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetFeedsByIDByPage FindPageListByPageWithTotal err:%v", err)
 	}
+	go func() {
+		for _, feed := range findPageListByPageWithTotalResp {
+			msg := kqueue.CountEvent{
+				Type:      kqueue.View,
+				TargetID:  feed.Id,
+				IsComment: false,
+			}
+			msgBytes, err := json.Marshal(msg)
+			if err != nil {
+				logx.Errorf("IncreaseFeedView Marshal CountEvent failed Type:%d,TargetID:%d,IsComment:%v,err:%v", kqueue.Like, feed.Id, false, err)
+			}
+			contentIDStr := strconv.FormatInt(feed.Id, 10)
+
+			err = l.svcCtx.KqPusherCounterEventClient.PushWithKey(l.ctx, contentIDStr, tool.BytesToString(msgBytes))
+			if err != nil {
+				logx.Errorf("IncreaseFeedView PushWithKey failed Type:%d,TargetID:%d,IsComment:%v,err:%v", kqueue.Like, feed.Id, false, err)
+			}
+		}
+	}()
 
 	resp := &pb.GetFeedsByIDByPageResp{}
 	resp.Total = total

@@ -3,7 +3,6 @@ package logic
 import (
 	"context"
 
-	"github.com/jinzhu/copier"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/rpc/internal/svc"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/rpc/pb"
 	"github.com/me2seeks/echo-hub/app/usercenter/model"
@@ -38,7 +37,15 @@ func (l *GetUserInfoLogic) GetUserInfo(in *pb.GetUserInfoReq) (*pb.GetUserInfoRe
 		return nil, errors.Wrapf(ErrUserNoExistsError, "GetUserInfo  not exit UserID:%d", in.UserID)
 	}
 	resp := &pb.GetUserInfoResp{}
-	_ = copier.Copy(resp.User, user)
+	resp.User = &pb.User{
+		Id:       user.Id,
+		Email:    user.Email,
+		Nickname: user.Nickname,
+		Handel:   user.Handle,
+		Sex:      int32(user.Sex),
+		Avatar:   user.Avatar,
+		Bio:      user.Bio,
+	}
 
 	return resp, nil
 }

@@ -34,4 +34,3 @@ service interaction {
 	@handler unlike
 	delete /comment/like (DeleteCommentLikeReq) returns (DeleteCommentLikeResp)
 }
-

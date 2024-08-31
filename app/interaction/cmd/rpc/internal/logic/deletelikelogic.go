@@ -53,14 +53,14 @@ func (l *DeleteLikeLogic) DeleteLike(in *pb.DeleteLikeReq) (*pb.DeleteLikeResp, 
 		}
 		msgBytes, err := json.Marshal(msg)
 		if err != nil {
-			l.Errorf("DeleteLike Marshal CountEvent failed Type:%d,TargetID:%d,IsComment:%d,err:%v", kqueue.Like, in.Id, in.IsComment, err)
+			logx.Errorf("DeleteLike Marshal CountEvent failed Type:%d,TargetID:%d,IsComment:%v,err:%v", kqueue.Like, in.Id, in.IsComment, err)
 			return
 		}
 		contentIDStr := strconv.FormatInt(in.Id, 10)
 
 		err = l.svcCtx.KqPusherClient.PushWithKey(l.ctx, contentIDStr, tool.BytesToString(msgBytes))
 		if err != nil {
-			l.Errorf("DeleteLike PushWithKey failed contentIDStr:%s, msg:%s, err:%v", contentIDStr, string(msgBytes), err)
+			logx.Errorf("DeleteLike PushWithKey failed contentIDStr:%s, msg:%s, err:%v", contentIDStr, string(msgBytes), err)
 			return
 		}
 	}()

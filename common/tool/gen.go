@@ -22,9 +22,9 @@ func BuildQuery(ids []int64) string {
 	return builder.String()
 }
 
-func GenMediaURL(Value sql.NullString, baseURL string) string {
-	if !Value.Valid {
+func GenMediaURL(value sql.NullString, baseURL string) string {
+	if !value.Valid {
 		return ""
 	}
-	return baseURL + Value.String
+	return baseURL + value.String
 }

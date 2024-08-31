@@ -5,6 +5,7 @@ import (
 
 	"github.com/me2seeks/echo-hub/app/counter/cmd/rpc/internal/svc"
 	"github.com/me2seeks/echo-hub/app/counter/cmd/rpc/pb"
+	"github.com/me2seeks/echo-hub/app/counter/model"
 	"github.com/me2seeks/echo-hub/common/xerr"
 	"github.com/pkg/errors"
 
@@ -29,6 +30,13 @@ func (l *GetUserCounterLogic) GetUserCounter(in *pb.GetUserCounterRequest) (*pb.
 	// TODO use redis hash
 	userCount, err := l.svcCtx.UserStateModel.FindOne(l.ctx, in.UserId)
 	if err != nil {
+		if err == model.ErrNotFound {
+			return &pb.GetUserCounterResponse{
+				FollowingCount: 0,
+				FollowerCount:  0,
+				FeedCount:      0,
+			}, nil
+		}
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetUserCounter error: %v", err)
 	}
 

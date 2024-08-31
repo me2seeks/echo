@@ -26,7 +26,7 @@ func NewCounterEvent(ctx context.Context, svcCtx *svc.ServiceContext) *CounterEv
 }
 
 func (l *CounterEvent) Consume(ctx context.Context, key, val string) error {
-	logx.Debugf("CounterEvent key :%v , val :%v", key, val)
+	logx.Infof("CounterEvent key :%v , val :%v", key, val)
 	var event kqueue.CountEvent
 	err := json.Unmarshal(tool.StringToBytes(val), &event)
 	if err != nil {
@@ -90,6 +90,7 @@ func (l *CounterEvent) Consume(ctx context.Context, key, val string) error {
 			return errors.Wrapf(xerr.NewErrCode(xerr.DbError), "decrease like count TargetID:%d,IsComment:%t,err:%v", event.TargetID, event.IsComment, err)
 		}
 	case kqueue.Comment:
+		logx.Infof("Comment event:%v", event)
 		if !event.IsComment {
 			err := l.svcCtx.FeedCounterModel.IncreaseCommentCount(l.ctx, nil, event.TargetID)
 			if err != nil {
