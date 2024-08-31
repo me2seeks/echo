@@ -65,7 +65,7 @@ func (l *LoginLogic) Login(in *pb.LoginReq) (*pb.LoginResp, error) {
 func (l *LoginLogic) loginByEmail(email, password string) (int64, error) {
 	user, err := l.svcCtx.UserModel.FindOneByEmail(l.ctx, email)
 	if err != nil && err != model.ErrNotFound {
-		return 0, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "根据手机号查询用户信息失败,mobile:%s,err:%v", email, err)
+		return 0, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "根据邮箱查询用户信息失败,email:%s,err:%v", email, err)
 	}
 	if user == nil {
 		return 0, errors.Wrapf(ErrUserNoExistsError, "email:%s", email)
