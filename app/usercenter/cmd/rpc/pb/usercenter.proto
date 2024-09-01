@@ -37,7 +37,7 @@ message User {
     int64 id = 1;
     string email = 2;
     string nickname =3;
-    string handel = 4;
+    string handle = 4;
     int32  sex = 5;
     string avatar = 6;
     string bio = 7;

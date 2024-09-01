@@ -41,7 +41,7 @@ func (l *GetUserInfoLogic) GetUserInfo(in *pb.GetUserInfoReq) (*pb.GetUserInfoRe
 		Id:       user.Id,
 		Email:    user.Email,
 		Nickname: user.Nickname,
-		Handel:   user.Handle,
+		Handle:   user.Handle,
 		Sex:      int32(user.Sex),
 		Avatar:   user.Avatar,
 		Bio:      user.Bio,
