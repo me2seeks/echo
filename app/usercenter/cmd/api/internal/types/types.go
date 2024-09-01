@@ -69,7 +69,7 @@ type User struct {
 	Id       int64  `json:"id"`
 	Email    string `json:"email"`
 	Nickname string `json:"nickname"`
-	Handle   string `json:"Handle"`
+	Handle   string `json:"handle"`
 	Sex      int32  `json:"sex"`
 	Avatar   string `json:"avatar"`
 	Bio      string `json:"bio"`
