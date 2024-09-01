@@ -38,7 +38,7 @@ Redis:
   Pass: 
   Key: counter-rpc
 Mysql:
-  DataSource: root:bf17tk6d7t56@tcp(10.2.12.14:32699)/echo-hub?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+  DataSource: root:bf17tk6d7t56@tcp(10.2.12.14:32702)/echo-hub?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
 Cache:
   - Host: 10.2.12.14:32699
     Pass: 

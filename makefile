@@ -85,7 +85,7 @@ stop: ## 停止目标
 	echo -n "stop $$i"; \
 	sleep 1; \
 	echo " "; \
-done
+	done
 
 restart: stop start ## 重启项目
 
