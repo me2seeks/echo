@@ -29,5 +29,5 @@ type SearchUsersResp struct {
 type User struct {
 	Id       int64  `json:"id"`
 	Nickname string `json:"nickname"`
-	Handle   string `json:"Handle"`
+	Handle   string `json:"handle"`
 }

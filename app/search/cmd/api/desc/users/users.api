@@ -3,7 +3,7 @@ syntax = "v1"
 type User {
 	Id       int64  `json:"id"`
 	Nickname string `json:"nickname"`
-	Handle   string `json:"Handle"`
+	Handle   string `json:"handle"`
 }
 
 type (
