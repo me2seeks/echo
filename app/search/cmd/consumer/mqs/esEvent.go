@@ -43,6 +43,7 @@ func (l *EsEvent) Consume(ctx context.Context, key, val string) error {
 			ID:        event.UserID,
 			Handle:    event.Handle,
 			Nickname:  event.Content,
+			Avatar:    event.Avatar,
 			CreatedAt: event.CreatedAt,
 		})
 		if err != nil {

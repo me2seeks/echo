@@ -37,6 +37,7 @@ type EsEvent struct {
 	ID        int64
 	UserID    int64
 	Handle    string
+	Avatar    string
 	Content   string
 	CreatedAt time.Time
 }

@@ -85,6 +85,7 @@ func (l *RegisterLogic) Register(in *pb.RegisterReq) (*pb.RegisterResp, error) {
 			UserID:    user.Id,
 			Handle:    user.Handle,
 			Content:   user.Nickname,
+			Avatar:    l.svcCtx.Config.BaseURL + user.Avatar,
 			CreatedAt: time.Now(),
 		}
 		msgBytes, err := json.Marshal(msg)

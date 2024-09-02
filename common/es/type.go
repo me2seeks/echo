@@ -6,6 +6,7 @@ type User struct {
 	ID        int64
 	Handle    string
 	Nickname  string
+	Avatar    string
 	CreatedAt time.Time
 }
 
