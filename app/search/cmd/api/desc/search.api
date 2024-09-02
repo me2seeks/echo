@@ -20,7 +20,7 @@ type (
 service search {
 	@doc "search users"
 	@handler search
-	post /users (SearchReq) returns (SearchUsersResp)
+	get /users (SearchReq) returns (SearchUsersResp)
 }
 
 @server (
@@ -30,6 +30,5 @@ service search {
 service search {
 	@doc "search feeds"
 	@handler search
-	post /feeds (SearchReq) returns (SearchFeedsResp)
+	get /feeds (SearchReq) returns (SearchFeedsResp)
 }
-

@@ -16,7 +16,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				// search feeds
-				Method:  http.MethodPost,
+				Method:  http.MethodGet,
 				Path:    "/feeds",
 				Handler: feed.SearchHandler(serverCtx),
 			},
@@ -28,7 +28,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				// search users
-				Method:  http.MethodPost,
+				Method:  http.MethodGet,
 				Path:    "/users",
 				Handler: user.SearchHandler(serverCtx),
 			},
