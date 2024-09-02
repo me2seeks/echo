@@ -3,7 +3,6 @@ package user
 import (
 	"context"
 
-	"github.com/jinzhu/copier"
 	"github.com/me2seeks/echo-hub/app/search/cmd/api/internal/svc"
 	"github.com/me2seeks/echo-hub/app/search/cmd/api/internal/types"
 	"github.com/me2seeks/echo-hub/app/search/cmd/rpc/search"
@@ -37,7 +36,15 @@ func (l *SearchLogic) Search(req *types.SearchReq) (*types.SearchUsersResp, erro
 	}
 
 	resp := &types.SearchUsersResp{}
-	_ = copier.Copy(resp, searchUsersResp)
+	for _, user := range searchUsersResp.Users {
+		resp.Users = append(resp.Users, types.User{
+			Id:       user.Id,
+			Nickname: user.Nickname,
+			Handle:   user.Handle,
+			Avatar:   user.Avatar,
+			CreateAt: user.CreateAt.AsTime().Unix(),
+		})
+	}
 
 	return resp, nil
 }

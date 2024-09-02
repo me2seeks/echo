@@ -32,3 +32,4 @@ service search {
 	@handler search
 	get /feeds (SearchReq) returns (SearchFeedsResp)
 }
+

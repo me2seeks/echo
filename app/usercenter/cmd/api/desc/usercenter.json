@@ -376,6 +376,9 @@
         "nickname": {
           "type": "string"
         },
+        "avatar": {
+          "type": "string"
+        },
         "password": {
           "type": "string"
         }
@@ -385,6 +388,7 @@
         "email",
         "handle",
         "nickname",
+        "avatar",
         "password"
       ]
     },
@@ -469,7 +473,7 @@
         "nickname": {
           "type": "string"
         },
-        "Handle": {
+        "handle": {
           "type": "string"
         },
         "sex": {
@@ -488,7 +492,7 @@
         "id",
         "email",
         "nickname",
-        "Handle",
+        "handle",
         "sex",
         "avatar",
         "bio"

@@ -71,7 +71,8 @@ start: ## 运行目标
 	nohup ./target/search-api/search-api -f ./target/search-api/search.yaml  > /dev/null 2>&1 &
 
 stop: ## 停止目标
-	-pkill -f usercenter-rpc                                                                                                -pkill -f usercenter-api
+	-pkill -f usercenter-rpc  
+	-pkill -f usercenter-api
 	-pkill -f content-rpc
 	-pkill -f content-api
 	-pkill -f interaction-rpc
@@ -79,7 +80,8 @@ stop: ## 停止目标
 	-pkill -f counter-rpc
 	-pkill -f counter-consumer
 	-pkill -f counter-api
-	-pkill -f search-rpc                                                                                                    -pkill -f search-consumer
+	-pkill -f search-rpc
+	-pkill -f search-consumer
 	-pkill -f search-api
 	@for i in 5 4 3 2 1; do \
 	echo -n "stop $$i"; \

@@ -57,8 +57,9 @@ message RegisterReq {
     string handle = 2;
     string nickname = 3;
     string password = 4;
-    string authKey = 5;
-    string authType = 6;
+    string avatar = 5;
+    string authKey = 6;
+    string authType = 7;
 }
 message RegisterResp {
     string accessToken = 1;

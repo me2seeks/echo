@@ -6,7 +6,8 @@ import (
 
 type Config struct {
 	zrpc.RpcServerConf
-	EsConf struct {
+	BaseURL string
+	EsConf  struct {
 		Address            []string
 		Username           string
 		Password           string

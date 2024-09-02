@@ -51,6 +51,7 @@ func (l *RegisterLogic) Register(in *pb.RegisterReq) (*pb.RegisterResp, error) {
 		Email:    in.Email,
 		Nickname: in.Nickname,
 		Handle:   in.Handle,
+		Avatar:   in.Avatar,
 	}
 
 	if len(user.Nickname) == 0 {
@@ -85,7 +86,7 @@ func (l *RegisterLogic) Register(in *pb.RegisterReq) (*pb.RegisterResp, error) {
 			UserID:    user.Id,
 			Handle:    user.Handle,
 			Content:   user.Nickname,
-			Avatar:    l.svcCtx.Config.BaseURL + user.Avatar,
+			Avatar:    user.Avatar,
 			CreatedAt: time.Now(),
 		}
 		msgBytes, err := json.Marshal(msg)

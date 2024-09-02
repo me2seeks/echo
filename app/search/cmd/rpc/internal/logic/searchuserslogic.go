@@ -88,12 +88,16 @@ func (l *SearchUsersLogic) SearchUsers(in *pb.SearchReq) (*pb.SearchUsersResp, e
 
 	resp := &pb.SearchUsersResp{}
 	for _, hit := range response.Hits.Hits {
-		resp.Users = append(resp.Users, &pb.User{
+		user := &pb.User{
 			Id:       hit.Source.ID,
 			Nickname: hit.Source.Nickname,
 			Handle:   hit.Source.Handle,
 			CreateAt: timestamppb.New(hit.Source.CreatedAt),
-		})
+		}
+		if hit.Source.Avatar != "" {
+			user.Avatar = l.svcCtx.Config.BaseURL + hit.Source.Avatar
+		}
+		resp.Users = append(resp.Users, user)
 	}
 	return resp, nil
 }

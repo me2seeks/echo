@@ -39,6 +39,7 @@ type RegisterReq struct {
 	Email    string `json:"email"`
 	Handle   string `json:"handle"`
 	Nickname string `json:"nickname"`
+	Avatar   string `json:"avatar"`
 	Password string `json:"password"`
 }
 

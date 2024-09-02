@@ -34,6 +34,7 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (*types.RegisterResp, e
 		Handle:   req.Handle,
 		Nickname: req.Nickname,
 		Password: req.Password,
+		Avatar:   req.Avatar,
 		AuthKey:  req.Email,
 		AuthType: model.UserAuthTypeSystem,
 	})

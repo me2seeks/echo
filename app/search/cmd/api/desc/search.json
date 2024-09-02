@@ -16,7 +16,7 @@
   ],
   "paths": {
     "/search/feeds": {
-      "post": {
+      "get": {
         "summary": "search feeds",
         "operationId": "search",
         "responses": {
@@ -29,12 +29,24 @@
         },
         "parameters": [
           {
-            "name": "body",
-            "in": "body",
+            "name": "keyword",
+            "in": "query",
             "required": true,
-            "schema": {
-              "$ref": "#/definitions/SearchReq"
-            }
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
           }
         ],
         "tags": [
@@ -46,7 +58,7 @@
       }
     },
     "/search/users": {
-      "post": {
+      "get": {
         "summary": "search users",
         "operationId": "search",
         "responses": {
@@ -59,12 +71,24 @@
         },
         "parameters": [
           {
-            "name": "body",
-            "in": "body",
+            "name": "keyword",
+            "in": "query",
             "required": true,
-            "schema": {
-              "$ref": "#/definitions/SearchReq"
-            }
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
           }
         ],
         "tags": [
@@ -182,15 +206,24 @@
         "nickname": {
           "type": "string"
         },
-        "Handle": {
+        "handle": {
           "type": "string"
+        },
+        "avatar": {
+          "type": "string"
+        },
+        "createAt": {
+          "type": "integer",
+          "format": "int64"
         }
       },
       "title": "User",
       "required": [
         "id",
         "nickname",
-        "Handle"
+        "handle",
+        "avatar",
+        "createAt"
       ]
     }
   },

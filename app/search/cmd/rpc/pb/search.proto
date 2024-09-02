@@ -16,7 +16,8 @@ message User{
     int64 id =1;
     string nickname = 2;
     string handle = 3;
-    google.protobuf.Timestamp createAt = 4;
+    string avatar = 4;
+    google.protobuf.Timestamp createAt = 5;
 }
 
 message SearchReq {

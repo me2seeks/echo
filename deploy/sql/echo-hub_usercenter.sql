@@ -27,7 +27,7 @@ CREATE TABLE `user` (
 -- ----------------------------
 DROP TABLE IF EXISTS `user_auth`;
 CREATE TABLE `user_auth` (
-    `id` bigint NOT NULL,
+    `id` bigint NOT NULL AUTO_INCREMENT,
     `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `update_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `delete_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -43,6 +43,7 @@ CREATE TABLE `user_auth` (
 -- ----------------------------
 -- user_relation
 -- ----------------------------
+DROP TABLE IF EXISTS `user_relation`;
 CREATE TABLE `user_relation` (
     `id` bigint NOT NULL,
     `follower_id` bigint NOT NULL COMMENT '关注者的用户ID',

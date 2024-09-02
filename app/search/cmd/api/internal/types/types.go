@@ -30,4 +30,6 @@ type User struct {
 	Id       int64  `json:"id"`
 	Nickname string `json:"nickname"`
 	Handle   string `json:"handle"`
+	Avatar   string `json:"avatar"`
+	CreateAt int64  `json:"createAt"`
 }
