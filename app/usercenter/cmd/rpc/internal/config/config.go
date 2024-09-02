@@ -15,6 +15,7 @@ type Config struct {
 		DataSource string
 	}
 	Cache                    cache.CacheConf
+	BaseURL                  string
 	KqPusherCounterEventConf struct {
 		Brokers []string
 		Topic   string

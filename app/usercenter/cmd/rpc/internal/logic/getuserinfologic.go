@@ -43,8 +43,10 @@ func (l *GetUserInfoLogic) GetUserInfo(in *pb.GetUserInfoReq) (*pb.GetUserInfoRe
 		Nickname: user.Nickname,
 		Handle:   user.Handle,
 		Sex:      int32(user.Sex),
-		Avatar:   user.Avatar,
 		Bio:      user.Bio,
+	}
+	if user.Avatar != "" {
+		resp.User.Avatar = l.svcCtx.Config.BaseURL + user.Avatar
 	}
 
 	return resp, nil
