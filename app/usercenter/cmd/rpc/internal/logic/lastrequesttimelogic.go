@@ -44,15 +44,15 @@ func (l *LastRequestTimeLogic) LastRequestTime(in *pb.LastRequestTimeReq) (*pb.L
 		}
 		userLastRequest.LastRequestTime = time.Time{}
 	}
-	go func() {
-		_, err = l.svcCtx.UserLastRequestModel.Update(l.ctx, nil, &model.UserLastRequest{
-			UserId:          userLastRequest.UserId,
-			LastRequestTime: time.Now(),
-		})
-		if err != nil {
-			l.Error("LastRequestTime Update failed: %v", err)
-		}
-	}()
+
+	err = l.svcCtx.UserLastRequestModel.UpdateWithVersion(l.ctx, nil, &model.UserLastRequest{
+		UserId:          in.UserID,
+		LastRequestTime: time.Now(),
+		DeleteAt:        userLastRequest.DeleteAt,
+	})
+	if err != nil {
+		l.Error("LastRequestTime Update failed: %v", err)
+	}
 
 	return &pb.LastRequestTimeResp{
 		LastRequestTime: timestamppb.New(userLastRequest.LastRequestTime),
