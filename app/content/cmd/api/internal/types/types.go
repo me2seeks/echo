@@ -82,7 +82,7 @@ type Feed struct {
 type GetCommentsByPageReq struct {
 	CommentID int64 `path:"commentID"`
 	Page      int64 `form:"page"`
-	PageSize  int64 `form:"page_size"`
+	PageSize  int64 `form:"pageSize"`
 }
 
 type GetCommentsByPageResp struct {
@@ -93,7 +93,7 @@ type GetCommentsByPageResp struct {
 type GetFeedCommentsByPageReq struct {
 	FeedID   int64 `path:"feedID"`
 	Page     int64 `form:"page"`
-	PageSize int64 `form:"page_size"`
+	PageSize int64 `form:"pageSize"`
 }
 
 type GetFeedCommentsByPageResp struct {
@@ -104,7 +104,7 @@ type GetFeedCommentsByPageResp struct {
 type GetFeedsByPageReq struct {
 	UserID   int64 `path:"userID"`
 	Page     int64 `form:"page"`
-	PageSize int64 `form:"page_size"`
+	PageSize int64 `form:"pageSize"`
 }
 
 type GetFeedsByPageResp struct {
@@ -114,7 +114,7 @@ type GetFeedsByPageResp struct {
 
 type GetFollowingFeedsByPageReq struct {
 	Page     int64 `form:"page"`
-	PageSize int64 `form:"page_size"`
+	PageSize int64 `form:"pageSize"`
 }
 
 type GetFollowingFeedsByPageResp struct {

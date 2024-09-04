@@ -104,7 +104,7 @@
             "format": "int64"
           },
           {
-            "name": "page_size",
+            "name": "pageSize",
             "in": "query",
             "required": true,
             "type": "integer",
@@ -202,7 +202,7 @@
             "format": "int64"
           },
           {
-            "name": "page_size",
+            "name": "pageSze",
             "in": "query",
             "required": true,
             "type": "integer",
@@ -249,7 +249,7 @@
             "format": "int64"
           },
           {
-            "name": "page_size",
+            "name": "pageSize",
             "in": "query",
             "required": true,
             "type": "integer",
@@ -327,7 +327,7 @@
             "format": "int64"
           },
           {
-            "name": "page_size",
+            "name": "pageSize",
             "in": "query",
             "required": true,
             "type": "integer",
@@ -365,6 +365,11 @@
         ],
         "tags": [
           "upload"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
         ]
       }
     }
@@ -635,7 +640,7 @@
           "type": "integer",
           "format": "int64"
         },
-        "page_size": {
+        "pageSize": {
           "type": "integer",
           "format": "int64"
         }
@@ -643,7 +648,7 @@
       "title": "GetCommentsByPageReq",
       "required": [
         "page",
-        "page_size"
+        "pageSize"
       ]
     },
     "GetCommentsByPageResp": {
@@ -673,7 +678,7 @@
           "type": "integer",
           "format": "int64"
         },
-        "page_size": {
+        "pageSize": {
           "type": "integer",
           "format": "int64"
         }
@@ -681,7 +686,7 @@
       "title": "GetFeedCommentsByPageReq",
       "required": [
         "page",
-        "page_size"
+        "pageSize"
       ]
     },
     "GetFeedCommentsByPageResp": {
@@ -711,7 +716,7 @@
           "type": "integer",
           "format": "int64"
         },
-        "page_size": {
+        "pageSize": {
           "type": "integer",
           "format": "int64"
         }
@@ -719,7 +724,7 @@
       "title": "GetFeedsByPageReq",
       "required": [
         "page",
-        "page_size"
+        "pageSize"
       ]
     },
     "GetFeedsByPageResp": {
@@ -749,7 +754,7 @@
           "type": "integer",
           "format": "int64"
         },
-        "page_size": {
+        "pageSze": {
           "type": "integer",
           "format": "int64"
         }
@@ -757,7 +762,7 @@
       "title": "GetFollowingFeedsByPageReq",
       "required": [
         "page",
-        "page_size"
+        "pageSze"
       ]
     },
     "GetFollowingFeedsByPageResp": {

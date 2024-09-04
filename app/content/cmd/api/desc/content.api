@@ -89,7 +89,7 @@ type (
 	GetFeedCommentsByPageReq {
 		FeedID   int64 `path:"feedID"`
 		Page     int64 `form:"page"`
-		PageSize int64 `form:"page_size"`
+		PageSize int64 `form:"pageSize"`
 	}
 	GetFeedCommentsByPageResp {
 		Comments []Comment `json:"comment"`

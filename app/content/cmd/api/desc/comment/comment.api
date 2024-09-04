@@ -15,7 +15,7 @@ type (
 	GetCommentsByPageReq {
 		CommentID int64 `path:"commentID"`
 		Page      int64 `form:"page"`
-		PageSize  int64 `form:"page_size"`
+		PageSize  int64 `form:"pageSize"`
 	}
 	GetCommentsByPageResp {
 		Comments []Comment `json:"comment"`
