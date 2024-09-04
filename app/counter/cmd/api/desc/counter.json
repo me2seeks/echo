@@ -99,24 +99,24 @@
     "GetContentCounterResp": {
       "type": "object",
       "properties": {
-        "comment_count": {
+        "commentCount": {
           "type": "integer",
           "format": "int64"
         },
-        "like_count": {
+        "likeCount": {
           "type": "integer",
           "format": "int64"
         },
-        "view_count": {
+        "viewCount": {
           "type": "integer",
           "format": "int64"
         }
       },
       "title": "GetContentCounterResp",
       "required": [
-        "comment_count",
-        "like_count",
-        "view_count"
+        "commentCount",
+        "likeCount",
+        "viewCount"
       ]
     },
     "GetUserCounterReq": {
@@ -126,24 +126,24 @@
     "GetUserCounterResp": {
       "type": "object",
       "properties": {
-        "following_count": {
+        "followingCount": {
           "type": "integer",
           "format": "int64"
         },
-        "follower_count": {
+        "followerCount": {
           "type": "integer",
           "format": "int64"
         },
-        "feed_count": {
+        "feedCount": {
           "type": "integer",
           "format": "int64"
         }
       },
       "title": "GetUserCounterResp",
       "required": [
-        "following_count",
-        "follower_count",
-        "feed_count"
+        "followingCount",
+        "followerCount",
+        "feedCount"
       ]
     }
   },

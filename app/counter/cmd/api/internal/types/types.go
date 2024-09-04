@@ -6,9 +6,9 @@ type GetContentCounterReq struct {
 }
 
 type GetContentCounterResp struct {
-	CommentCount int64 `json:"comment_count"`
-	LikeCount    int64 `json:"like_count"`
-	ViewCount    int64 `json:"view_count"`
+	CommentCount int64 `json:"commentCount"`
+	LikeCount    int64 `json:"likeCount"`
+	ViewCount    int64 `json:"viewCount"`
 }
 
 type GetUserCounterReq struct {
@@ -16,7 +16,7 @@ type GetUserCounterReq struct {
 }
 
 type GetUserCounterResp struct {
-	FollowingCount int64 `json:"following_count"`
-	FollowerCount  int64 `json:"follower_count"`
-	FeedCount      int64 `json:"feed_count"`
+	FollowingCount int64 `json:"followingCount"`
+	FollowerCount  int64 `json:"followerCount"`
+	FeedCount      int64 `json:"feedCount"`
 }
