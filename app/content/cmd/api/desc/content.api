@@ -80,9 +80,9 @@ service content {
 	@doc "delete comment"
 	@handler delete
 	delete / (DeleteCommentReq) returns (DeleteCommentResp)
-	// @doc "update comment"
-	// @handler update
-	// put / (UpdateCommentReq) returns (UpdateCommentResp)
+// @doc "update comment"
+// @handler update
+// put / (UpdateCommentReq) returns (UpdateCommentResp)
 }
 
 type (
@@ -96,3 +96,4 @@ type (
 		Total    int64     `json:"total"`
 	}
 )
+

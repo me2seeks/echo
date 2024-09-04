@@ -8,7 +8,7 @@ type Feed {
 	Media1      string `json:"media1"`
 	Media2      string `json:"media2"`
 	Media3      string `json:"media3"`
-	Create_time int64  `json:"create_time"`
+	Create_time int64  `json:"createTime"`
 }
 
 type (
@@ -26,7 +26,7 @@ type (
 type (
 	GetFollowingFeedsByPageReq {
 		Page     int64 `form:"page"`
-		PageSize int64 `form:"pageSze"`
+		PageSize int64 `form:"pageSize"`
 	}
 	GetFollowingFeedsByPageResp {
 		Feeds []Feed `json:"feed"`

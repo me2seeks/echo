@@ -12,11 +12,11 @@ type Comment struct {
 	Media1      string `json:"media1"`
 	Media2      string `json:"media2"`
 	Media3      string `json:"media3"`
-	Create_time int64  `json:"create_time"`
+	Create_time int64  `json:"createTime"`
 }
 
 type CreateCommentReq struct {
-	CommentID int64  `json:"comment_id"`
+	CommentID int64  `json:"commentId"`
 	Content   string `json:"content"`
 	Media0    string `json:"media0"`
 	Media1    string `json:"media1"`
@@ -55,7 +55,7 @@ type CreateFeedResp struct {
 
 type DeleteCommentReq struct {
 	ID       int64 `json:"id"`
-	ParentID int64 `json:"parent_id"`
+	ParentID int64 `json:"parentId"`
 }
 
 type DeleteCommentResp struct {
@@ -76,7 +76,7 @@ type Feed struct {
 	Media1      string `json:"media1"`
 	Media2      string `json:"media2"`
 	Media3      string `json:"media3"`
-	Create_time int64  `json:"create_time"`
+	Create_time int64  `json:"createTime"`
 }
 
 type GetCommentsByPageReq struct {

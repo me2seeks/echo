@@ -202,7 +202,7 @@
             "format": "int64"
           },
           {
-            "name": "pageSze",
+            "name": "pageSize",
             "in": "query",
             "required": true,
             "type": "integer",
@@ -405,7 +405,7 @@
         "media3": {
           "type": "string"
         },
-        "create_time": {
+        "createTime": {
           "type": "integer",
           "format": "int64"
         }
@@ -420,13 +420,13 @@
         "media1",
         "media2",
         "media3",
-        "create_time"
+        "createTime"
       ]
     },
     "CreateCommentReq": {
       "type": "object",
       "properties": {
-        "comment_id": {
+        "commentId": {
           "type": "integer",
           "format": "int64"
         },
@@ -448,7 +448,7 @@
       },
       "title": "CreateCommentReq",
       "required": [
-        "comment_id",
+        "commentId",
         "content",
         "media0",
         "media1",
@@ -558,7 +558,7 @@
           "type": "integer",
           "format": "int64"
         },
-        "parent_id": {
+        "parentId": {
           "type": "integer",
           "format": "int64"
         }
@@ -566,7 +566,7 @@
       "title": "DeleteCommentReq",
       "required": [
         "id",
-        "parent_id"
+        "parentId"
       ]
     },
     "DeleteCommentResp": {
@@ -616,7 +616,7 @@
         "media3": {
           "type": "string"
         },
-        "create_time": {
+        "createTime": {
           "type": "integer",
           "format": "int64"
         }
@@ -630,7 +630,7 @@
         "media1",
         "media2",
         "media3",
-        "create_time"
+        "createTime"
       ]
     },
     "GetCommentsByPageReq": {
@@ -754,7 +754,7 @@
           "type": "integer",
           "format": "int64"
         },
-        "pageSze": {
+        "pageSize": {
           "type": "integer",
           "format": "int64"
         }
@@ -762,7 +762,7 @@
       "title": "GetFollowingFeedsByPageReq",
       "required": [
         "page",
-        "pageSze"
+        "pageSize"
       ]
     },
     "GetFollowingFeedsByPageResp": {
