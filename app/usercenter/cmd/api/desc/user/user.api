@@ -1,7 +1,7 @@
 syntax = "v1"
 
 type User {
-	Id       int64  `json:"id"`
+	Id       string `json:"id"`
 	Email    string `json:"email"`
 	Nickname string `json:"nickname"`
 	Handle   string `json:"handle"`

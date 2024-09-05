@@ -29,12 +29,13 @@ func NewDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DetailLogi
 }
 
 func (l *DetailLogic) Detail(req *types.UserInfoReq) (*types.UserInfoResp, error) {
-	if req.UserID == 0 {
-		req.UserID = ctxdata.GetUIDFromCtx(l.ctx)
+	userID := ctxdata.GetUIDFromCtx(l.ctx)
+	if req.UserID != 0 {
+		userID = req.UserID
 	}
 
 	getUserInfoResp, err := l.svcCtx.UsercenterRPC.GetUserInfo(l.ctx, &usercenter.GetUserInfoReq{
-		UserID: req.UserID,
+		UserID: userID,
 	})
 	if err != nil {
 		return nil, err

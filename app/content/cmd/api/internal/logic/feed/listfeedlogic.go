@@ -2,6 +2,7 @@ package feed
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/me2seeks/echo-hub/app/content/cmd/api/internal/svc"
 	"github.com/me2seeks/echo-hub/app/content/cmd/api/internal/types"
@@ -40,14 +41,14 @@ func (l *ListFeedLogic) ListFeed(req *types.GetFeedsByPageReq) (*types.GetFeedsB
 
 	for _, feed := range getFeedsByUserIDByPageResp.Feeds {
 		resp.Feeds = append(resp.Feeds, types.Feed{
-			ID:          feed.Id,
-			UserID:      feed.UserID,
-			Content:     feed.Content,
-			Media0:      feed.Media0,
-			Media1:      feed.Media1,
-			Media2:      feed.Media2,
-			Media3:      feed.Media3,
-			Create_time: feed.CreateTime.AsTime().Unix(),
+			ID:         strconv.FormatInt(feed.Id, 10),
+			UserID:     strconv.FormatInt(feed.UserID, 10),
+			Content:    feed.Content,
+			Media0:     feed.Media0,
+			Media1:     feed.Media1,
+			Media2:     feed.Media2,
+			Media3:     feed.Media3,
+			CreateTime: feed.CreateTime.AsTime().Unix(),
 		})
 	}
 

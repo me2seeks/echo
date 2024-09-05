@@ -13,7 +13,7 @@ type FollowersReq struct {
 }
 
 type FollowersResp struct {
-	Followers []int64 `json:"followers"`
+	Followers []string `json:"followers"`
 }
 
 type FollowingsReq struct {
@@ -21,7 +21,7 @@ type FollowingsReq struct {
 }
 
 type FollowingsResp struct {
-	Followings []int64 `json:"followings"`
+	Followings []string `json:"followings"`
 }
 
 type LoginReq struct {
@@ -67,7 +67,7 @@ type UpdateUserInfoResp struct {
 }
 
 type User struct {
-	Id       int64  `json:"id"`
+	Id       string `json:"id"`
 	Email    string `json:"email"`
 	Nickname string `json:"nickname"`
 	Handle   string `json:"handle"`
@@ -82,7 +82,7 @@ type UserInfoReq struct {
 
 type UserInfoResp struct {
 	UserInfo struct {
-		Id       int64  `json:"id"`
+		Id       string `json:"id"`
 		Email    string `json:"email"`
 		Nickname string `json:"nickname"`
 		Handle   string `json:"handle"`

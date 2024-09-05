@@ -2,14 +2,14 @@
 package types
 
 type Feed struct {
-	Id      int64  `json:"id"`
-	Content string `json:"content"`
-	UserID  int64  `json:"userID"`
-	Media0  string `json:"media0"`
-	Media1  string `json:"media1"`
-	Media2  string `json:"media2"`
-	Media3  string `json:"media3"`
-	Created int64  `json:"created"`
+	Id        string `json:"id"`
+	Content   string `json:"content"`
+	UserID    string `json:"userID"`
+	Media0    string `json:"media0"`
+	Media1    string `json:"media1"`
+	Media2    string `json:"media2"`
+	Media3    string `json:"media3"`
+	CreatTime int64  `json:"createTime"`
 }
 
 type SearchFeedsResp struct {
@@ -27,9 +27,9 @@ type SearchUsersResp struct {
 }
 
 type User struct {
-	Id       int64  `json:"id"`
-	Nickname string `json:"nickname"`
-	Handle   string `json:"handle"`
-	Avatar   string `json:"avatar"`
-	CreateAt int64  `json:"createAt"`
+	Id         string `json:"id"`
+	Nickname   string `json:"nickname"`
+	Handle     string `json:"handle"`
+	Avatar     string `json:"avatar"`
+	CreateTime int64  `json:"createTime"`
 }

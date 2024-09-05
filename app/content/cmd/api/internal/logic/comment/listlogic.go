@@ -2,6 +2,7 @@ package comment
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/me2seeks/echo-hub/app/content/cmd/api/internal/svc"
 	"github.com/me2seeks/echo-hub/app/content/cmd/api/internal/types"
@@ -40,14 +41,14 @@ func (l *ListLogic) List(req *types.GetCommentsByPageReq) (*types.GetCommentsByP
 
 	for _, comment := range getCommentsByPageResp.Comments {
 		resp.Comments = append(resp.Comments, types.Comment{
-			ID:          comment.Id,
-			UserID:      comment.UserID,
-			Content:     comment.Content,
-			Media0:      comment.Media0,
-			Media1:      comment.Media1,
-			Media2:      comment.Media2,
-			Media3:      comment.Media3,
-			Create_time: comment.CreateTime.AsTime().Unix(),
+			ID:         strconv.FormatInt(comment.Id, 10),
+			UserID:     strconv.FormatInt(comment.UserID, 10),
+			Content:    comment.Content,
+			Media0:     comment.Media0,
+			Media1:     comment.Media1,
+			Media2:     comment.Media2,
+			Media3:     comment.Media3,
+			CreateTime: comment.CreateTime.AsTime().Unix(),
 		})
 	}
 	return resp, nil

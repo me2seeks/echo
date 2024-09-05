@@ -6,6 +6,7 @@ import (
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/api/internal/svc"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/api/internal/types"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/rpc/usercenter"
+	"github.com/me2seeks/echo-hub/common/tool"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -26,7 +27,7 @@ func NewFollowingsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Follow
 }
 
 func (l *FollowingsLogic) Followings(req *types.FollowingsReq) (*types.FollowingsResp, error) {
-	resp, err := l.svcCtx.UsercenterRPC.GetFollowings(l.ctx, &usercenter.GetFollowingsReq{
+	getFollowingsResp, err := l.svcCtx.UsercenterRPC.GetFollowings(l.ctx, &usercenter.GetFollowingsReq{
 		UserID: req.UserID,
 	})
 	if err != nil {
@@ -34,6 +35,6 @@ func (l *FollowingsLogic) Followings(req *types.FollowingsReq) (*types.Following
 	}
 
 	return &types.FollowingsResp{
-		Followings: resp.IDs,
+		Followings: tool.ConvertInt64SliceToStringSlice(getFollowingsResp.IDs),
 	}, nil
 }

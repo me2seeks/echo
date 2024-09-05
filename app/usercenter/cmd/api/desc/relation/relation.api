@@ -21,7 +21,7 @@ type (
 		UserID int64 `json:"userID"`
 	}
 	FollowersResp {
-		Followers []int64 `json:"followers"`
+		Followers []string `json:"followers"`
 	}
 )
 
@@ -30,6 +30,6 @@ type (
 		UserID int64 `json:"userID"`
 	}
 	FollowingsResp {
-		Followings []int64 `json:"followings"`
+		Followings []string `json:"followings"`
 	}
 )

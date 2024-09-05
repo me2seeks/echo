@@ -2,6 +2,7 @@ package feed
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/content"
 	"github.com/me2seeks/echo-hub/app/search/cmd/api/internal/svc"
@@ -49,14 +50,14 @@ func (l *SearchLogic) Search(req *types.SearchReq) (*types.SearchFeedsResp, erro
 		// _ = copier.Copy(&resp.Feeds, contentResp.Feeds)
 		for _, feed := range contentResp.Feeds {
 			resp.Feeds = append(resp.Feeds, types.Feed{
-				Id:      feed.Id,
-				Content: feed.Content,
-				UserID:  feed.UserID,
-				Media0:  feed.Media0,
-				Media1:  feed.Media1,
-				Media2:  feed.Media2,
-				Media3:  feed.Media3,
-				Created: feed.CreateTime.AsTime().Unix(),
+				Id:        strconv.FormatInt(feed.Id, 10),
+				Content:   feed.Content,
+				UserID:    strconv.FormatInt(feed.UserID, 10),
+				Media0:    feed.Media0,
+				Media1:    feed.Media1,
+				Media2:    feed.Media2,
+				Media3:    feed.Media3,
+				CreatTime: feed.CreateTime.AsTime().Unix(),
 			})
 		}
 	}

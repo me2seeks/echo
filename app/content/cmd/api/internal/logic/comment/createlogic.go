@@ -2,6 +2,7 @@ package comment
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/me2seeks/echo-hub/app/content/cmd/api/internal/svc"
 	"github.com/me2seeks/echo-hub/app/content/cmd/api/internal/types"
@@ -42,6 +43,6 @@ func (l *CreateLogic) Create(req *types.CreateCommentReq) (*types.CreateCommentR
 		return nil, err
 	}
 	return &types.CreateCommentResp{
-		ID: resp.Id,
+		ID: strconv.FormatInt(resp.Id, 10),
 	}, nil
 }

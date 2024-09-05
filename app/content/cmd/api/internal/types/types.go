@@ -4,15 +4,15 @@ package types
 import "github.com/me2seeks/echo-hub/common/upload"
 
 type Comment struct {
-	ID          int64  `json:"id"`
-	FeedID      int64  `json:"feedID"`
-	UserID      int64  `json:"userID"`
-	Content     string `json:"content"`
-	Media0      string `json:"media0"`
-	Media1      string `json:"media1"`
-	Media2      string `json:"media2"`
-	Media3      string `json:"media3"`
-	Create_time int64  `json:"createTime"`
+	ID         string `json:"id"`
+	FeedID     string `json:"feedID"`
+	UserID     string `json:"userID"`
+	Content    string `json:"content"`
+	Media0     string `json:"media0"`
+	Media1     string `json:"media1"`
+	Media2     string `json:"media2"`
+	Media3     string `json:"media3"`
+	CreateTime int64  `json:"createTime"`
 }
 
 type CreateCommentReq struct {
@@ -25,7 +25,7 @@ type CreateCommentReq struct {
 }
 
 type CreateCommentResp struct {
-	ID int64 `json:"id"`
+	ID string `json:"id"`
 }
 
 type CreateFeedCommentReq struct {
@@ -38,7 +38,7 @@ type CreateFeedCommentReq struct {
 }
 
 type CreateFeedCommentResp struct {
-	ID int64 `json:"id"`
+	ID string `json:"id"`
 }
 
 type CreateFeedReq struct {
@@ -50,7 +50,7 @@ type CreateFeedReq struct {
 }
 
 type CreateFeedResp struct {
-	ID int64 `json:"id"`
+	ID string `json:"id"`
 }
 
 type DeleteCommentReq struct {
@@ -69,14 +69,14 @@ type DeleteFeedResp struct {
 }
 
 type Feed struct {
-	ID          int64  `json:"id"`
-	UserID      int64  `json:"userID"`
-	Content     string `json:"content"`
-	Media0      string `json:"media0"`
-	Media1      string `json:"media1"`
-	Media2      string `json:"media2"`
-	Media3      string `json:"media3"`
-	Create_time int64  `json:"createTime"`
+	ID         string `json:"id"`
+	UserID     string `json:"userID"`
+	Content    string `json:"content"`
+	Media0     string `json:"media0"`
+	Media1     string `json:"media1"`
+	Media2     string `json:"media2"`
+	Media3     string `json:"media3"`
+	CreateTime int64  `json:"createTime"`
 }
 
 type GetCommentsByPageReq struct {

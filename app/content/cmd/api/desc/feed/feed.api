@@ -1,14 +1,14 @@
 syntax = "v1"
 
 type Feed {
-	ID          int64  `json:"id"`
-	UserID      int64  `json:"userID"`
-	Content     string `json:"content"`
-	Media0      string `json:"media0"`
-	Media1      string `json:"media1"`
-	Media2      string `json:"media2"`
-	Media3      string `json:"media3"`
-	Create_time int64  `json:"createTime"`
+	ID         string `json:"id"`
+	UserID     string `json:"userID"`
+	Content    string `json:"content"`
+	Media0     string `json:"media0"`
+	Media1     string `json:"media1"`
+	Media2     string `json:"media2"`
+	Media3     string `json:"media3"`
+	CreateTime int64  `json:"createTime"`
 }
 
 type (
@@ -43,7 +43,7 @@ type (
 		Media3  string `json:"media3"`
 	}
 	CreateFeedResp {
-		ID int64 `json:"id"`
+		ID string `json:"id"`
 	}
 )
 // type (
@@ -76,6 +76,6 @@ type (
 		Media3  string `json:"media3"`
 	}
 	CreateFeedCommentResp {
-		ID int64 `json:"id"`
+		ID string `json:"id"`
 	}
 )
