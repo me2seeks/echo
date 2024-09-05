@@ -22,6 +22,7 @@ const (
 	EsError
 	Str2Int64Error
 	ReadBodyError
+	InvalidParameter
 )
 
 // 用户模块

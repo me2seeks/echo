@@ -22,6 +22,7 @@ func init() {
 	message[EsError] = "es操作失败"
 	message[Str2Int64Error] = "字符串转int64失败"
 	message[ReadBodyError] = "读取body失败"
+	message[InvalidParameter] = "无效参数"
 }
 
 func MapErrMsg(errcode uint32) string {

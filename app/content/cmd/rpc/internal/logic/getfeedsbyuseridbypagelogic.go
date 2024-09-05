@@ -31,6 +31,9 @@ func NewGetFeedsByUserIDByPageLogic(ctx context.Context, svcCtx *svc.ServiceCont
 }
 
 func (l *GetFeedsByUserIDByPageLogic) GetFeedsByUserIDByPage(in *pb.GetFeedsByUserIDByPageReq) (*pb.GetFeedsByUserIDByPageResp, error) {
+	if len(in.UserIDs) == 0 {
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.InvalidParameter), "GetFeedsByUserIDByPage: UserIDs list is empty")
+	}
 	findPageListByPageWithTotalResp, total, err := l.svcCtx.FeedsModel.FindPageListByPageWithTotal(l.ctx, l.svcCtx.FeedsModel.SelectBuilder().
 		// Columns("id, user_id, content, media0, media1, media2, media3, create_at").
 		Where("user_id in "+tool.BuildQuery(in.UserIDs)).
