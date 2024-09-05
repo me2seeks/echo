@@ -77,6 +77,7 @@ type User struct {
 }
 
 type UserInfoReq struct {
+	UserID int64 `form:"userID,optional"`
 }
 
 type UserInfoResp struct {

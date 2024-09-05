@@ -27,8 +27,20 @@
             }
           }
         },
+        "parameters": [
+          {
+            "name": "userID",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
         "tags": [
           "user"
+        ],
+        "consumes": [
+          "multipart/form-data"
         ],
         "security": [
           {
@@ -500,6 +512,12 @@
     },
     "UserInfoReq": {
       "type": "object",
+      "properties": {
+        "userID": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
       "title": "UserInfoReq"
     },
     "UserInfoResp": {

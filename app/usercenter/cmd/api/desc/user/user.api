@@ -39,6 +39,7 @@ type (
 
 type (
 	UserInfoReq {
+		UserID int64 `form:"userID,optional"`
 	}
 	UserInfoResp {
 		UserInfo User `json:"userInfo"`
