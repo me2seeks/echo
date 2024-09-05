@@ -2,8 +2,8 @@ package user
 
 import (
 	"context"
+	"strconv"
 
-	"github.com/jinzhu/copier"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/api/internal/svc"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/api/internal/types"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/rpc/usercenter"
@@ -41,8 +41,15 @@ func (l *DetailLogic) Detail(req *types.UserInfoReq) (*types.UserInfoResp, error
 		return nil, err
 	}
 
-	resp := &types.UserInfoResp{}
-	_ = copier.Copy(&resp.UserInfo, getUserInfoResp.User)
-
-	return resp, nil
+	return &types.UserInfoResp{
+		UserInfo: types.User{
+			Id:       strconv.FormatInt(getUserInfoResp.User.Id, 10),
+			Email:    getUserInfoResp.User.Email,
+			Nickname: getUserInfoResp.User.Nickname,
+			Handle:   getUserInfoResp.User.Handle,
+			Sex:      getUserInfoResp.User.Sex,
+			Avatar:   getUserInfoResp.User.Avatar,
+			Bio:      getUserInfoResp.User.Bio,
+		},
+	}, nil
 }
