@@ -19,9 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Interaction_CreateLike_FullMethodName   = "/pb.interaction/createLike"
-	Interaction_DeleteLike_FullMethodName   = "/pb.interaction/deleteLike"
-	Interaction_GetLikeCount_FullMethodName = "/pb.interaction/getLikeCount"
+	Interaction_CreateLike_FullMethodName    = "/pb.interaction/createLike"
+	Interaction_DeleteLike_FullMethodName    = "/pb.interaction/deleteLike"
+	Interaction_GetLikeCount_FullMethodName  = "/pb.interaction/getLikeCount"
+	Interaction_GetLikeStatus_FullMethodName = "/pb.interaction/getLikeStatus"
 )
 
 // InteractionClient is the client API for Interaction service.
@@ -31,6 +32,7 @@ type InteractionClient interface {
 	CreateLike(ctx context.Context, in *CreateLikeReq, opts ...grpc.CallOption) (*CreateLikeResp, error)
 	DeleteLike(ctx context.Context, in *DeleteLikeReq, opts ...grpc.CallOption) (*DeleteLikeResp, error)
 	GetLikeCount(ctx context.Context, in *GetLikeCountReq, opts ...grpc.CallOption) (*GetLikeCountResp, error)
+	GetLikeStatus(ctx context.Context, in *GetLikeStatusReq, opts ...grpc.CallOption) (*GetLikeStatusResp, error)
 }
 
 type interactionClient struct {
@@ -71,6 +73,16 @@ func (c *interactionClient) GetLikeCount(ctx context.Context, in *GetLikeCountRe
 	return out, nil
 }
 
+func (c *interactionClient) GetLikeStatus(ctx context.Context, in *GetLikeStatusReq, opts ...grpc.CallOption) (*GetLikeStatusResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetLikeStatusResp)
+	err := c.cc.Invoke(ctx, Interaction_GetLikeStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // InteractionServer is the server API for Interaction service.
 // All implementations must embed UnimplementedInteractionServer
 // for forward compatibility.
@@ -78,6 +90,7 @@ type InteractionServer interface {
 	CreateLike(context.Context, *CreateLikeReq) (*CreateLikeResp, error)
 	DeleteLike(context.Context, *DeleteLikeReq) (*DeleteLikeResp, error)
 	GetLikeCount(context.Context, *GetLikeCountReq) (*GetLikeCountResp, error)
+	GetLikeStatus(context.Context, *GetLikeStatusReq) (*GetLikeStatusResp, error)
 	mustEmbedUnimplementedInteractionServer()
 }
 
@@ -96,6 +109,9 @@ func (UnimplementedInteractionServer) DeleteLike(context.Context, *DeleteLikeReq
 }
 func (UnimplementedInteractionServer) GetLikeCount(context.Context, *GetLikeCountReq) (*GetLikeCountResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLikeCount not implemented")
+}
+func (UnimplementedInteractionServer) GetLikeStatus(context.Context, *GetLikeStatusReq) (*GetLikeStatusResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetLikeStatus not implemented")
 }
 func (UnimplementedInteractionServer) mustEmbedUnimplementedInteractionServer() {}
 func (UnimplementedInteractionServer) testEmbeddedByValue()                     {}
@@ -172,6 +188,24 @@ func _Interaction_GetLikeCount_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Interaction_GetLikeStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetLikeStatusReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InteractionServer).GetLikeStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Interaction_GetLikeStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InteractionServer).GetLikeStatus(ctx, req.(*GetLikeStatusReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Interaction_ServiceDesc is the grpc.ServiceDesc for Interaction service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -190,6 +224,10 @@ var Interaction_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "getLikeCount",
 			Handler:    _Interaction_GetLikeCount_Handler,
+		},
+		{
+			MethodName: "getLikeStatus",
+			Handler:    _Interaction_GetLikeStatus_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

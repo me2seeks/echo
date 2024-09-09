@@ -7,6 +7,7 @@ import (
 	"github.com/me2seeks/echo-hub/app/content/cmd/api/internal/svc"
 	"github.com/me2seeks/echo-hub/app/content/cmd/api/internal/types"
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/content"
+	"github.com/me2seeks/echo-hub/app/interaction/cmd/rpc/interaction"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/rpc/usercenter"
 	"github.com/me2seeks/echo-hub/common/ctxdata"
 
@@ -56,6 +57,11 @@ func (l *ListFollowingFeedLogic) ListFollowingFeed(req *types.GetFollowingFeedsB
 	resp.Total = getFeedsByUserIDByPageResp.Total
 
 	for _, feed := range getFeedsByUserIDByPageResp.Feeds {
+		getLikeStatusResp, _ := l.svcCtx.InteractionRPC.GetLikeStatus(l.ctx, &interaction.GetLikeStatusReq{
+			UserID:    userID,
+			ContentID: feed.Id,
+			IsComment: false,
+		})
 		resp.Feeds = append(resp.Feeds, types.Feed{
 			ID:         strconv.FormatInt(feed.Id, 10),
 			UserID:     strconv.FormatInt(feed.UserID, 10),
@@ -65,6 +71,7 @@ func (l *ListFollowingFeedLogic) ListFollowingFeed(req *types.GetFollowingFeedsB
 			Media2:     feed.Media2,
 			Media3:     feed.Media3,
 			CreateTime: feed.CreateTime.AsTime().Unix(),
+			IsLiked:    getLikeStatusResp.IsLiked,
 		})
 	}
 

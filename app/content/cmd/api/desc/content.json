@@ -379,16 +379,13 @@
       "type": "object",
       "properties": {
         "id": {
-          "type": "integer",
-          "format": "int64"
+          "type": "string"
         },
         "feedID": {
-          "type": "integer",
-          "format": "int64"
+          "type": "string"
         },
         "userID": {
-          "type": "integer",
-          "format": "int64"
+          "type": "string"
         },
         "content": {
           "type": "string"
@@ -408,6 +405,10 @@
         "createTime": {
           "type": "integer",
           "format": "int64"
+        },
+        "isLiked": {
+          "type": "boolean",
+          "format": "boolean"
         }
       },
       "title": "Comment",
@@ -420,7 +421,8 @@
         "media1",
         "media2",
         "media3",
-        "createTime"
+        "createTime",
+        "isLiked"
       ]
     },
     "CreateCommentReq": {
@@ -460,8 +462,7 @@
       "type": "object",
       "properties": {
         "id": {
-          "type": "integer",
-          "format": "int64"
+          "type": "string"
         }
       },
       "title": "CreateCommentResp",
@@ -501,8 +502,7 @@
       "type": "object",
       "properties": {
         "id": {
-          "type": "integer",
-          "format": "int64"
+          "type": "string"
         }
       },
       "title": "CreateFeedCommentResp",
@@ -542,8 +542,7 @@
       "type": "object",
       "properties": {
         "id": {
-          "type": "integer",
-          "format": "int64"
+          "type": "string"
         }
       },
       "title": "CreateFeedResp",
@@ -594,12 +593,10 @@
       "type": "object",
       "properties": {
         "id": {
-          "type": "integer",
-          "format": "int64"
+          "type": "string"
         },
         "userID": {
-          "type": "integer",
-          "format": "int64"
+          "type": "string"
         },
         "content": {
           "type": "string"
@@ -619,6 +616,10 @@
         "createTime": {
           "type": "integer",
           "format": "int64"
+        },
+        "isLiked": {
+          "type": "boolean",
+          "format": "boolean"
         }
       },
       "title": "Feed",
@@ -630,7 +631,8 @@
         "media1",
         "media2",
         "media3",
-        "createTime"
+        "createTime",
+        "isLiked"
       ]
     },
     "GetCommentsByPageReq": {

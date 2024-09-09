@@ -3,6 +3,7 @@ package svc
 import (
 	"github.com/me2seeks/echo-hub/app/content/cmd/api/internal/config"
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/content"
+	"github.com/me2seeks/echo-hub/app/interaction/cmd/rpc/interaction"
 	"github.com/me2seeks/echo-hub/app/usercenter/cmd/rpc/usercenter"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
@@ -11,9 +12,10 @@ import (
 )
 
 type ServiceContext struct {
-	Config        config.Config
-	ContentRPC    content.Content
-	UsercenterRPC usercenter.Usercenter
+	Config         config.Config
+	ContentRPC     content.Content
+	UsercenterRPC  usercenter.Usercenter
+	InteractionRPC interaction.Interaction
 
 	MinioClient *minio.Client
 }
@@ -27,9 +29,10 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		logx.Errorf("failed to create minio client: %s", err)
 	}
 	return &ServiceContext{
-		Config:        c,
-		ContentRPC:    content.NewContent(zrpc.MustNewClient(c.ContentRPCConf)),
-		UsercenterRPC: usercenter.NewUsercenter(zrpc.MustNewClient(c.UsercenterRPCConf)),
-		MinioClient:   minioClient,
+		Config:         c,
+		ContentRPC:     content.NewContent(zrpc.MustNewClient(c.ContentRPCConf)),
+		UsercenterRPC:  usercenter.NewUsercenter(zrpc.MustNewClient(c.UsercenterRPCConf)),
+		InteractionRPC: interaction.NewInteraction(zrpc.MustNewClient(c.InteractionRPCConf)),
+		MinioClient:    minioClient,
 	}
 }

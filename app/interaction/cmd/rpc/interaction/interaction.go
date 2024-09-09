@@ -13,17 +13,20 @@ import (
 )
 
 type (
-	CreateLikeReq    = pb.CreateLikeReq
-	CreateLikeResp   = pb.CreateLikeResp
-	DeleteLikeReq    = pb.DeleteLikeReq
-	DeleteLikeResp   = pb.DeleteLikeResp
-	GetLikeCountReq  = pb.GetLikeCountReq
-	GetLikeCountResp = pb.GetLikeCountResp
+	CreateLikeReq     = pb.CreateLikeReq
+	CreateLikeResp    = pb.CreateLikeResp
+	DeleteLikeReq     = pb.DeleteLikeReq
+	DeleteLikeResp    = pb.DeleteLikeResp
+	GetLikeCountReq   = pb.GetLikeCountReq
+	GetLikeCountResp  = pb.GetLikeCountResp
+	GetLikeStatusReq  = pb.GetLikeStatusReq
+	GetLikeStatusResp = pb.GetLikeStatusResp
 
 	Interaction interface {
 		CreateLike(ctx context.Context, in *CreateLikeReq, opts ...grpc.CallOption) (*CreateLikeResp, error)
 		DeleteLike(ctx context.Context, in *DeleteLikeReq, opts ...grpc.CallOption) (*DeleteLikeResp, error)
 		GetLikeCount(ctx context.Context, in *GetLikeCountReq, opts ...grpc.CallOption) (*GetLikeCountResp, error)
+		GetLikeStatus(ctx context.Context, in *GetLikeStatusReq, opts ...grpc.CallOption) (*GetLikeStatusResp, error)
 	}
 
 	defaultInteraction struct {
@@ -50,4 +53,9 @@ func (m *defaultInteraction) DeleteLike(ctx context.Context, in *DeleteLikeReq, 
 func (m *defaultInteraction) GetLikeCount(ctx context.Context, in *GetLikeCountReq, opts ...grpc.CallOption) (*GetLikeCountResp, error) {
 	client := pb.NewInteractionClient(m.cli.Conn())
 	return client.GetLikeCount(ctx, in, opts...)
+}
+
+func (m *defaultInteraction) GetLikeStatus(ctx context.Context, in *GetLikeStatusReq, opts ...grpc.CallOption) (*GetLikeStatusResp, error) {
+	client := pb.NewInteractionClient(m.cli.Conn())
+	return client.GetLikeStatus(ctx, in, opts...)
 }

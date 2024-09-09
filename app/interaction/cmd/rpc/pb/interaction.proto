@@ -9,6 +9,7 @@ service interaction {
     rpc createLike(CreateLikeReq) returns (CreateLikeResp) {}
     rpc deleteLike(DeleteLikeReq) returns (DeleteLikeResp) {}   
     rpc getLikeCount(GetLikeCountReq) returns (GetLikeCountResp) {}
+    rpc getLikeStatus(GetLikeStatusReq) returns (GetLikeStatusResp) {}
 }
 
 message CreateLikeReq {
@@ -33,4 +34,13 @@ message GetLikeCountReq {
 }
 message GetLikeCountResp {
     int64 count = 1;
+}
+
+message GetLikeStatusReq {
+    int64 userID = 1;
+    int64 contentID = 2;
+    bool isComment = 3;
+}
+message GetLikeStatusResp {
+    bool isLiked = 1;
 }

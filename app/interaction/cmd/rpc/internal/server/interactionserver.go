@@ -36,3 +36,8 @@ func (s *InteractionServer) GetLikeCount(ctx context.Context, in *pb.GetLikeCoun
 	l := logic.NewGetLikeCountLogic(ctx, s.svcCtx)
 	return l.GetLikeCount(in)
 }
+
+func (s *InteractionServer) GetLikeStatus(ctx context.Context, in *pb.GetLikeStatusReq) (*pb.GetLikeStatusResp, error) {
+	l := logic.NewGetLikeStatusLogic(ctx, s.svcCtx)
+	return l.GetLikeStatus(in)
+}

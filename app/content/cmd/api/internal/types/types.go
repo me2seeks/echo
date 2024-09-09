@@ -13,6 +13,7 @@ type Comment struct {
 	Media2     string `json:"media2"`
 	Media3     string `json:"media3"`
 	CreateTime int64  `json:"createTime"`
+	IsLiked    bool   `json:"isLiked"`
 }
 
 type CreateCommentReq struct {
@@ -77,6 +78,7 @@ type Feed struct {
 	Media2     string `json:"media2"`
 	Media3     string `json:"media3"`
 	CreateTime int64  `json:"createTime"`
+	IsLiked    bool   `json:"isLiked"`
 }
 
 type GetCommentsByPageReq struct {
