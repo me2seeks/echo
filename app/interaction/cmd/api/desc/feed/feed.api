@@ -2,7 +2,7 @@ syntax = "v1"
 
 type (
 	CreateFeedLikeReq {
-		ID int64 `json:"id"`
+		ID int64 `path:"id"`
 	}
 	CreateFeedLikeResp {
 	}
@@ -10,7 +10,7 @@ type (
 
 type (
 	DeleteFeedLikeReq {
-		ID int64 `json:"id"`
+		ID int64 `path:"id"`
 	}
 	DeleteFeedLikeResp {
 	}

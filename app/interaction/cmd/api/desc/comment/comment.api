@@ -2,7 +2,7 @@ syntax = "v1"
 
 type (
 	CreateCommentLikeReq {
-		ID int64 `json:"id"`
+		ID int64 `path:"id"`
 	}
 	CreateCommentLikeResp {
 	}
@@ -10,7 +10,7 @@ type (
 
 type (
 	DeleteCommentLikeReq {
-		ID int64 `json:"id"`
+		ID int64 `path:"id"`
 	}
 	DeleteCommentLikeResp {
 	}

@@ -17,13 +17,13 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				// like
 				Method:  http.MethodPost,
-				Path:    "/comment/like",
+				Path:    "/comment/:id/like",
 				Handler: comment.LikeHandler(serverCtx),
 			},
 			{
 				// unlike
 				Method:  http.MethodDelete,
-				Path:    "/comment/like",
+				Path:    "/comment/:id/like",
 				Handler: comment.UnlikeHandler(serverCtx),
 			},
 		},
@@ -36,13 +36,13 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				// like
 				Method:  http.MethodPost,
-				Path:    "/feed/like",
+				Path:    "/feed/:id/like",
 				Handler: feed.LikeHandler(serverCtx),
 			},
 			{
 				// unlike
 				Method:  http.MethodDelete,
-				Path:    "/feed/like",
+				Path:    "/feed/:id/like",
 				Handler: feed.UnlikeHandler(serverCtx),
 			},
 		},

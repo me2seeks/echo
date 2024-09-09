@@ -13,11 +13,11 @@ import (
 service interaction {
 	@doc "like"
 	@handler like
-	post /feed/like (CreateFeedLikeReq) returns (CreateFeedLikeResp)
+	post /feed/:id/like (CreateFeedLikeReq) returns (CreateFeedLikeResp)
 
 	@doc "unlike"
 	@handler unlike
-	delete /feed/like (DeleteFeedLikeReq) returns (DeleteFeedLikeResp)
+	delete /feed/:id/like (DeleteFeedLikeReq) returns (DeleteFeedLikeResp)
 }
 
 @server (
@@ -28,9 +28,10 @@ service interaction {
 service interaction {
 	@doc "like"
 	@handler like
-	post /comment/like (CreateCommentLikeReq) returns (CreateCommentLikeResp)
+	post /comment/:id/like (CreateCommentLikeReq) returns (CreateCommentLikeResp)
 
 	@doc "unlike"
 	@handler unlike
-	delete /comment/like (DeleteCommentLikeReq) returns (DeleteCommentLikeResp)
+	delete /comment/:id/like (DeleteCommentLikeReq) returns (DeleteCommentLikeResp)
 }
+

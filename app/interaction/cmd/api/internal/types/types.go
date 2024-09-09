@@ -2,28 +2,28 @@
 package types
 
 type CreateCommentLikeReq struct {
-	ID int64 `json:"id"`
+	ID int64 `path:"id"`
 }
 
 type CreateCommentLikeResp struct {
 }
 
 type CreateFeedLikeReq struct {
-	ID int64 `json:"id"`
+	ID int64 `path:"id"`
 }
 
 type CreateFeedLikeResp struct {
 }
 
 type DeleteCommentLikeReq struct {
-	ID int64 `json:"id"`
+	ID int64 `path:"id"`
 }
 
 type DeleteCommentLikeResp struct {
 }
 
 type DeleteFeedLikeReq struct {
-	ID int64 `json:"id"`
+	ID int64 `path:"id"`
 }
 
 type DeleteFeedLikeResp struct {
