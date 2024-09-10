@@ -26,6 +26,7 @@ service usercenter {
     rpc getFollowings(GetFollowingsReq) returns(GetFollowingsResp);
     rpc getFollowingeCount(GetFollowingeCountReq) returns(GetFollowingeCountResp);
     rpc getFollowerCount(GetFollowerCountReq) returns(GetFollowerCountResp);
+    rpc getFollowStatus(GetFollowStatusReq) returns(GetFollowStatusResp);
 
     //user last request
 
@@ -167,4 +168,12 @@ message LastRequestTimeReq {
 }
 message LastRequestTimeResp {
     google.protobuf.Timestamp lastRequestTime = 1;
+}
+
+message GetFollowStatusReq {
+    int64 userID = 1;
+    int64 followeeID = 2;
+}
+message GetFollowStatusResp {
+    bool IsFollowed = 1;
 }

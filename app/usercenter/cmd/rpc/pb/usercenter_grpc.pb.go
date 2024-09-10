@@ -32,6 +32,7 @@ const (
 	Usercenter_GetFollowings_FullMethodName        = "/pb.usercenter/getFollowings"
 	Usercenter_GetFollowingeCount_FullMethodName   = "/pb.usercenter/getFollowingeCount"
 	Usercenter_GetFollowerCount_FullMethodName     = "/pb.usercenter/getFollowerCount"
+	Usercenter_GetFollowStatus_FullMethodName      = "/pb.usercenter/getFollowStatus"
 	Usercenter_LastRequestTime_FullMethodName      = "/pb.usercenter/lastRequestTime"
 )
 
@@ -54,6 +55,7 @@ type UsercenterClient interface {
 	GetFollowings(ctx context.Context, in *GetFollowingsReq, opts ...grpc.CallOption) (*GetFollowingsResp, error)
 	GetFollowingeCount(ctx context.Context, in *GetFollowingeCountReq, opts ...grpc.CallOption) (*GetFollowingeCountResp, error)
 	GetFollowerCount(ctx context.Context, in *GetFollowerCountReq, opts ...grpc.CallOption) (*GetFollowerCountResp, error)
+	GetFollowStatus(ctx context.Context, in *GetFollowStatusReq, opts ...grpc.CallOption) (*GetFollowStatusResp, error)
 	LastRequestTime(ctx context.Context, in *LastRequestTimeReq, opts ...grpc.CallOption) (*LastRequestTimeResp, error)
 }
 
@@ -195,6 +197,16 @@ func (c *usercenterClient) GetFollowerCount(ctx context.Context, in *GetFollower
 	return out, nil
 }
 
+func (c *usercenterClient) GetFollowStatus(ctx context.Context, in *GetFollowStatusReq, opts ...grpc.CallOption) (*GetFollowStatusResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetFollowStatusResp)
+	err := c.cc.Invoke(ctx, Usercenter_GetFollowStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *usercenterClient) LastRequestTime(ctx context.Context, in *LastRequestTimeReq, opts ...grpc.CallOption) (*LastRequestTimeResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(LastRequestTimeResp)
@@ -224,6 +236,7 @@ type UsercenterServer interface {
 	GetFollowings(context.Context, *GetFollowingsReq) (*GetFollowingsResp, error)
 	GetFollowingeCount(context.Context, *GetFollowingeCountReq) (*GetFollowingeCountResp, error)
 	GetFollowerCount(context.Context, *GetFollowerCountReq) (*GetFollowerCountResp, error)
+	GetFollowStatus(context.Context, *GetFollowStatusReq) (*GetFollowStatusResp, error)
 	LastRequestTime(context.Context, *LastRequestTimeReq) (*LastRequestTimeResp, error)
 	mustEmbedUnimplementedUsercenterServer()
 }
@@ -273,6 +286,9 @@ func (UnimplementedUsercenterServer) GetFollowingeCount(context.Context, *GetFol
 }
 func (UnimplementedUsercenterServer) GetFollowerCount(context.Context, *GetFollowerCountReq) (*GetFollowerCountResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFollowerCount not implemented")
+}
+func (UnimplementedUsercenterServer) GetFollowStatus(context.Context, *GetFollowStatusReq) (*GetFollowStatusResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFollowStatus not implemented")
 }
 func (UnimplementedUsercenterServer) LastRequestTime(context.Context, *LastRequestTimeReq) (*LastRequestTimeResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LastRequestTime not implemented")
@@ -532,6 +548,24 @@ func _Usercenter_GetFollowerCount_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Usercenter_GetFollowStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFollowStatusReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsercenterServer).GetFollowStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Usercenter_GetFollowStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsercenterServer).GetFollowStatus(ctx, req.(*GetFollowStatusReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Usercenter_LastRequestTime_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(LastRequestTimeReq)
 	if err := dec(in); err != nil {
@@ -608,6 +642,10 @@ var Usercenter_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "getFollowerCount",
 			Handler:    _Usercenter_GetFollowerCount_Handler,
+		},
+		{
+			MethodName: "getFollowStatus",
+			Handler:    _Usercenter_GetFollowStatus_Handler,
 		},
 		{
 			MethodName: "lastRequestTime",

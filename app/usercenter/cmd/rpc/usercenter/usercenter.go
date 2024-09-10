@@ -17,6 +17,8 @@ type (
 	FollowResp               = pb.FollowResp
 	GenerateTokenReq         = pb.GenerateTokenReq
 	GenerateTokenResp        = pb.GenerateTokenResp
+	GetFollowStatusReq       = pb.GetFollowStatusReq
+	GetFollowStatusResp      = pb.GetFollowStatusResp
 	GetFollowerCountReq      = pb.GetFollowerCountReq
 	GetFollowerCountResp     = pb.GetFollowerCountResp
 	GetFollowersReq          = pb.GetFollowersReq
@@ -58,6 +60,7 @@ type (
 		GetFollowings(ctx context.Context, in *GetFollowingsReq, opts ...grpc.CallOption) (*GetFollowingsResp, error)
 		GetFollowingeCount(ctx context.Context, in *GetFollowingeCountReq, opts ...grpc.CallOption) (*GetFollowingeCountResp, error)
 		GetFollowerCount(ctx context.Context, in *GetFollowerCountReq, opts ...grpc.CallOption) (*GetFollowerCountResp, error)
+		GetFollowStatus(ctx context.Context, in *GetFollowStatusReq, opts ...grpc.CallOption) (*GetFollowStatusResp, error)
 		LastRequestTime(ctx context.Context, in *LastRequestTimeReq, opts ...grpc.CallOption) (*LastRequestTimeResp, error)
 	}
 
@@ -135,6 +138,11 @@ func (m *defaultUsercenter) GetFollowingeCount(ctx context.Context, in *GetFollo
 func (m *defaultUsercenter) GetFollowerCount(ctx context.Context, in *GetFollowerCountReq, opts ...grpc.CallOption) (*GetFollowerCountResp, error) {
 	client := pb.NewUsercenterClient(m.cli.Conn())
 	return client.GetFollowerCount(ctx, in, opts...)
+}
+
+func (m *defaultUsercenter) GetFollowStatus(ctx context.Context, in *GetFollowStatusReq, opts ...grpc.CallOption) (*GetFollowStatusResp, error) {
+	client := pb.NewUsercenterClient(m.cli.Conn())
+	return client.GetFollowStatus(ctx, in, opts...)
 }
 
 func (m *defaultUsercenter) LastRequestTime(ctx context.Context, in *LastRequestTimeReq, opts ...grpc.CallOption) (*LastRequestTimeResp, error) {
