@@ -79,6 +79,7 @@ type Feed struct {
 	Media3     string `json:"media3"`
 	CreateTime int64  `json:"createTime"`
 	IsLiked    bool   `json:"isLiked"`
+	IsFollowed bool   `json:"isFollowed"`
 }
 
 type GetCommentsByPageReq struct {

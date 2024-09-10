@@ -7,6 +7,9 @@ import (
 	"github.com/me2seeks/echo-hub/app/content/cmd/api/internal/svc"
 	"github.com/me2seeks/echo-hub/app/content/cmd/api/internal/types"
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/content"
+	"github.com/me2seeks/echo-hub/app/interaction/cmd/rpc/interaction"
+	"github.com/me2seeks/echo-hub/app/usercenter/cmd/rpc/usercenter"
+	"github.com/me2seeks/echo-hub/common/ctxdata"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -27,8 +30,8 @@ func NewListFeedLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListFeed
 }
 
 func (l *ListFeedLogic) ListFeed(req *types.GetFeedsByPageReq) (*types.GetFeedsByPageResp, error) {
-	getFeedsByUserIDByPageResp, err := l.svcCtx.ContentRPC.GetFeedsByUserIDByPage(l.ctx, &content.GetFeedsByUserIDByPageReq{
-		UserIDs:  []int64{req.UserID},
+	userID := ctxdata.GetUIDFromCtx(l.ctx)
+	getFeedsByPageResp, err := l.svcCtx.ContentRPC.GetFeedsByPage(l.ctx, &content.GetFeedsByPageReq{
 		Page:     req.Page,
 		PageSize: req.PageSize,
 	})
@@ -37,9 +40,18 @@ func (l *ListFeedLogic) ListFeed(req *types.GetFeedsByPageReq) (*types.GetFeedsB
 	}
 
 	resp := &types.GetFeedsByPageResp{}
-	resp.Total = getFeedsByUserIDByPageResp.Total
+	resp.Total = getFeedsByPageResp.Total
 
-	for _, feed := range getFeedsByUserIDByPageResp.Feeds {
+	for _, feed := range getFeedsByPageResp.Feeds {
+		getLikeStatusResp, _ := l.svcCtx.InteractionRPC.GetLikeStatus(l.ctx, &interaction.GetLikeStatusReq{
+			UserID:    userID,
+			ContentID: feed.Id,
+			IsComment: false,
+		})
+		getFollowStatusResp, _ := l.svcCtx.UsercenterRPC.GetFollowStatus(l.ctx, &usercenter.GetFollowStatusReq{
+			UserID:   userID,
+			TargetID: feed.UserID,
+		})
 		resp.Feeds = append(resp.Feeds, types.Feed{
 			ID:         strconv.FormatInt(feed.Id, 10),
 			UserID:     strconv.FormatInt(feed.UserID, 10),
@@ -49,6 +61,8 @@ func (l *ListFeedLogic) ListFeed(req *types.GetFeedsByPageReq) (*types.GetFeedsB
 			Media2:     feed.Media2,
 			Media3:     feed.Media3,
 			CreateTime: feed.CreateTime.AsTime().Unix(),
+			IsLiked:    getLikeStatusResp.IsLiked,
+			IsFollowed: getFollowStatusResp.IsFollowed,
 		})
 	}
 

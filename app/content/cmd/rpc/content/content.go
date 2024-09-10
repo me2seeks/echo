@@ -29,6 +29,8 @@ type (
 	GetCommentsResp            = pb.GetCommentsResp
 	GetFeedsByIDByPageReq      = pb.GetFeedsByIDByPageReq
 	GetFeedsByIDByPageResp     = pb.GetFeedsByIDByPageResp
+	GetFeedsByPageReq          = pb.GetFeedsByPageReq
+	GetFeedsByPageResp         = pb.GetFeedsByPageResp
 	GetFeedsByUserIDByPageReq  = pb.GetFeedsByUserIDByPageReq
 	GetFeedsByUserIDByPageResp = pb.GetFeedsByUserIDByPageResp
 	UpdateCommentReq           = pb.UpdateCommentReq
@@ -42,6 +44,7 @@ type (
 		DeleteFeed(ctx context.Context, in *DeleteFeedReq, opts ...grpc.CallOption) (*DeleteFeedResp, error)
 		GetFeedsByIDByPage(ctx context.Context, in *GetFeedsByIDByPageReq, opts ...grpc.CallOption) (*GetFeedsByIDByPageResp, error)
 		GetFeedsByUserIDByPage(ctx context.Context, in *GetFeedsByUserIDByPageReq, opts ...grpc.CallOption) (*GetFeedsByUserIDByPageResp, error)
+		GetFeedsByPage(ctx context.Context, in *GetFeedsByPageReq, opts ...grpc.CallOption) (*GetFeedsByPageResp, error)
 		CreateComment(ctx context.Context, in *CreateCommentReq, opts ...grpc.CallOption) (*CreateCommentResp, error)
 		UpdateComment(ctx context.Context, in *UpdateCommentReq, opts ...grpc.CallOption) (*UpdateCommentResp, error)
 		DeleteComment(ctx context.Context, in *DeleteCommentReq, opts ...grpc.CallOption) (*DeleteCommentResp, error)
@@ -83,6 +86,11 @@ func (m *defaultContent) GetFeedsByIDByPage(ctx context.Context, in *GetFeedsByI
 func (m *defaultContent) GetFeedsByUserIDByPage(ctx context.Context, in *GetFeedsByUserIDByPageReq, opts ...grpc.CallOption) (*GetFeedsByUserIDByPageResp, error) {
 	client := pb.NewContentClient(m.cli.Conn())
 	return client.GetFeedsByUserIDByPage(ctx, in, opts...)
+}
+
+func (m *defaultContent) GetFeedsByPage(ctx context.Context, in *GetFeedsByPageReq, opts ...grpc.CallOption) (*GetFeedsByPageResp, error) {
+	client := pb.NewContentClient(m.cli.Conn())
+	return client.GetFeedsByPage(ctx, in, opts...)
 }
 
 func (m *defaultContent) CreateComment(ctx context.Context, in *CreateCommentReq, opts ...grpc.CallOption) (*CreateCommentResp, error) {

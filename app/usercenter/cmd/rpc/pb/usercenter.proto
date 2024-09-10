@@ -172,7 +172,7 @@ message LastRequestTimeResp {
 
 message GetFollowStatusReq {
     int64 userID = 1;
-    int64 followeeID = 2;
+    int64 targetID = 2;
 }
 message GetFollowStatusResp {
     bool IsFollowed = 1;

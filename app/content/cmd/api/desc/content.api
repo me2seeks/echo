@@ -22,9 +22,13 @@ service content {
 	group:  feed
 )
 service content {
+	@doc "get feed list  by userID page"
+	@handler listFeedByUserID
+	get /:userID (GetFeedsByPageReq) returns (GetFeedsByPageResp)
+
 	@doc "get feed list by page"
 	@handler listFeed
-	get /:userID (GetFeedsByPageReq) returns (GetFeedsByPageResp)
+	get / (GetFeedsByPageReq) returns (GetFeedsByPageResp)
 
 	@doc "get comment list by page"
 	@handler listComment

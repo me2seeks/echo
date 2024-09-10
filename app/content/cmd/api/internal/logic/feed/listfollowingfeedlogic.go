@@ -62,7 +62,6 @@ func (l *ListFollowingFeedLogic) ListFollowingFeed(req *types.GetFollowingFeedsB
 			ContentID: feed.Id,
 			IsComment: false,
 		})
-		logx.Info(getLikeStatusResp)
 		resp.Feeds = append(resp.Feeds, types.Feed{
 			ID:         strconv.FormatInt(feed.Id, 10),
 			UserID:     strconv.FormatInt(feed.UserID, 10),
@@ -73,6 +72,7 @@ func (l *ListFollowingFeedLogic) ListFollowingFeed(req *types.GetFollowingFeedsB
 			Media3:     feed.Media3,
 			CreateTime: feed.CreateTime.AsTime().Unix(),
 			IsLiked:    getLikeStatusResp.IsLiked,
+			IsFollowed: true,
 		})
 	}
 

@@ -47,6 +47,11 @@ func (s *ContentServer) GetFeedsByUserIDByPage(ctx context.Context, in *pb.GetFe
 	return l.GetFeedsByUserIDByPage(in)
 }
 
+func (s *ContentServer) GetFeedsByPage(ctx context.Context, in *pb.GetFeedsByPageReq) (*pb.GetFeedsByPageResp, error) {
+	l := logic.NewGetFeedsByPageLogic(ctx, s.svcCtx)
+	return l.GetFeedsByPage(in)
+}
+
 func (s *ContentServer) CreateComment(ctx context.Context, in *pb.CreateCommentReq) (*pb.CreateCommentResp, error) {
 	l := logic.NewCreateCommentLogic(ctx, s.svcCtx)
 	return l.CreateComment(in)

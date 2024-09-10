@@ -47,16 +47,22 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
+				// get feed list by page
+				Method:  http.MethodGet,
+				Path:    "/",
+				Handler: feed.ListFeedHandler(serverCtx),
+			},
+			{
 				// get comment list by page
 				Method:  http.MethodGet,
 				Path:    "/:feedID/comment",
 				Handler: feed.ListCommentHandler(serverCtx),
 			},
 			{
-				// get feed list by page
+				// get feed list  by userID page
 				Method:  http.MethodGet,
 				Path:    "/:userID",
-				Handler: feed.ListFeedHandler(serverCtx),
+				Handler: feed.ListFeedByUserIDHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/feed"),
