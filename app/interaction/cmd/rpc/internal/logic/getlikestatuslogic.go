@@ -29,12 +29,12 @@ func (l *GetLikeStatusLogic) GetLikeStatus(in *pb.GetLikeStatusReq) (*pb.GetLike
 	}
 	if !in.IsComment {
 		feedLike, err := l.svcCtx.FeedLikesModel.FindOneByUserIdContentId(l.ctx, in.UserID, in.ContentID)
-		if err != nil && feedLike != nil {
+		if err == nil && feedLike != nil {
 			resp.IsLiked = true
 		}
 	} else {
 		commentLike, err := l.svcCtx.CommentLikesModel.FindOneByUserIdContentId(l.ctx, in.UserID, in.ContentID)
-		if err != nil && commentLike != nil {
+		if err == nil && commentLike != nil {
 			resp.IsLiked = true
 		}
 	}
