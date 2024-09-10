@@ -27,7 +27,7 @@ func (l *GetFollowStatusLogic) GetFollowStatus(in *pb.GetFollowStatusReq) (*pb.G
 	var resp pb.GetFollowStatusResp
 	findOneByFollowerIDFolloweeIDResp, err := l.svcCtx.UserRelationModel.FindOneByFollowerIdFolloweeId(l.ctx, in.UserID, in.TargetID)
 	if err == nil && findOneByFollowerIDFolloweeIDResp != nil {
-		resp.IsFollowed = true
+		resp.IsFollowing = true
 	}
 
 	return &resp, nil

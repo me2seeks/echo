@@ -57,5 +57,9 @@ service usercenter {
 	@doc "get following"
 	@handler followings
 	post /followings (FollowingsReq) returns (FollowingsResp)
+
+	@doc "get follow status"
+	@handler followStatus
+	get /follow/:userID (FollowStatusReq) returns (FollowStatusResp)
 }
 

@@ -62,7 +62,7 @@ func (l *ListFeedLogic) ListFeed(req *types.GetFeedsByPageReq) (*types.GetFeedsB
 			Media3:     feed.Media3,
 			CreateTime: feed.CreateTime.AsTime().Unix(),
 			IsLiked:    getLikeStatusResp.IsLiked,
-			IsFollowed: getFollowStatusResp.IsFollowed,
+			IsFollowed: getFollowStatusResp.IsFollowing,
 		})
 	}
 

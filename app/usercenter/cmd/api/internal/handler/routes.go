@@ -21,6 +21,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: relation.FollowHandler(serverCtx),
 			},
 			{
+				// get follow status
+				Method:  http.MethodGet,
+				Path:    "/follow/:userID",
+				Handler: relation.FollowStatusHandler(serverCtx),
+			},
+			{
 				// get followers
 				Method:  http.MethodPost,
 				Path:    "/followers",

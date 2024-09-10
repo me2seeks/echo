@@ -175,5 +175,5 @@ message GetFollowStatusReq {
     int64 targetID = 2;
 }
 message GetFollowStatusResp {
-    bool IsFollowed = 1;
+    bool isFollowing = 1;
 }

@@ -33,3 +33,12 @@ type (
 		Followings []string `json:"followings"`
 	}
 )
+
+type (
+	FollowStatusReq {
+		UserID int64 `path:"userID"`
+	}
+	FollowStatusResp {
+		IsFollowing bool `json:"isFollowing"`
+	}
+)

@@ -8,6 +8,14 @@ type FollowReq struct {
 type FollowResp struct {
 }
 
+type FollowStatusReq struct {
+	UserID int64 `path:"userID"`
+}
+
+type FollowStatusResp struct {
+	IsFollowing bool `json:"isFollowing"`
+}
+
 type FollowersReq struct {
 	UserID int64 `json:"userID"`
 }
