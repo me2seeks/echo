@@ -120,6 +120,40 @@
       }
     },
     "/feed/": {
+      "get": {
+        "summary": "get feed list by page",
+        "operationId": "listFeed",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetFeedsByPageResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "feed"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      },
       "delete": {
         "summary": "delete feed",
         "operationId": "delete",
@@ -302,8 +336,8 @@
     },
     "/feed/{userID}": {
       "get": {
-        "summary": "get feed list by page",
-        "operationId": "listFeed",
+        "summary": "get feed list  by userID page",
+        "operationId": "listFeedByUserID",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -620,6 +654,10 @@
         "isLiked": {
           "type": "boolean",
           "format": "boolean"
+        },
+        "isFollowed": {
+          "type": "boolean",
+          "format": "boolean"
         }
       },
       "title": "Feed",
@@ -632,7 +670,8 @@
         "media2",
         "media3",
         "createTime",
-        "isLiked"
+        "isLiked",
+        "isFollowed"
       ]
     },
     "GetCommentsByPageReq": {
