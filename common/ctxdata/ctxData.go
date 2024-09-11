@@ -2,7 +2,7 @@ package ctxdata
 
 import (
 	"context"
-	"encoding/json"
+	"strconv"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -11,13 +11,14 @@ import (
 var CtxKeyJwtUserID = "jwtUserId"
 
 func GetUIDFromCtx(ctx context.Context) int64 {
-	var uid int64
-	if jsonUID, ok := ctx.Value(CtxKeyJwtUserID).(json.Number); ok {
-		if int64Uid, err := jsonUID.Int64(); err == nil {
-			uid = int64Uid
-		} else {
-			logx.WithContext(ctx).Errorf("GetUidFromCtx err : %+v", err)
-		}
+	var uID int64
+	uIDStr, ok := ctx.Value(CtxKeyJwtUserID).(string)
+	if ok {
+		logx.WithContext(ctx).Errorf("GetUidFromCtx err : %+v", uID)
 	}
-	return uid
+	uID, err := strconv.ParseInt(uIDStr, 10, 64)
+	if err != nil {
+		logx.WithContext(ctx).Errorf("GetUidFromCtx err : %+v", err)
+	}
+	return uID
 }

@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"strconv"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -46,7 +47,7 @@ func (l *GenerateTokenLogic) getJwtToken(secretKey string, iat, seconds, userID 
 	claims := make(jwt.MapClaims)
 	claims["exp"] = iat + seconds
 	claims["iat"] = iat
-	claims[ctxdata.CtxKeyJwtUserID] = userID
+	claims[ctxdata.CtxKeyJwtUserID] = strconv.FormatInt(userID, 10)
 	token := jwt.New(jwt.SigningMethodHS256)
 	token.Claims = claims
 	return token.SignedString([]byte(secretKey))
