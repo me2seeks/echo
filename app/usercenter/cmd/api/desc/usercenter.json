@@ -317,14 +317,14 @@
     "FollowStatusResp": {
       "type": "object",
       "properties": {
-        "isFollowing": {
+        "isFollow": {
           "type": "boolean",
           "format": "boolean"
         }
       },
       "title": "FollowStatusResp",
       "required": [
-        "isFollowing"
+        "isFollow"
       ]
     },
     "FollowersReq": {
@@ -541,6 +541,10 @@
         },
         "bio": {
           "type": "string"
+        },
+        "isFollow": {
+          "type": "boolean",
+          "format": "boolean"
         }
       },
       "title": "User",
@@ -551,7 +555,8 @@
         "handle",
         "sex",
         "avatar",
-        "bio"
+        "bio",
+        "isFollow"
       ]
     },
     "UserInfoReq": {

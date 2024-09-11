@@ -24,7 +24,7 @@ service content {
 service content {
 	@doc "get feed list  by userID page"
 	@handler listFeedByUserID
-	get /:userID (GetFeedsByPageReq) returns (GetFeedsByPageResp)
+	get /:userID (GetFeedsByUserIDPageReq) returns (GetFeedsByPageResp)
 
 	@doc "get feed list by page"
 	@handler listFeed

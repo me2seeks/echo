@@ -104,7 +104,6 @@ type GetFeedCommentsByPageResp struct {
 }
 
 type GetFeedsByPageReq struct {
-	UserID   int64 `path:"userID"`
 	Page     int64 `form:"page"`
 	PageSize int64 `form:"pageSize"`
 }
@@ -112,6 +111,12 @@ type GetFeedsByPageReq struct {
 type GetFeedsByPageResp struct {
 	Feeds []Feed `json:"feed"`
 	Total int64  `json:"total"`
+}
+
+type GetFeedsByUserIDPageReq struct {
+	UserID   int64 `path:"userID"`
+	Page     int64 `form:"page"`
+	PageSize int64 `form:"pageSize"`
 }
 
 type GetFollowingFeedsByPageReq struct {

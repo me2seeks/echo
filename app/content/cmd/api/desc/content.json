@@ -654,10 +654,6 @@
         "isLiked": {
           "type": "boolean",
           "format": "boolean"
-        },
-        "isFollowed": {
-          "type": "boolean",
-          "format": "boolean"
         }
       },
       "title": "Feed",
@@ -670,8 +666,7 @@
         "media2",
         "media3",
         "createTime",
-        "isLiked",
-        "isFollowed"
+        "isLiked"
       ]
     },
     "GetCommentsByPageReq": {
@@ -786,6 +781,24 @@
       "required": [
         "feed",
         "total"
+      ]
+    },
+    "GetFeedsByUserIDPageReq": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "GetFeedsByUserIDPageReq",
+      "required": [
+        "page",
+        "pageSize"
       ]
     },
     "GetFollowingFeedsByPageReq": {

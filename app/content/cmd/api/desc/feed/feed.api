@@ -14,13 +14,20 @@ type Feed {
 
 type (
 	GetFeedsByPageReq {
-		UserID   int64 `path:"userID"`
 		Page     int64 `form:"page"`
 		PageSize int64 `form:"pageSize"`
 	}
 	GetFeedsByPageResp {
 		Feeds []Feed `json:"feed"`
 		Total int64  `json:"total"`
+	}
+)
+
+type (
+	GetFeedsByUserIDPageReq {
+		UserID   int64 `path:"userID"`
+		Page     int64 `form:"page"`
+		PageSize int64 `form:"pageSize"`
 	}
 )
 
