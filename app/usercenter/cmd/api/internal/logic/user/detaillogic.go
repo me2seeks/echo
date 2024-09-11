@@ -40,6 +40,17 @@ func (l *DetailLogic) Detail(req *types.UserInfoReq) (*types.UserInfoResp, error
 	if err != nil {
 		return nil, err
 	}
+	var getFollowStatusResp *usercenter.GetFollowStatusResp
+
+	if req.UserID != 0 {
+		getFollowStatusResp, err = l.svcCtx.UsercenterRPC.GetFollowStatus(l.ctx, &usercenter.GetFollowStatusReq{
+			UserID:   userID,
+			TargetID: req.UserID,
+		})
+		if err != nil {
+			return nil, err
+		}
+	}
 
 	return &types.UserInfoResp{
 		UserInfo: types.User{
@@ -50,6 +61,7 @@ func (l *DetailLogic) Detail(req *types.UserInfoReq) (*types.UserInfoResp, error
 			Sex:      getUserInfoResp.User.Sex,
 			Avatar:   getUserInfoResp.User.Avatar,
 			Bio:      getUserInfoResp.User.Bio,
+			IsFollow: getFollowStatusResp.IsFollow,
 		},
 	}, nil
 }

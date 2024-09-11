@@ -8,7 +8,6 @@ import (
 	"github.com/me2seeks/echo-hub/app/content/cmd/api/internal/types"
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/content"
 	"github.com/me2seeks/echo-hub/app/interaction/cmd/rpc/interaction"
-	"github.com/me2seeks/echo-hub/app/usercenter/cmd/rpc/usercenter"
 	"github.com/me2seeks/echo-hub/common/ctxdata"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -48,10 +47,7 @@ func (l *ListFeedLogic) ListFeed(req *types.GetFeedsByPageReq) (*types.GetFeedsB
 			ContentID: feed.Id,
 			IsComment: false,
 		})
-		getFollowStatusResp, _ := l.svcCtx.UsercenterRPC.GetFollowStatus(l.ctx, &usercenter.GetFollowStatusReq{
-			UserID:   userID,
-			TargetID: feed.UserID,
-		})
+
 		resp.Feeds = append(resp.Feeds, types.Feed{
 			ID:         strconv.FormatInt(feed.Id, 10),
 			UserID:     strconv.FormatInt(feed.UserID, 10),
@@ -62,7 +58,6 @@ func (l *ListFeedLogic) ListFeed(req *types.GetFeedsByPageReq) (*types.GetFeedsB
 			Media3:     feed.Media3,
 			CreateTime: feed.CreateTime.AsTime().Unix(),
 			IsLiked:    getLikeStatusResp.IsLiked,
-			IsFollowed: getFollowStatusResp.IsFollowing,
 		})
 	}
 

@@ -13,7 +13,7 @@ type FollowStatusReq struct {
 }
 
 type FollowStatusResp struct {
-	IsFollowing bool `json:"isFollowing"`
+	IsFollow bool `json:"isFollow"`
 }
 
 type FollowersReq struct {
@@ -82,6 +82,7 @@ type User struct {
 	Sex      int32  `json:"sex"`
 	Avatar   string `json:"avatar"`
 	Bio      string `json:"bio"`
+	IsFollow bool   `json:"isFollow"`
 }
 
 type UserInfoReq struct {
@@ -97,5 +98,6 @@ type UserInfoResp struct {
 		Sex      int32  `json:"sex"`
 		Avatar   string `json:"avatar"`
 		Bio      string `json:"bio"`
+		IsFollow bool   `json:"isFollow"`
 	} `json:"userInfo"`
 }

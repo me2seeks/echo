@@ -72,7 +72,6 @@ func (l *ListFollowingFeedLogic) ListFollowingFeed(req *types.GetFollowingFeedsB
 			Media3:     feed.Media3,
 			CreateTime: feed.CreateTime.AsTime().Unix(),
 			IsLiked:    getLikeStatusResp.IsLiked,
-			IsFollowed: true,
 		})
 	}
 

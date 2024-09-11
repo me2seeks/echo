@@ -10,7 +10,7 @@ import (
 
 func TestEs(t *testing.T) {
 	client, err := es.NewClient(es.Config{
-		Addresses: []string{"https://10.2.12.14:30200"},
+		Addresses: []string{"https://10.2.12.14:32704"},
 		Username:  "elastic",
 		Password:  "Kmin*YUxdE4nN0hizzKp",
 		Transport: &http.Transport{

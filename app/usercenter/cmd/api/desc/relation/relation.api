@@ -39,6 +39,6 @@ type (
 		UserID int64 `path:"userID"`
 	}
 	FollowStatusResp {
-		IsFollowing bool `json:"isFollowing"`
+		IsFollow bool `json:"isFollow"`
 	}
 )

@@ -8,6 +8,7 @@ type User {
 	Sex      int32  `json:"sex"`
 	Avatar   string `json:"avatar"`
 	Bio      string `json:"bio"`
+	IsFollow bool   `json:"isFollow"`
 }
 
 type (

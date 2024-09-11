@@ -38,6 +38,6 @@ func (l *FollowStatusLogic) FollowStatus(req *types.FollowStatusReq) (*types.Fol
 	}
 
 	return &types.FollowStatusResp{
-		IsFollowing: getFollowStatusResp.IsFollowing,
+		IsFollow: getFollowStatusResp.IsFollow,
 	}, nil
 }
