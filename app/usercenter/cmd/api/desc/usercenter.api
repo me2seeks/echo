@@ -18,10 +18,6 @@ service usercenter {
 	@doc "login"
 	@handler login
 	post /login (LoginReq) returns (LoginResp)
-
-	@doc "get user info"
-	@handler detail
-	get / (UserInfoReq) returns (UserInfoResp)
 }
 
 //need login
@@ -31,6 +27,10 @@ service usercenter {
 	jwt:    JwtAuth
 )
 service usercenter {
+	@doc "get user info"
+	@handler detail
+	get / (UserInfoReq) returns (UserInfoResp)
+
 	@doc "update user info"
 	@handler update
 	post / (UpdateUserInfoReq) returns (UpdateUserInfoResp)
@@ -44,19 +44,19 @@ service usercenter {
 service usercenter {
 	@doc "follow"
 	@handler follow
-	post /follow (FollowReq) returns (FollowResp)
+	post /follow/:userID (FollowReq) returns (FollowResp)
 
 	@doc "unfollow"
 	@handler unfollow
-	post /unfollow (UnfollowReq) returns (UnfollowResp)
+	post /unfollow/:userID (UnfollowReq) returns (UnfollowResp)
 
 	@doc "get followers"
 	@handler followers
-	post /followers (FollowersReq) returns (FollowersResp)
+	get /followers/:userID (FollowersReq) returns (FollowersResp)
 
 	@doc "get following"
 	@handler followings
-	post /followings (FollowingsReq) returns (FollowingsResp)
+	get /followings/:userID (FollowingsReq) returns (FollowingsResp)
 
 	@doc "get follow status"
 	@handler followStatus

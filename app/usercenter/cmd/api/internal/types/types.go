@@ -2,7 +2,7 @@
 package types
 
 type FollowReq struct {
-	UserID int64 `json:"userID"`
+	UserID int64 `path:"userID"`
 }
 
 type FollowResp struct {
@@ -17,7 +17,7 @@ type FollowStatusResp struct {
 }
 
 type FollowersReq struct {
-	UserID int64 `json:"userID"`
+	UserID int64 `path:"userID"`
 }
 
 type FollowersResp struct {
@@ -25,7 +25,7 @@ type FollowersResp struct {
 }
 
 type FollowingsReq struct {
-	UserID int64 `json:"userID"`
+	UserID int64 `path:"userID"`
 }
 
 type FollowingsResp struct {
@@ -58,7 +58,7 @@ type RegisterResp struct {
 }
 
 type UnfollowReq struct {
-	UserID int64 `json:"userID"`
+	UserID int64 `path:"userID"`
 }
 
 type UnfollowResp struct {

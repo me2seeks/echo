@@ -41,6 +41,11 @@
         ],
         "consumes": [
           "multipart/form-data"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
         ]
       },
       "post": {
@@ -66,38 +71,6 @@
         ],
         "tags": [
           "user"
-        ],
-        "security": [
-          {
-            "apiKey": []
-          }
-        ]
-      }
-    },
-    "/user/follow": {
-      "post": {
-        "summary": "follow",
-        "operationId": "follow",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/FollowResp"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/FollowReq"
-            }
-          }
-        ],
-        "tags": [
-          "relation"
         ],
         "security": [
           {
@@ -134,27 +107,31 @@
             "apiKey": []
           }
         ]
-      }
-    },
-    "/user/followers": {
+      },
       "post": {
-        "summary": "get followers",
-        "operationId": "followers",
+        "summary": "follow",
+        "operationId": "follow",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/FollowersResp"
+              "$ref": "#/definitions/FollowResp"
             }
           }
         },
         "parameters": [
           {
+            "name": "userID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
             "name": "body",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/FollowersReq"
+              "$ref": "#/definitions/FollowReq"
             }
           }
         ],
@@ -168,8 +145,38 @@
         ]
       }
     },
-    "/user/followings": {
-      "post": {
+    "/user/followers/{userID}": {
+      "get": {
+        "summary": "get followers",
+        "operationId": "followers",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/FollowersResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "relation"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
+    "/user/followings/{userID}": {
+      "get": {
         "summary": "get following",
         "operationId": "followings",
         "responses": {
@@ -182,12 +189,10 @@
         },
         "parameters": [
           {
-            "name": "body",
-            "in": "body",
+            "name": "userID",
+            "in": "path",
             "required": true,
-            "schema": {
-              "$ref": "#/definitions/FollowingsReq"
-            }
+            "type": "string"
           }
         ],
         "tags": [
@@ -254,7 +259,7 @@
         ]
       }
     },
-    "/user/unfollow": {
+    "/user/unfollow/{userID}": {
       "post": {
         "summary": "unfollow",
         "operationId": "unfollow",
@@ -267,6 +272,12 @@
           }
         },
         "parameters": [
+          {
+            "name": "userID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
           {
             "name": "body",
             "in": "body",
@@ -290,16 +301,7 @@
   "definitions": {
     "FollowReq": {
       "type": "object",
-      "properties": {
-        "userID": {
-          "type": "integer",
-          "format": "int64"
-        }
-      },
-      "title": "FollowReq",
-      "required": [
-        "userID"
-      ]
+      "title": "FollowReq"
     },
     "FollowResp": {
       "type": "object",
@@ -324,16 +326,7 @@
     },
     "FollowersReq": {
       "type": "object",
-      "properties": {
-        "userID": {
-          "type": "integer",
-          "format": "int64"
-        }
-      },
-      "title": "FollowersReq",
-      "required": [
-        "userID"
-      ]
+      "title": "FollowersReq"
     },
     "FollowersResp": {
       "type": "object",
@@ -352,16 +345,7 @@
     },
     "FollowingsReq": {
       "type": "object",
-      "properties": {
-        "userID": {
-          "type": "integer",
-          "format": "int64"
-        }
-      },
-      "title": "FollowingsReq",
-      "required": [
-        "userID"
-      ]
+      "title": "FollowingsReq"
     },
     "FollowingsResp": {
       "type": "object",
@@ -468,16 +452,7 @@
     },
     "UnfollowReq": {
       "type": "object",
-      "properties": {
-        "userID": {
-          "type": "integer",
-          "format": "int64"
-        }
-      },
-      "title": "UnfollowReq",
-      "required": [
-        "userID"
-      ]
+      "title": "UnfollowReq"
     },
     "UnfollowResp": {
       "type": "object",

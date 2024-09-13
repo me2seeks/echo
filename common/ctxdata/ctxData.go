@@ -14,7 +14,6 @@ func GetUIDFromCtx(ctx context.Context) int64 {
 	var uID int64
 	uIDStr, ok := ctx.Value(CtxKeyJwtUserID).(string)
 	if !ok {
-		logx.WithContext(ctx).Errorf("GetUidFromCtx err : %+v", uID)
 		return uID
 	}
 	uID, err := strconv.ParseInt(uIDStr, 10, 64)

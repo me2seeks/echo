@@ -17,7 +17,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				// follow
 				Method:  http.MethodPost,
-				Path:    "/follow",
+				Path:    "/follow/:userID",
 				Handler: relation.FollowHandler(serverCtx),
 			},
 			{
@@ -28,20 +28,20 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				// get followers
-				Method:  http.MethodPost,
-				Path:    "/followers",
+				Method:  http.MethodGet,
+				Path:    "/followers/:userID",
 				Handler: relation.FollowersHandler(serverCtx),
 			},
 			{
 				// get following
-				Method:  http.MethodPost,
-				Path:    "/followings",
+				Method:  http.MethodGet,
+				Path:    "/followings/:userID",
 				Handler: relation.FollowingsHandler(serverCtx),
 			},
 			{
 				// unfollow
 				Method:  http.MethodPost,
-				Path:    "/unfollow",
+				Path:    "/unfollow/:userID",
 				Handler: relation.UnfollowHandler(serverCtx),
 			},
 		},
@@ -51,12 +51,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 
 	server.AddRoutes(
 		[]rest.Route{
-			{
-				// get user info
-				Method:  http.MethodGet,
-				Path:    "/",
-				Handler: user.DetailHandler(serverCtx),
-			},
 			{
 				// login
 				Method:  http.MethodPost,
@@ -75,6 +69,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 
 	server.AddRoutes(
 		[]rest.Route{
+			{
+				// get user info
+				Method:  http.MethodGet,
+				Path:    "/",
+				Handler: user.DetailHandler(serverCtx),
+			},
 			{
 				// update user info
 				Method:  http.MethodPost,
