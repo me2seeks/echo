@@ -30,19 +30,20 @@ func NewDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DetailLogi
 
 func (l *DetailLogic) Detail(req *types.UserInfoReq) (*types.UserInfoResp, error) {
 	userID := ctxdata.GetUIDFromCtx(l.ctx)
-	if req.UserID != 0 {
-		userID = req.UserID
+	if req.UserID == 0 {
+		req.UserID = userID
 	}
 
 	getUserInfoResp, err := l.svcCtx.UsercenterRPC.GetUserInfo(l.ctx, &usercenter.GetUserInfoReq{
-		UserID: userID,
+		UserID: req.UserID,
 	})
 	if err != nil {
 		return nil, err
 	}
-	var getFollowStatusResp *usercenter.GetFollowStatusResp
 
-	if req.UserID != 0 {
+	getFollowStatusResp := &usercenter.GetFollowStatusResp{}
+
+	if userID != req.UserID {
 		getFollowStatusResp, err = l.svcCtx.UsercenterRPC.GetFollowStatus(l.ctx, &usercenter.GetFollowStatusReq{
 			UserID:   userID,
 			TargetID: req.UserID,

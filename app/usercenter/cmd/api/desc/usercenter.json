@@ -41,11 +41,6 @@
         ],
         "consumes": [
           "multipart/form-data"
-        ],
-        "security": [
-          {
-            "apiKey": []
-          }
         ]
       },
       "post": {

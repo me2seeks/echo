@@ -18,6 +18,10 @@ service usercenter {
 	@doc "login"
 	@handler login
 	post /login (LoginReq) returns (LoginResp)
+
+	@doc "get user info"
+	@handler detail
+	get / (UserInfoReq) returns (UserInfoResp)
 }
 
 //need login
@@ -27,10 +31,6 @@ service usercenter {
 	jwt:    JwtAuth
 )
 service usercenter {
-	@doc "get user info"
-	@handler detail
-	get / (UserInfoReq) returns (UserInfoResp)
-
 	@doc "update user info"
 	@handler update
 	post / (UpdateUserInfoReq) returns (UpdateUserInfoResp)
