@@ -38,7 +38,8 @@ func (l *GetFeedsByIDLogic) GetFeedsByID(in *pb.GetFeedsByIDReq) (*pb.GetFeedsBy
 	findResp := make([]*model.Feeds, 0)
 	var err error
 	if len(in.IDs) == 1 {
-		findResp[0], err = l.svcCtx.FeedsModel.FindOne(l.ctx, in.IDs[0])
+		find, err := l.svcCtx.FeedsModel.FindOne(l.ctx, in.IDs[0])
+		findResp = append(findResp, find)
 		if err != nil {
 			return nil, errors.Wrapf(xerr.NewErrCode(xerr.DbError), "GetFeedsByID FindOne err:%v", err)
 		}
