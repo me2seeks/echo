@@ -27,8 +27,8 @@ type (
 	GetCommentsByPageResp      = pb.GetCommentsByPageResp
 	GetCommentsReq             = pb.GetCommentsReq
 	GetCommentsResp            = pb.GetCommentsResp
-	GetFeedsByIDByPageReq      = pb.GetFeedsByIDByPageReq
-	GetFeedsByIDByPageResp     = pb.GetFeedsByIDByPageResp
+	GetFeedsByIDReq            = pb.GetFeedsByIDReq
+	GetFeedsByIDResp           = pb.GetFeedsByIDResp
 	GetFeedsByPageReq          = pb.GetFeedsByPageReq
 	GetFeedsByPageResp         = pb.GetFeedsByPageResp
 	GetFeedsByUserIDByPageReq  = pb.GetFeedsByUserIDByPageReq
@@ -42,7 +42,7 @@ type (
 		CreateFeed(ctx context.Context, in *CreateFeedReq, opts ...grpc.CallOption) (*CreateFeedResp, error)
 		UpdateFeed(ctx context.Context, in *UpdateFeedReq, opts ...grpc.CallOption) (*UpdateFeedResp, error)
 		DeleteFeed(ctx context.Context, in *DeleteFeedReq, opts ...grpc.CallOption) (*DeleteFeedResp, error)
-		GetFeedsByIDByPage(ctx context.Context, in *GetFeedsByIDByPageReq, opts ...grpc.CallOption) (*GetFeedsByIDByPageResp, error)
+		GetFeedsByID(ctx context.Context, in *GetFeedsByIDReq, opts ...grpc.CallOption) (*GetFeedsByIDResp, error)
 		GetFeedsByUserIDByPage(ctx context.Context, in *GetFeedsByUserIDByPageReq, opts ...grpc.CallOption) (*GetFeedsByUserIDByPageResp, error)
 		GetFeedsByPage(ctx context.Context, in *GetFeedsByPageReq, opts ...grpc.CallOption) (*GetFeedsByPageResp, error)
 		CreateComment(ctx context.Context, in *CreateCommentReq, opts ...grpc.CallOption) (*CreateCommentResp, error)
@@ -78,9 +78,9 @@ func (m *defaultContent) DeleteFeed(ctx context.Context, in *DeleteFeedReq, opts
 	return client.DeleteFeed(ctx, in, opts...)
 }
 
-func (m *defaultContent) GetFeedsByIDByPage(ctx context.Context, in *GetFeedsByIDByPageReq, opts ...grpc.CallOption) (*GetFeedsByIDByPageResp, error) {
+func (m *defaultContent) GetFeedsByID(ctx context.Context, in *GetFeedsByIDReq, opts ...grpc.CallOption) (*GetFeedsByIDResp, error) {
 	client := pb.NewContentClient(m.cli.Conn())
-	return client.GetFeedsByIDByPage(ctx, in, opts...)
+	return client.GetFeedsByID(ctx, in, opts...)
 }
 
 func (m *defaultContent) GetFeedsByUserIDByPage(ctx context.Context, in *GetFeedsByUserIDByPageReq, opts ...grpc.CallOption) (*GetFeedsByUserIDByPageResp, error) {

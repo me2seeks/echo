@@ -87,3 +87,12 @@ type (
 		ID string `json:"id"`
 	}
 )
+
+type (
+	GetFeedReq {
+		ID int64 `path:"feedID"`
+	}
+	GetFeedResp {
+		Feed Feed `json:"feed"`
+	}
+)

@@ -33,6 +33,10 @@ service content {
 	@doc "get comment list by page"
 	@handler listComment
 	get /:feedID/comment (GetFeedCommentsByPageReq) returns (GetFeedCommentsByPageResp)
+
+	@doc "get feed by feedID"
+	@handler getFeed
+	get /:feedID (GetFeedReq) returns (GetFeedResp)
 }
 
 @server (

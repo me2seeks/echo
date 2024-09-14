@@ -256,6 +256,31 @@
         ]
       }
     },
+    "/feed/{feedID}": {
+      "get": {
+        "summary": "get feed by feedID",
+        "operationId": "getFeed",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetFeedResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "feedID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "feed"
+        ]
+      }
+    },
     "/feed/{feedID}/comment": {
       "get": {
         "summary": "get comment list by page",
@@ -743,6 +768,22 @@
       "required": [
         "comment",
         "total"
+      ]
+    },
+    "GetFeedReq": {
+      "type": "object",
+      "title": "GetFeedReq"
+    },
+    "GetFeedResp": {
+      "type": "object",
+      "properties": {
+        "feed": {
+          "$ref": "#/definitions/Feed"
+        }
+      },
+      "title": "GetFeedResp",
+      "required": [
+        "feed"
       ]
     },
     "GetFeedsByPageReq": {

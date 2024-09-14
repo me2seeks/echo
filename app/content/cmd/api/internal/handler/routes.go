@@ -53,6 +53,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: feed.ListFeedHandler(serverCtx),
 			},
 			{
+				// get feed by feedID
+				Method:  http.MethodGet,
+				Path:    "/:feedID",
+				Handler: feed.GetFeedHandler(serverCtx),
+			},
+			{
 				// get comment list by page
 				Method:  http.MethodGet,
 				Path:    "/:feedID/comment",

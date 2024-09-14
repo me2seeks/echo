@@ -37,9 +37,9 @@ func (s *ContentServer) DeleteFeed(ctx context.Context, in *pb.DeleteFeedReq) (*
 	return l.DeleteFeed(in)
 }
 
-func (s *ContentServer) GetFeedsByIDByPage(ctx context.Context, in *pb.GetFeedsByIDByPageReq) (*pb.GetFeedsByIDByPageResp, error) {
-	l := logic.NewGetFeedsByIDByPageLogic(ctx, s.svcCtx)
-	return l.GetFeedsByIDByPage(in)
+func (s *ContentServer) GetFeedsByID(ctx context.Context, in *pb.GetFeedsByIDReq) (*pb.GetFeedsByIDResp, error) {
+	l := logic.NewGetFeedsByIDLogic(ctx, s.svcCtx)
+	return l.GetFeedsByID(in)
 }
 
 func (s *ContentServer) GetFeedsByUserIDByPage(ctx context.Context, in *pb.GetFeedsByUserIDByPageReq) (*pb.GetFeedsByUserIDByPageResp, error) {

@@ -39,10 +39,8 @@ func (l *SearchLogic) Search(req *types.SearchReq) (*types.SearchFeedsResp, erro
 	resp := &types.SearchFeedsResp{}
 
 	if len(searchContentResp.ContentID) != 0 {
-		contentResp, err := l.svcCtx.ContentRPC.GetFeedsByIDByPage(l.ctx, &content.GetFeedsByIDByPageReq{
-			IDs:      searchContentResp.ContentID,
-			Page:     req.Page,
-			PageSize: req.PageSize,
+		contentResp, err := l.svcCtx.ContentRPC.GetFeedsByID(l.ctx, &content.GetFeedsByIDReq{
+			IDs: searchContentResp.ContentID,
 		})
 		if err != nil {
 			return nil, err

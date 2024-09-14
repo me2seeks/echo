@@ -103,6 +103,24 @@ type GetFeedCommentsByPageResp struct {
 	Total    int64     `json:"total"`
 }
 
+type GetFeedReq struct {
+	ID int64 `path:"feedID"`
+}
+
+type GetFeedResp struct {
+	Feed struct {
+		ID         string `json:"id"`
+		UserID     string `json:"userID"`
+		Content    string `json:"content"`
+		Media0     string `json:"media0"`
+		Media1     string `json:"media1"`
+		Media2     string `json:"media2"`
+		Media3     string `json:"media3"`
+		CreateTime int64  `json:"createTime"`
+		IsLiked    bool   `json:"isLiked"`
+	} `json:"feed"`
+}
+
 type GetFeedsByPageReq struct {
 	Page     int64 `form:"page"`
 	PageSize int64 `form:"pageSize"`
