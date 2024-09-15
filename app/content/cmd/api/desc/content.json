@@ -742,7 +742,7 @@
     "GetCommentsByPageResp": {
       "type": "object",
       "properties": {
-        "comment": {
+        "comments": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Comment"
@@ -755,7 +755,7 @@
       },
       "title": "GetCommentsByPageResp",
       "required": [
-        "comment",
+        "comments",
         "total"
       ]
     },
