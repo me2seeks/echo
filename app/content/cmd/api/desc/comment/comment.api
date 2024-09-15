@@ -19,7 +19,7 @@ type (
 		PageSize  int64 `form:"pageSize"`
 	}
 	GetCommentsByPageResp {
-		Comments []Comment `json:"comment"`
+		Comments []Comment `json:"comments"`
 		Total    int64     `json:"total"`
 	}
 )

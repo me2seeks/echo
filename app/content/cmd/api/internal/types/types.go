@@ -88,7 +88,7 @@ type GetCommentsByPageReq struct {
 }
 
 type GetCommentsByPageResp struct {
-	Comments []Comment `json:"comment"`
+	Comments []Comment `json:"comments"`
 	Total    int64     `json:"total"`
 }
 
