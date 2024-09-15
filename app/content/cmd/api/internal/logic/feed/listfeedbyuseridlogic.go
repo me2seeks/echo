@@ -7,6 +7,8 @@ import (
 	"github.com/me2seeks/echo-hub/app/content/cmd/api/internal/svc"
 	"github.com/me2seeks/echo-hub/app/content/cmd/api/internal/types"
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/content"
+	"github.com/me2seeks/echo-hub/app/interaction/cmd/rpc/interaction"
+	"github.com/me2seeks/echo-hub/common/ctxdata"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -27,6 +29,7 @@ func NewListFeedByUserIDLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *ListFeedByUserIDLogic) ListFeedByUserID(req *types.GetFeedsByUserIDPageReq) (*types.GetFeedsByPageResp, error) {
+	userID := ctxdata.GetUIDFromCtx(l.ctx)
 	getFeedsByUserIDByPageResp, err := l.svcCtx.ContentRPC.GetFeedsByUserIDByPage(l.ctx, &content.GetFeedsByUserIDByPageReq{
 		UserIDs:  []int64{req.UserID},
 		Page:     req.Page,
@@ -40,6 +43,11 @@ func (l *ListFeedByUserIDLogic) ListFeedByUserID(req *types.GetFeedsByUserIDPage
 	resp.Total = getFeedsByUserIDByPageResp.Total
 
 	for _, feed := range getFeedsByUserIDByPageResp.Feeds {
+		getLikeStatusResp, _ := l.svcCtx.InteractionRPC.GetLikeStatus(l.ctx, &interaction.GetLikeStatusReq{
+			UserID:    userID,
+			ContentID: feed.Id,
+			IsComment: false,
+		})
 		resp.Feeds = append(resp.Feeds, types.Feed{
 			ID:         strconv.FormatInt(feed.Id, 10),
 			UserID:     strconv.FormatInt(feed.UserID, 10),
@@ -49,6 +57,7 @@ func (l *ListFeedByUserIDLogic) ListFeedByUserID(req *types.GetFeedsByUserIDPage
 			Media2:     feed.Media2,
 			Media3:     feed.Media3,
 			CreateTime: feed.CreateTime.AsTime().Unix(),
+			IsLiked:    getLikeStatusResp.IsLiked,
 		})
 	}
 

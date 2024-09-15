@@ -97,6 +97,7 @@ service content {
 	@doc "delete comment"
 	@handler delete
 	delete / (DeleteCommentReq) returns (DeleteCommentResp)
+	
 // @doc "update comment"
 // @handler update
 // put / (UpdateCommentReq) returns (UpdateCommentResp)

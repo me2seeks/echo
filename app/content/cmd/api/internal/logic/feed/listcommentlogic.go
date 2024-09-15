@@ -7,6 +7,8 @@ import (
 	"github.com/me2seeks/echo-hub/app/content/cmd/api/internal/svc"
 	"github.com/me2seeks/echo-hub/app/content/cmd/api/internal/types"
 	"github.com/me2seeks/echo-hub/app/content/cmd/rpc/content"
+	"github.com/me2seeks/echo-hub/app/interaction/cmd/rpc/interaction"
+	"github.com/me2seeks/echo-hub/common/ctxdata"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -27,6 +29,7 @@ func NewListCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListC
 }
 
 func (l *ListCommentLogic) ListComment(req *types.GetFeedCommentsByPageReq) (*types.GetFeedCommentsByPageResp, error) {
+	userID := ctxdata.GetUIDFromCtx(l.ctx)
 	getCommentsByPageResp, err := l.svcCtx.ContentRPC.GetCommentsByPage(l.ctx, &content.GetCommentsByPageReq{
 		Id:        req.FeedID,
 		Page:      req.Page,
@@ -41,6 +44,11 @@ func (l *ListCommentLogic) ListComment(req *types.GetFeedCommentsByPageReq) (*ty
 	resp.Total = getCommentsByPageResp.Total
 
 	for _, comment := range getCommentsByPageResp.Comments {
+		getLikeStatusResp, _ := l.svcCtx.InteractionRPC.GetLikeStatus(l.ctx, &interaction.GetLikeStatusReq{
+			UserID:    userID,
+			ContentID: comment.Id,
+			IsComment: false,
+		})
 		resp.Comments = append(resp.Comments, types.Comment{
 			ID:         strconv.FormatInt(comment.Id, 10),
 			UserID:     strconv.FormatInt(comment.UserID, 10),
@@ -50,6 +58,7 @@ func (l *ListCommentLogic) ListComment(req *types.GetFeedCommentsByPageReq) (*ty
 			Media2:     comment.Media2,
 			Media3:     comment.Media3,
 			CreateTime: comment.CreateTime.AsTime().Unix(),
+			IsLiked:    getLikeStatusResp.IsLiked,
 		})
 	}
 
