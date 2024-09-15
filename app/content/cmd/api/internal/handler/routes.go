@@ -22,6 +22,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: comment.ListHandler(serverCtx),
 			},
 		},
+		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
 		rest.WithPrefix("/comment"),
 	)
 
@@ -59,6 +60,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: feed.ListCommentHandler(serverCtx),
 			},
 		},
+		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
 		rest.WithPrefix("/feed"),
 	)
 
@@ -77,6 +79,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: feed.ListFeedByUserIDHandler(serverCtx),
 			},
 		},
+		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
 		rest.WithPrefix("/feeds"),
 	)
 

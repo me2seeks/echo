@@ -20,6 +20,7 @@ service content {
 @server (
 	prefix: feed
 	group:  feed
+	jwt:    JwtAuth
 )
 service content {
 	@doc "get comment list by page"
@@ -34,6 +35,7 @@ service content {
 @server (
 	prefix: feeds
 	group:  feed
+	jwt:    JwtAuth
 )
 service content {
 	@doc "get feed list  by userID page"
@@ -48,6 +50,7 @@ service content {
 @server (
 	prefix: comment
 	group:  comment
+	jwt:    JwtAuth
 )
 service content {
 	@doc "get comment comment list by page"

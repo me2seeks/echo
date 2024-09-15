@@ -116,44 +116,15 @@
         ],
         "consumes": [
           "multipart/form-data"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
         ]
       }
     },
     "/feed/": {
-      "get": {
-        "summary": "get feed list by page",
-        "operationId": "listFeed",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/GetFeedsByPageResp"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "tags": [
-          "feed"
-        ],
-        "consumes": [
-          "multipart/form-data"
-        ]
-      },
       "delete": {
         "summary": "delete feed",
         "operationId": "delete",
@@ -278,6 +249,11 @@
         ],
         "tags": [
           "feed"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
         ]
       }
     },
@@ -320,6 +296,11 @@
         ],
         "consumes": [
           "multipart/form-data"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
         ]
       },
       "post": {
@@ -359,7 +340,48 @@
         ]
       }
     },
-    "/feed/{userID}": {
+    "/feeds/": {
+      "get": {
+        "summary": "get feed list by page",
+        "operationId": "listFeed",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetFeedsByPageResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "feed"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
+    "/feeds/{userID}": {
       "get": {
         "summary": "get feed list  by userID page",
         "operationId": "listFeedByUserID",
@@ -398,6 +420,11 @@
         ],
         "consumes": [
           "multipart/form-data"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
         ]
       }
     },
