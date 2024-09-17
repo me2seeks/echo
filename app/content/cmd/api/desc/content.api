@@ -48,7 +48,7 @@ service content {
 }
 
 @server (
-	prefix: comment
+	prefix: comments
 	group:  comment
 	jwt:    JwtAuth
 )
@@ -56,6 +56,17 @@ service content {
 	@doc "get comment comment list by page"
 	@handler list
 	get /:commentID (GetCommentsByPageReq) returns (GetCommentsByPageResp)
+}
+
+@server (
+	prefix: comment
+	group:  comment
+	jwt:    JwtAuth
+)
+service content {
+	@doc "get comment comment list by page"
+	@handler getComment
+	get /:commentID (GetCommentReq) returns (GetCommentResp)
 }
 
 @server (
@@ -97,10 +108,9 @@ service content {
 	@doc "delete comment"
 	@handler delete
 	delete / (DeleteCommentReq) returns (DeleteCommentResp)
-	
-// @doc "update comment"
-// @handler update
-// put / (UpdateCommentReq) returns (UpdateCommentResp)
+	// @doc "update comment"
+	// @handler update
+	// put / (UpdateCommentReq) returns (UpdateCommentResp)
 }
 
 type (
@@ -110,8 +120,7 @@ type (
 		PageSize int64 `form:"pageSize"`
 	}
 	GetFeedCommentsByPageResp {
-		Comments []Comment `json:"comment"`
+		Comments []Comment `json:"comments"`
 		Total    int64     `json:"total"`
 	}
 )
-

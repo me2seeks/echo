@@ -26,6 +26,7 @@ service Content {
     rpc deleteComment (DeleteCommentReq) returns (DeleteCommentResp) {}
 
     rpc getComments (GetCommentsReq) returns (GetCommentsResp) {}
+    rpc getCommentByID (GetCommentByIDReq) returns (GetCommentByIDResp) {}
     rpc getCommentsByPage (GetCommentsByPageReq) returns (GetCommentsByPageResp) {}
 }
 
@@ -164,3 +165,10 @@ message GetFeedsByPageResp {
     int64 total = 2;
 }
 
+
+message GetCommentByIDReq{
+    int64 id = 1;
+}
+message GetCommentByIDResp{
+    Comment comment = 1;
+}

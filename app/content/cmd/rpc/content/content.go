@@ -23,6 +23,8 @@ type (
 	DeleteFeedReq              = pb.DeleteFeedReq
 	DeleteFeedResp             = pb.DeleteFeedResp
 	Feed                       = pb.Feed
+	GetCommentByIDReq          = pb.GetCommentByIDReq
+	GetCommentByIDResp         = pb.GetCommentByIDResp
 	GetCommentsByPageReq       = pb.GetCommentsByPageReq
 	GetCommentsByPageResp      = pb.GetCommentsByPageResp
 	GetCommentsReq             = pb.GetCommentsReq
@@ -49,6 +51,7 @@ type (
 		UpdateComment(ctx context.Context, in *UpdateCommentReq, opts ...grpc.CallOption) (*UpdateCommentResp, error)
 		DeleteComment(ctx context.Context, in *DeleteCommentReq, opts ...grpc.CallOption) (*DeleteCommentResp, error)
 		GetComments(ctx context.Context, in *GetCommentsReq, opts ...grpc.CallOption) (*GetCommentsResp, error)
+		GetCommentByID(ctx context.Context, in *GetCommentByIDReq, opts ...grpc.CallOption) (*GetCommentByIDResp, error)
 		GetCommentsByPage(ctx context.Context, in *GetCommentsByPageReq, opts ...grpc.CallOption) (*GetCommentsByPageResp, error)
 	}
 
@@ -111,6 +114,11 @@ func (m *defaultContent) DeleteComment(ctx context.Context, in *DeleteCommentReq
 func (m *defaultContent) GetComments(ctx context.Context, in *GetCommentsReq, opts ...grpc.CallOption) (*GetCommentsResp, error) {
 	client := pb.NewContentClient(m.cli.Conn())
 	return client.GetComments(ctx, in, opts...)
+}
+
+func (m *defaultContent) GetCommentByID(ctx context.Context, in *GetCommentByIDReq, opts ...grpc.CallOption) (*GetCommentByIDResp, error) {
+	client := pb.NewContentClient(m.cli.Conn())
+	return client.GetCommentByID(ctx, in, opts...)
 }
 
 func (m *defaultContent) GetCommentsByPage(ctx context.Context, in *GetCommentsByPageReq, opts ...grpc.CallOption) (*GetCommentsByPageResp, error) {

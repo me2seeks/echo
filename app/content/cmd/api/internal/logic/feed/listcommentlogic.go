@@ -47,7 +47,7 @@ func (l *ListCommentLogic) ListComment(req *types.GetFeedCommentsByPageReq) (*ty
 		getLikeStatusResp, _ := l.svcCtx.InteractionRPC.GetLikeStatus(l.ctx, &interaction.GetLikeStatusReq{
 			UserID:    userID,
 			ContentID: comment.Id,
-			IsComment: false,
+			IsComment: true,
 		})
 		resp.Comments = append(resp.Comments, types.Comment{
 			ID:         strconv.FormatInt(comment.Id, 10),

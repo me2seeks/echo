@@ -28,7 +28,7 @@ func NewGetFeedLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetFeedLo
 	}
 }
 
-func (l *GetFeedLogic) GetFeed(req *types.GetFeedReq) (resp *types.GetFeedResp, err error) {
+func (l *GetFeedLogic) GetFeed(req *types.GetFeedReq) (*types.GetFeedResp, error) {
 	userID := ctxdata.GetUIDFromCtx(l.ctx)
 	getFeedsByIDResp, err := l.svcCtx.ContentRPC.GetFeedsByID(l.ctx, &content.GetFeedsByIDReq{
 		IDs: []int64{req.ID},
@@ -36,18 +36,11 @@ func (l *GetFeedLogic) GetFeed(req *types.GetFeedReq) (resp *types.GetFeedResp, 
 	if err != nil {
 		return nil, err
 	}
-
 	if len(getFeedsByIDResp.Feeds) == 0 {
 		return nil, nil
 	}
 
-	getLikeStatusResp, _ := l.svcCtx.InteractionRPC.GetLikeStatus(l.ctx, &interaction.GetLikeStatusReq{
-		UserID:    userID,
-		ContentID: getFeedsByIDResp.Feeds[0].Id,
-		IsComment: false,
-	})
-
-	return &types.GetFeedResp{
+	resp := &types.GetFeedResp{
 		Feed: types.Feed{
 			ID:         strconv.FormatInt(getFeedsByIDResp.Feeds[0].Id, 10),
 			UserID:     strconv.FormatInt(getFeedsByIDResp.Feeds[0].UserID, 10),
@@ -57,7 +50,17 @@ func (l *GetFeedLogic) GetFeed(req *types.GetFeedReq) (resp *types.GetFeedResp, 
 			Media2:     getFeedsByIDResp.Feeds[0].Media2,
 			Media3:     getFeedsByIDResp.Feeds[0].Media3,
 			CreateTime: getFeedsByIDResp.Feeds[0].CreateTime.AsTime().Unix(),
-			IsLiked:    getLikeStatusResp.IsLiked,
 		},
-	}, nil
+	}
+
+	if userID != 0 {
+		getLikeStatusResp, _ := l.svcCtx.InteractionRPC.GetLikeStatus(l.ctx, &interaction.GetLikeStatusReq{
+			UserID:    userID,
+			ContentID: getFeedsByIDResp.Feeds[0].Id,
+			IsComment: false,
+		})
+		resp.Feed.IsLiked = getLikeStatusResp.IsLiked
+	}
+
+	return resp, nil
 }

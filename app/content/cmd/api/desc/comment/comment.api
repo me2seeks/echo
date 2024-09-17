@@ -58,3 +58,12 @@ type (
 	DeleteCommentResp {
 	}
 )
+
+type (
+	GetCommentReq {
+		CommentID int64 `path:"commentID"`
+	}
+	GetCommentResp {
+		Comment Comment `json:"comment"`
+	}
+)

@@ -81,6 +81,25 @@ type Feed struct {
 	IsLiked    bool   `json:"isLiked"`
 }
 
+type GetCommentReq struct {
+	CommentID int64 `path:"commentID"`
+}
+
+type GetCommentResp struct {
+	Comment struct {
+		ID         string `json:"id"`
+		FeedID     string `json:"feedID"`
+		UserID     string `json:"userID"`
+		Content    string `json:"content"`
+		Media0     string `json:"media0"`
+		Media1     string `json:"media1"`
+		Media2     string `json:"media2"`
+		Media3     string `json:"media3"`
+		CreateTime int64  `json:"createTime"`
+		IsLiked    bool   `json:"isLiked"`
+	} `json:"comment"`
+}
+
 type GetCommentsByPageReq struct {
 	CommentID int64 `path:"commentID"`
 	Page      int64 `form:"page"`

@@ -29,6 +29,7 @@ const (
 	Content_UpdateComment_FullMethodName          = "/pb.Content/updateComment"
 	Content_DeleteComment_FullMethodName          = "/pb.Content/deleteComment"
 	Content_GetComments_FullMethodName            = "/pb.Content/getComments"
+	Content_GetCommentByID_FullMethodName         = "/pb.Content/getCommentByID"
 	Content_GetCommentsByPage_FullMethodName      = "/pb.Content/getCommentsByPage"
 )
 
@@ -46,6 +47,7 @@ type ContentClient interface {
 	UpdateComment(ctx context.Context, in *UpdateCommentReq, opts ...grpc.CallOption) (*UpdateCommentResp, error)
 	DeleteComment(ctx context.Context, in *DeleteCommentReq, opts ...grpc.CallOption) (*DeleteCommentResp, error)
 	GetComments(ctx context.Context, in *GetCommentsReq, opts ...grpc.CallOption) (*GetCommentsResp, error)
+	GetCommentByID(ctx context.Context, in *GetCommentByIDReq, opts ...grpc.CallOption) (*GetCommentByIDResp, error)
 	GetCommentsByPage(ctx context.Context, in *GetCommentsByPageReq, opts ...grpc.CallOption) (*GetCommentsByPageResp, error)
 }
 
@@ -157,6 +159,16 @@ func (c *contentClient) GetComments(ctx context.Context, in *GetCommentsReq, opt
 	return out, nil
 }
 
+func (c *contentClient) GetCommentByID(ctx context.Context, in *GetCommentByIDReq, opts ...grpc.CallOption) (*GetCommentByIDResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetCommentByIDResp)
+	err := c.cc.Invoke(ctx, Content_GetCommentByID_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *contentClient) GetCommentsByPage(ctx context.Context, in *GetCommentsByPageReq, opts ...grpc.CallOption) (*GetCommentsByPageResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetCommentsByPageResp)
@@ -181,6 +193,7 @@ type ContentServer interface {
 	UpdateComment(context.Context, *UpdateCommentReq) (*UpdateCommentResp, error)
 	DeleteComment(context.Context, *DeleteCommentReq) (*DeleteCommentResp, error)
 	GetComments(context.Context, *GetCommentsReq) (*GetCommentsResp, error)
+	GetCommentByID(context.Context, *GetCommentByIDReq) (*GetCommentByIDResp, error)
 	GetCommentsByPage(context.Context, *GetCommentsByPageReq) (*GetCommentsByPageResp, error)
 	mustEmbedUnimplementedContentServer()
 }
@@ -221,6 +234,9 @@ func (UnimplementedContentServer) DeleteComment(context.Context, *DeleteCommentR
 }
 func (UnimplementedContentServer) GetComments(context.Context, *GetCommentsReq) (*GetCommentsResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetComments not implemented")
+}
+func (UnimplementedContentServer) GetCommentByID(context.Context, *GetCommentByIDReq) (*GetCommentByIDResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCommentByID not implemented")
 }
 func (UnimplementedContentServer) GetCommentsByPage(context.Context, *GetCommentsByPageReq) (*GetCommentsByPageResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCommentsByPage not implemented")
@@ -426,6 +442,24 @@ func _Content_GetComments_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Content_GetCommentByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCommentByIDReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ContentServer).GetCommentByID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Content_GetCommentByID_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ContentServer).GetCommentByID(ctx, req.(*GetCommentByIDReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Content_GetCommentsByPage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetCommentsByPageReq)
 	if err := dec(in); err != nil {
@@ -490,6 +524,10 @@ var Content_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "getComments",
 			Handler:    _Content_GetComments_Handler,
+		},
+		{
+			MethodName: "getCommentByID",
+			Handler:    _Content_GetCommentByID_Handler,
 		},
 		{
 			MethodName: "getCommentsByPage",

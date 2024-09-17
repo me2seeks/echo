@@ -80,6 +80,36 @@
     "/comment/{commentID}": {
       "get": {
         "summary": "get comment comment list by page",
+        "operationId": "getComment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetCommentResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "commentID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "comment"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
+    "/comments/{commentID}": {
+      "get": {
+        "summary": "get comment comment list by page",
         "operationId": "list",
         "responses": {
           "200": {
@@ -721,6 +751,22 @@
         "isLiked"
       ]
     },
+    "GetCommentReq": {
+      "type": "object",
+      "title": "GetCommentReq"
+    },
+    "GetCommentResp": {
+      "type": "object",
+      "properties": {
+        "comment": {
+          "$ref": "#/definitions/Comment"
+        }
+      },
+      "title": "GetCommentResp",
+      "required": [
+        "comment"
+      ]
+    },
     "GetCommentsByPageReq": {
       "type": "object",
       "properties": {
@@ -780,7 +826,7 @@
     "GetFeedCommentsByPageResp": {
       "type": "object",
       "properties": {
-        "comment": {
+        "comments": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Comment"
@@ -793,7 +839,7 @@
       },
       "title": "GetFeedCommentsByPageResp",
       "required": [
-        "comment",
+        "comments",
         "total"
       ]
     },

@@ -72,6 +72,11 @@ func (s *ContentServer) GetComments(ctx context.Context, in *pb.GetCommentsReq) 
 	return l.GetComments(in)
 }
 
+func (s *ContentServer) GetCommentByID(ctx context.Context, in *pb.GetCommentByIDReq) (*pb.GetCommentByIDResp, error) {
+	l := logic.NewGetCommentByIDLogic(ctx, s.svcCtx)
+	return l.GetCommentByID(in)
+}
+
 func (s *ContentServer) GetCommentsByPage(ctx context.Context, in *pb.GetCommentsByPageReq) (*pb.GetCommentsByPageResp, error) {
 	l := logic.NewGetCommentsByPageLogic(ctx, s.svcCtx)
 	return l.GetCommentsByPage(in)

@@ -23,6 +23,19 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
+		rest.WithPrefix("/comments"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// get comment comment list by page
+				Method:  http.MethodGet,
+				Path:    "/:commentID",
+				Handler: comment.GetCommentHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
 		rest.WithPrefix("/comment"),
 	)
 
