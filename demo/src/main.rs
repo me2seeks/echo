@@ -16,6 +16,8 @@ use webrtc::peer_connection::configuration::RTCConfiguration;
 use webrtc::peer_connection::peer_connection_state::RTCPeerConnectionState;
 use webrtc::peer_connection::sdp::session_description::RTCSessionDescription;
 use webrtc::peer_connection::RTCPeerConnection;
+use webrtc::rtp_transceiver::rtp_codec::RTCRtpCodecCapability;
+use webrtc::track::track_local::track_local_static_rtp::TrackLocalStaticRTP;
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(tag = "event", content = "payload")]
@@ -93,7 +95,7 @@ impl WebRTCActor {
         // Prepare the configuration
         let config = RTCConfiguration {
             ice_servers: vec![RTCIceServer {
-                urls: vec!["stun:95.216.190.5:3478".to_owned()],
+                urls: vec!["stun:stun.syncthing.net:3478".to_owned()],
                 ..Default::default()
             }],
             ..Default::default()
@@ -118,6 +120,29 @@ impl WebRTCActor {
             println!("Peer Connection State has changed: {:?}", state);
             Box::pin(async {})
         }));
+
+        pc.create_data_channel("hello", None).await.unwrap();
+
+        let video_track = Arc::new(TrackLocalStaticRTP::new(
+            RTCRtpCodecCapability {
+                mime_type: "video/vp8".to_owned(),
+                ..Default::default()
+            },
+            "video".to_owned(),
+            "webrtc-rs".to_owned(),
+        ));
+
+        let audio_track = Arc::new(TrackLocalStaticRTP::new(
+            RTCRtpCodecCapability {
+                mime_type: "audio/opus".to_owned(),
+                ..Default::default()
+            },
+            "audio".to_owned(),
+            "webrtc-rs".to_owned(),
+        ));
+
+        pc.add_track(video_track).await.unwrap();
+        pc.add_track(audio_track).await.unwrap();
 
         Ok(WebRTCActor {
             pc: Arc::new(pc),
@@ -159,7 +184,6 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WebRTCActor {
                             Ok(ws_message) => match ws_message {
                                 WSMessage::WebRTC(sdp) => match sdp.sdp_type {
                                     webrtc::peer_connection::sdp::sdp_type::RTCSdpType::Offer => {
-                                        println!("Received WebRTC offer: {}", sdp.sdp);
                                         if let Err(err) = pc.set_remote_description(sdp).await {
                                             println!("Error setting remote description: {:?}", err);
                                             return;
